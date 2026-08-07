@@ -9,6 +9,10 @@ Language: **English** | [繁體中文](./README.md)
 
 ---
 
+<img width="1172" height="752" alt="image" src="https://github.com/user-attachments/assets/edb53488-7334-4a09-974d-f847c998ca6b" />
+<img width="1172" height="752" alt="image" src="https://github.com/user-attachments/assets/857865c7-ce0d-4b9a-958b-bbe9236bc0db" />
+<img width="1155" height="738" alt="image" src="https://github.com/user-attachments/assets/f242c00e-2a68-483c-880c-5f97122b3bc1" />
+
 ## 🌟 Key Features
 
 * 🎵 **MPV Playback Engine**: High-fidelity support for popular audio formats (FLAC, MP3, WAV, AAC, M4A...) and video formats (MP4, MKV, WEBM...).
