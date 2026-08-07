@@ -9,27 +9,56 @@
 
 ## 🌟 核心特色 (Features)
 
-* 🎵 **MPV 播放引擎**：支援音訊 (FLAC, MP3, WAV, AAC, M4A...) 與影片 (MP4, MKV, WEBM...) 。
-* 🎛️ **音訊過濾器**：
+* 🎵 **MPV 播放引擎**：支援常見音訊 (FLAC, MP3, WAV, AAC, M4A...) 與影片格式 (MP4, MKV, WEBM...)。
+* 🎛️ **音訊過濾與強化**：
   * **10-Band 參量等化器 (Parametric EQ)**
-  * **192kHz 重取樣 (Audio Upsampling)**
+  * **192kHz 音訊重取樣 (Audio Upsampling)**
   * **EBUR128 音量響度正規化**
-* 📁 **一鍵掃描與自動分類**：點擊 `+ SCAN` 自動掃描音樂庫，按資料夾與專輯自動分類。
+* 📁 **一鍵掃描與自動分類**：點擊 `+ SCAN` 自動掃描音樂庫，按資料夾與專輯自動整理。
 * 🔁 **4 大播放模式 (Play Modes)**：
   * 🔁 **Repeat All**（列表循環）
   * 🔀 **Shuffle**（隨機播放）
   * 🔂 **Repeat One**（單曲循環）
-  * 📀 **Album Continue**（專輯連播 — 播完此專輯自動銜接下一個專輯）
-。
-* 🎨 **多款主題風格**：測試開發主題（Needy Girl Overdose、Cyberpunk、Cyber Mech HUD、Glass、Modern Dark、Clean Light），並可自由編寫 HTML 擴充。
+  * 📀 **Album Continue**（專輯連播 — 播完當前專輯後自動銜接下一個專輯）
+* 🎨 **多款主題風格**：內建測試開發主題（Needy Girl Overdose、Cyberpunk、Cyber Mech HUD、Glass、Modern Dark、Clean Light），並支援自由編寫 HTML/CSS/JS 進行擴充。
 
 ---
 
-## 🛠️ 開發環境需求與依賴 (Environment Requirements)
+## 📦 免安裝便攜版下載 (For End Users)
 
-專案開發建議使用 Conda 虛擬環境
+如果您不想安裝 Python 開發環境，只想直接使用播放器：
 
-### `requirements.txt` 內容：
+1. 前往本專案右側的 **[Releases](../../releases)** 頁面下載最新版本的：
+   * **`MPlayThemeUI.exe`**（主程式）
+   * **`bin.zip`**（核心依賴組件）
+2. 將 `bin.zip` 解壓縮，獲得一個 `bin` 資料夾。
+3. 將 `MPlayThemeUI.exe` 與 `bin` 資料夾放置於**同一個目錄下**：
+   ```text
+   📁 專案資料夾/
+   ├── 📄 MPlayThemeUI.exe
+   └── 📁 bin/
+       └── 📄 libmpv-2.dll (及其他元件)
+   ```
+4. 雙擊執行 `MPlayThemeUI.exe` 即可開始收聽！
+
+---
+
+## 🛠️ 開發環境建置 (For Developers)
+
+如果您想自行修改源碼或編譯專案，請參考以下步驟：
+
+### 1. 建立 Conda 虛擬環境與安裝依賴
+
+```bash
+# 建立並啟動 Python 3.11 虛擬環境
+conda create -n mpv_ctrl python=3.11 -y
+conda activate mpv_ctrl
+
+# 安裝專案所需依賴
+pip install -r requirements.txt
+```
+
+`requirements.txt` 清單：
 
 ```txt
 pywebview>=5.0.0
@@ -39,20 +68,6 @@ clr-loader>=0.2.10
 cffi>=1.15.0
 pyinstaller>=6.10.0
 pywin32-ctypes>=0.2.3
-```
-
----
-
-## 🚀 快速開始 (Quick Start)
-
-### 1. 安裝依賴庫
-
-```bash
-# 建議啟動您的 Conda 環境
-conda activate mpv_ctrl
-
-# 安裝所需依賴
-pip install -r requirements.txt
 ```
 
 ### 2. 運行開發版本
@@ -66,25 +81,27 @@ python main.py
 ```bash
 pyinstaller --noconfirm MPlay.spec
 ```
-打包完成後，獨立執行檔將產生於 `dist/MPlay.exe`。
+
+打包完成後，獨立執行檔將產生於 `dist/MPlayThemeUI.exe`。
 
 ---
 
 ## 🎨 客製化 HTML 主題指南 (Customizing Themes)
 
-前端介面完全由 HTML/CSS/JS 構成，放置於 `ui/` 資料夾內。  
-若您想創作屬於自己的風格：
+前端介面完全由 HTML/CSS/JS 構成，儲存於 `ui/` 資料夾內。  
+若您想創作屬於自己的客製化主題：
 
-1. 於 `ui/` 下新增或修改 HTML 檔案（例如 `my_custom_theme.html`）。
+1. 於 `ui/` 資料夾下新增或修改 HTML 檔案（例如 `my_custom_theme.html`）。
 2. 使用 `pywebview.api` 進行前後端 IPC 交互：
-   * `pywebview.api.play_video(path)`
-   * `pywebview.api.toggle_play_mode()`
-   * `pywebview.api.get_playback_status()`
-   * `pywebview.api.set_eq_gains(gains)`
-3. 自由調配 Tailwind CSS、Glassmorphic 風格或動畫貼圖，輕鬆打造專屬音樂播放介面！
+   - `pywebview.api.play_video(path)`
+   - `pywebview.api.toggle_play_mode()`
+   - `pywebview.api.get_playback_status()`
+   - `pywebview.api.set_eq_gains(gains)`
+3. 可自由調配 Tailwind CSS、Glassmorphic 視覺風格、Rive 動畫或貼圖，打造獨一無二的專屬播放介面！
 
 ---
 
-## 📄 授權條款 (License)
+## 📄 授權條款與第三方聲明 (License & Notices)
 
-本專案採開源方式分享，僅供個人學習、測試與非商業娛樂用途使用。
+- 本專案原始碼採 MIT License 釋出，僅供個人學習、測試與非商業娛樂用途使用。
+- 多媒體核心組件採用 MPV (遵循 LGPL-2.1 / GPL-2.0 開源授權)。
