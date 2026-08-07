@@ -1,4 +1,4 @@
-# MPlay (MPV2) - Python Environment Requirements
+# MPlay (MPlay-ThemeUI) - Python Environment Requirements
 # Environment: mpv_ctrl
 pywebview>=5.0.0
 python-mpv>=1.0.8
