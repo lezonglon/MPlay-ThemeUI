@@ -30,23 +30,24 @@
 
 1. 前往本專案右側的 **[Releases](../../releases)** 頁面下載最新版本的：
    * **`MPlayThemeUI.exe`**（主程式）
-   * **`bin.zip`**（核心依賴組件）
-2. 將 `bin.zip` 解壓縮，獲得一個 `bin` 資料夾。
-3. 將 `MPlayThemeUI.exe` 與 `bin` 資料夾放置於**同一個目錄下**：
-   ```text
-   📁 專案資料夾/
-   ├── 📄 MPlayThemeUI.exe
-   └── 📁 bin/
-       └── 📄 libmpv-2.dll (及其他元件)
-   ```
-4. 雙擊執行 `MPlayThemeUI.exe` 即可開始收聽！
+2. 雙擊執行 `MPlayThemeUI.exe` 即可開始收聽！
 
 ---
 
 ## 🛠️ 開發環境建置 (For Developers)
 
 如果您想自行修改源碼或編譯專案，請參考以下步驟：
-
+1. 前往本專案右側的 **[Releases](../../releases)** 頁面下載最新版本的：
+   * **`bin.zip`**（核心依賴組件）
+2. 將 `bin.zip` 解壓縮，獲得一個 `bin` 資料夾。
+3. 將 `bin` 資料夾放置於**同一個目錄下**：
+   ```text
+   📁 專案資料夾/
+   ├── 📄 main.py
+   └── 📁 bin/
+       └── 📄 libmpv-2.dll (及其他元件)
+   ```
+---
 ### 1. 建立 Conda 虛擬環境與安裝依賴
 
 ```bash
