@@ -1,11 +1,16 @@
 # 🎵 MPlay-ThemeUI - 簡易音樂播放器與主題試驗介面
 
+Language: **繁體中文** | [English](./README_EN.md)
+
 > **⚠️ 免責聲明與開源說明**  
 > 本專案開發此介面主要用於**個人娛樂測試使用，非商業用途**。  
 > 初始想法是希望有一個可以快速簡易收聽音樂的程式，支援一鍵匯入與自動分類，並且具有極高客製化彈性的介面，讓音樂不僅止於聽，更能享受視覺娛樂！  
 > 本專案基於 **Python + MPV 核心播放引擎 + HTML/CSS/JS 介面** 開發，並由 **AI 輔助完成**。未來如需體驗不同風格，可以直接撰寫或替換全新的 HTML 介面！
 
 ---
+<img width="1172" height="752" alt="image" src="https://github.com/user-attachments/assets/edb53488-7334-4a09-974d-f847c998ca6b" />
+<img width="1172" height="752" alt="image" src="https://github.com/user-attachments/assets/857865c7-ce0d-4b9a-958b-bbe9236bc0db" />
+<img width="1155" height="738" alt="image" src="https://github.com/user-attachments/assets/f242c00e-2a68-483c-880c-5f97122b3bc1" />
 
 ## 🌟 核心特色 (Features)
 
