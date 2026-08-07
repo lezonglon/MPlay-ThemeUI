@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPlay Cyberpunk 2077 [FIXED]</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <style>
+        :root {
+            --cp-cyan: #00f7ff;
+            --cp-magenta: #ff00e4;
+            --cp-yellow: #fcee0a;
+            --cp-bg-dark: #0a0a0d;
+        }
+
+        /* --- 全局特效 --- */
+        body { 
+            font-family: 'Rajdhani', sans-serif; 
+            background-color: var(--cp-bg-dark);
+            color: var(--cp-cyan);
+            margin: 0; padding: 0; overflow: hidden;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+        }
+
+        /* 掃描線 */
+        body::after {
+            content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px);
+            pointer-events: none; z-index: 9998; mix-blend-mode: overlay;
+        }
+
+        /* 文字發光類 */
+        .text-neon-cyan { color: var(--cp-cyan); text-shadow: 0 0 5px var(--cp-cyan), 0 0 10px rgba(0, 247, 255, 0.5); }
+        .text-neon-yellow { color: var(--cp-yellow); text-shadow: 0 0 5px var(--cp-yellow); font-weight: 700; }
+        .text-neon-magenta { color: var(--cp-magenta); text-shadow: 0 0 5px var(--cp-magenta); }
+
+        /* 3D 舞台 */
+        #stage-perspective { perspective: 1500px; width: 100vw; height: 100vh; overflow: hidden; }
+
+        /* 資料夾層 */
+        #layer-folders {
+            width: 100%; height: 100vh; overflow-y: auto; overflow-x: hidden;
+            transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+            background: linear-gradient(180deg, var(--cp-bg-dark) 0%, #1a1a20 100%);
+            padding-bottom: 120px;
+        }
+        #layer-folders.depth-mode {
+            transform: scale(0.9) translateZ(-150px) rotateX(2deg);
+            filter: brightness(0.4) blur(3px) grayscale(0.5);
+            pointer-events: none;
+            border: 2px solid rgba(0, 247, 255, 0.2);
+        }
+
+        /* 側邊欄 */
+        #layer-tracks {
+            position: absolute; top: 0; right: 0; width: 500px; height: 100%; 
+            display: flex; flex-direction: column;
+            background: rgba(18, 18, 22, 0.95);
+            border-left: 2px solid var(--cp-cyan);
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+            box-shadow: -10px 0 50px rgba(0, 247, 255, 0.1);
+            transform: translateX(120%) skewX(-5deg); opacity: 0;
+            transition: all 0.5s cubic-bezier(0.3, 1, 0.3, 1);
+            z-index: 50; backdrop-filter: blur(10px);
+        }
+        #layer-tracks.active { transform: translateX(0) skewX(0deg); opacity: 1; }
+        
+        /* 卡片與列表樣式 */
+        .folder-card {
+            background: linear-gradient(135deg, #1a1a20 0%, #22222a 100%);
+            border: 1px solid rgba(0, 247, 255, 0.3);
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
+            transition: all 0.3s ease;
+        }
+        .folder-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--cp-cyan);
+            box-shadow: 0 5px 20px rgba(0, 247, 255, 0.2);
+        }
+
+        .track-item {
+            border-bottom: 1px solid rgba(0, 247, 255, 0.1);
+            border-left: 3px solid transparent; transition: all 0.2s;
+        }
+        .track-item:hover { background: rgba(0, 247, 255, 0.05); padding-left: 1rem; border-left-color: var(--cp-cyan); }
+        .track-item.active {
+            background: linear-gradient(90deg, rgba(0, 247, 255, 0.15) 0%, transparent 100%);
+            border-left-color: var(--cp-yellow);
+        }
+        .track-item.active .track-title { color: var(--cp-yellow); text-shadow: 0 0 5px var(--cp-yellow); }
+
+        /* 播放控制條 (HUD) */
+        .player-bar {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 95%; max-width: 1200px; height: 80px;
+            background: rgba(12, 12, 16, 0.92); backdrop-filter: blur(20px);
+            border: 1px solid var(--cp-cyan);
+            /* 複雜切角 HUD */
+            clip-path: polygon(
+                0 12px, 12px 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 
+                calc(100% - 20px) 100%, calc(100% - 30px) calc(100% - 8px), 
+                30px calc(100% - 8px), 20px 100%, 0 100%
+            );
+            box-shadow: 0 10px 40px rgba(0, 247, 255, 0.15); z-index: 100;
+        }
+
+        /* 浮動選單樣式 (Fixed 避免 clip-path 裁切) */
+        #theme-menu {
+            position: fixed;
+            z-index: 99999;
+            width: 190px;
+            background: rgba(10, 10, 14, 0.96);
+            border: 1px solid var(--cp-cyan);
+            backdrop-filter: blur(16px);
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+            box-shadow: 0 0 25px rgba(0, 247, 255, 0.3);
+            display: none;
+        }
+
+        /* 選單項目 */
+        .menu-item {
+            display: block; width: 100%; text-align: left;
+            padding: 10px 14px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 13px; font-weight: 600;
+            color: rgba(0, 247, 255, 0.85);
+            border-bottom: 1px solid rgba(0, 247, 255, 0.12);
+            transition: all 0.2s;
+            background: transparent;
+        }
+        .menu-item:hover { background: rgba(0, 247, 255, 0.2); color: #fff; padding-left: 18px; }
+        .menu-item.active-skin { background: rgba(252, 238, 10, 0.15); color: var(--cp-yellow); font-weight: 700; border-left: 3px solid var(--cp-yellow); }
+        .menu-item:last-child { border-bottom: none; }
+        
+        /* 播放按鈕 */
+        .btn-play-cyber {
+            width: 48px; height: 48px;
+            background: radial-gradient(circle, rgba(0,247,255,0.2) 0%, transparent 70%);
+            border: 2px solid var(--cp-cyan);
+            display: flex; align-items: center; justify-content: center;
+            clip-path: polygon(10% 0, 90% 0, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0 90%, 0 10%);
+            transition: all 0.3s;
+        }
+        .btn-play-cyber:hover { background: var(--cp-cyan); color: #000; box-shadow: 0 0 25px var(--cp-cyan); transform: scale(1.1) rotate(45deg); }
+        .btn-play-cyber span { transition: transform 0.3s; }
+        .btn-play-cyber:hover span { transform: rotate(-45deg); }
+
+        /* Input Slider */
+        input[type=range] { -webkit-appearance: none; background: transparent; height: 20px; }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 6px; background: rgba(0, 247, 255, 0.2);
+            clip-path: polygon(0 0, 100% 0, 98% 100%, 2% 100%);
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 18px; width: 10px;
+            background: var(--cp-yellow); margin-top: -7px; 
+            clip-path: polygon(0 0, 100% 0, 70% 100%, 30% 100%);
+            box-shadow: 0 0 10px var(--cp-yellow);
+        }
+
+        /* 滾動條 */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--cp-cyan); }
+        
+        .hover-glitch:hover { animation: glitch-anim 0.2s linear infinite; }
+        @keyframes glitch-anim {
+            0% { transform: translate(0); } 20% { transform: translate(-2px, 1px); }
+            40% { transform: translate(-1px, -1px); } 60% { transform: translate(2px, 0px); }
+            100% { transform: translate(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="stage-perspective">
+        
+        <div id="layer-folders">
+            <header class="flex justify-between items-end mb-8 sticky top-0 z-10 p-8 pb-6 bg-black/80 backdrop-blur-md border-b border-[#00f7ff33]">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-black border border-cyan-400 group hover:border-yellow-400 transition relative overflow-hidden">
+                        <span class="material-icons-round text-cyan-400 text-4xl relative z-10 group-hover:text-yellow-400">album</span>
+                    </div>
+                    <div>
+                        <h1 class="text-4xl font-black tracking-wider text-neon-cyan italic font-['Orbitron']">NIGHT CITY <span class="text-neon-magenta">TUNES</span></h1>
+                        <div class="flex items-center gap-2 text-xs text-cyan-600 font-mono mt-1">
+                             <span class="material-icons-round text-[10px]">memory</span> SYSTEM_READY // V.2.77
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-4 items-center">
+                    <button onclick="ui.toggleEqModal()" class="hover-glitch px-5 py-2 bg-black border border-yellow-400 text-yellow-400 font-bold uppercase tracking-widest hover:bg-yellow-950 transition flex items-center gap-2" style="clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);">
+                        <span class="material-icons-round text-base">equalizer</span> AUDIO_EQ
+                    </button>
+                    <button onclick="ui.scanFolder()" class="hover-glitch px-6 py-2 bg-black border border-cyan-500 text-cyan-400 font-bold uppercase tracking-widest hover:bg-cyan-950 transition" style="clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);">
+                        IMPORT_DATA
+                    </button>
+                    <button onclick="ui.closeApp()" class="text-red-500 hover:text-red-400 transition"><span class="material-icons-round text-3xl">power_settings_new</span></button>
+                </div>
+            </header>
+
+            <div id="folder-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 px-12"></div>
+            <div class="h-40"></div>
+        </div>
+
+        <div id="layer-tracks">
+            <div class="p-6 border-b border-cyan-900/50 flex items-center gap-4 bg-black/40">
+                <button onclick="ui.closeFolder()" class="hover-glitch p-2 border border-cyan-800 text-cyan-500" style="clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%, 0 20%);">
+                    <span class="material-icons-round text-xl">arrow_back_ios_new</span>
+                </button>
+                <div class="overflow-hidden">
+                    <h2 id="panel-title" class="text-2xl font-bold truncate text-neon-yellow italic font-['Orbitron']">DATA_SOURCE</h2>
+                    <p class="text-xs text-cyan-700 font-mono tracking-[2px]">/// TRACKLIST_LOADED</p>
+                </div>
+            </div>
+            <div id="track-list" class="flex-1 overflow-y-auto p-4 space-y-1 pb-32 scroll-smooth"></div>
+        </div>
+    </div>
+
+    <!-- 🎛️ Cyberpunk Parametric EQ Custom Modal -->
+    <div id="eq-modal" class="hidden fixed inset-0 z-[999999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4" onclick="ui.closeEqModal()">
+        <div class="w-[620px] bg-[#0a0a0d] border-2 border-cyan-400 p-6 shadow-[0_0_40px_rgba(0,247,255,0.3)] flex flex-col gap-4 font-['Rajdhani'] text-cyan-400" style="clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center border-b border-cyan-500/40 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="material-icons-round text-yellow-400 text-xl">equalizer</span>
+                    <h3 class="text-sm font-black text-yellow-400 tracking-widest italic font-['Orbitron']">AUDIO_EQ // PARAMETRIC FILTERS</h3>
+                </div>
+                <div class="flex items-center gap-4">
+                    <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-yellow-400">
+                        <input type="checkbox" id="eq-master-switch" onchange="ui.toggleEqMaster(this.checked)" class="accent-yellow-400 w-4 h-4 cursor-pointer">
+                        <span>EQ_ACTIVE</span>
+                    </label>
+                    <button onclick="ui.closeEqModal()" class="text-cyan-500 hover:text-white font-bold text-xl px-2">×</button>
+                </div>
+            </div>
+
+            <!-- Preset Controls -->
+            <div class="flex justify-between items-center bg-black/60 p-3 border border-cyan-500/30">
+                <div class="flex items-center gap-2 text-xs">
+                    <span class="text-gray-300 font-bold uppercase tracking-wider">Preset:</span>
+                    <select id="eq-preset-select" onchange="ui.applyEqPreset(this.value)" class="bg-black text-cyan-300 border border-cyan-500 px-3 py-1 text-xs font-bold focus:outline-none cursor-pointer">
+                        <option value="Flat">🎵 Flat (Default / 原音)</option>
+                        <option value="Rock">🎸 Rock (搖滾樂)</option>
+                        <option value="Vocal">🎤 Vocal Boost (人聲增強)</option>
+                        <option value="Bass">💥 Bass Boost (低音重砲)</option>
+                        <option value="Gaming">🎧 Gaming & Anime (動漫遊戲)</option>
+                        <option value="Jazz">🎷 Jazz (爵士樂)</option>
+                        <option value="Pop">🌸 Pop (流行娛樂)</option>
+                        <option value="Electronic">⚡ Cyber Electronic (賽博電子)</option>
+                    </select>
+                </div>
+                <button onclick="ui.resetEqGains()" class="px-4 py-1 bg-black hover:bg-yellow-950 text-xs font-bold text-yellow-400 border border-yellow-400 transition">
+                    RESET_FLAT
+                </button>
+            </div>
+
+            <!-- Frequency Response Curve Preview -->
+            <div class="w-full h-16 bg-black border border-cyan-500/40 relative overflow-hidden flex items-center justify-center">
+                <svg id="eq-curve-svg" class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 600 60">
+                    <path id="eq-curve-path" d="M 0 30 Q 300 30 600 30" fill="none" stroke="#fcee0a" stroke-width="2.5" stroke-linecap="round" />
+                </svg>
+                <div class="absolute inset-0 flex justify-between items-center px-4 pointer-events-none opacity-40 text-[9px] text-cyan-400 font-bold">
+                    <span>SUB-BASS</span><span>MID</span><span>TREBLE</span>
+                </div>
+            </div>
+
+            <!-- 10-Band Equalizer Sliders (-12dB to +12dB) -->
+            <div id="eq-bands-container" class="grid grid-cols-10 gap-2 bg-black/60 p-4 border border-cyan-500/30">
+            </div>
+
+            <div class="flex justify-between items-center text-[10px] text-cyan-600 border-t border-cyan-500/30 pt-2 font-mono">
+                <span>RANGE: -12dB ~ +12dB</span>
+                <span class="text-yellow-400 font-bold">CYBERPUNK AUDIO PIPELINE</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="player-bar flex items-center justify-between gap-6 px-6">
+        <!-- 1. 左側：專輯封面 + 歌名與狀態 -->
+        <div class="flex items-center gap-4 w-[280px] flex-shrink-0">
+            <div class="w-12 h-12 bg-black border border-cyan-500/50 relative overflow-hidden flex-shrink-0 shadow-[0_0_10px_rgba(0,247,255,0.2)]" style="clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);">
+                <img id="cover-art" src="" alt="Cover" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 grayscale">
+                <div class="absolute inset-0 bg-[length:100%_4px] pointer-events-none bg-[linear-gradient(rgba(0,247,255,0.15)50%,transparent_50%)]"></div>
+                <span class="material-icons-round absolute inset-0 flex items-center justify-center text-cyan-800/50 text-2xl">music_note</span>
+            </div>
+            <div class="overflow-hidden flex-1">
+                <div id="player-title" class="text-xs font-bold text-neon-yellow truncate tracking-wider font-['Orbitron']">SYSTEM_IDLE...</div>
+                <div class="flex items-center gap-1.5 mt-1 text-[10px] text-cyan-600 font-mono">
+                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                    <span class="tracking-widest">NIGHT_CITY_OS</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. 中間：播放控制核心 (置中、寬敞、不重疊) -->
+        <div class="flex-1 max-w-[480px] flex flex-col items-center justify-center gap-1.5">
+            <!-- 上排：上一首 / 播放暫停 / 下一首 -->
+            <div class="flex items-center justify-center gap-6">
+                <button onclick="pywebview.api.control('prev')" class="text-cyan-500 hover:text-neon-cyan transition hover-glitch p-1" title="上一首">
+                    <span class="material-icons-round text-2xl">skip_previous</span>
+                </button>
+                <button onclick="pywebview.api.control('play_pause')" class="btn-play-cyber shadow-[0_0_15px_rgba(0,247,255,0.3)]" title="播放/暫停">
+                    <span class="material-icons-round text-3xl" id="icon-play">play_arrow</span>
+                </button>
+                <button onclick="pywebview.api.control('next')" class="text-cyan-500 hover:text-neon-cyan transition hover-glitch p-1" title="下一首">
+                    <span class="material-icons-round text-2xl">skip_next</span>
+                </button>
+            </div>
+            <!-- 下排：當前時間 + 進度條 + 總時間 -->
+            <div class="w-full flex items-center gap-3 text-[10px] text-cyan-400 font-mono font-bold">
+                <span id="time-current" class="w-9 text-right">00:00</span>
+                <input type="range" id="seek-bar" min="0" max="100" value="0" class="flex-1 cursor-pointer accent-cyan-400" onchange="ui.seek(this.value)" oninput="ui.isDragging = true" onmouseup="ui.isDragging = false">
+                <span id="time-total" class="w-9 text-left">00:00</span>
+            </div>
+        </div>
+
+        <!-- 3. 右側：DSP 標籤 + 模式 + 開機音樂 + 主題選單 + 音量 -->
+        <div class="flex items-center gap-3 w-auto flex-shrink-0 pl-4 border-l border-cyan-800/40">
+            <!-- DSP 標籤 -->
+            <button id="btn-upsample" onclick="pywebview.api.toggle_audio_upsample()" class="px-2 py-0.5 text-[9px] font-bold border border-cyan-800 text-cyan-600 hover:text-neon-cyan hover:border-cyan-400 transition tracking-wider font-mono rounded-sm" title="Hi-Res Audio 192kHz Over-Sampling">HI-RES 192K</button>
+            <button id="btn-normalize" onclick="pywebview.api.toggle_audio_normalize()" class="px-2 py-0.5 text-[9px] font-bold border border-cyan-800 text-cyan-600 hover:text-neon-cyan hover:border-cyan-400 transition tracking-wider font-mono rounded-sm" title="EBU R128 Loudness Auto Normalization">EBU R128</button>
+            
+            <!-- 播放模式 -->
+            <button onclick="pywebview.api.toggle_play_mode()" class="text-cyan-600 hover:text-neon-cyan transition hover-glitch" title="播放模式">
+                <span id="icon-mode" class="material-icons-round text-lg">repeat</span>
+            </button>
+            
+            <!-- 開機音樂 -->
+            <button onclick="pywebview.api.toggle_boot_music()" class="text-cyan-600 hover:text-neon-magenta transition" title="開機音樂">
+                <span id="icon-boot" class="material-icons-round text-lg">music_note</span>
+            </button>
+
+            <!-- 主題選單 -->
+            <button id="btn-theme" onclick="ui.toggleThemeMenu()" class="text-cyan-600 hover:text-neon-cyan transition hover:rotate-90 duration-300" title="主題選單">
+                <span class="material-icons-round text-lg">palette</span>
+            </button>
+
+            <!-- 音量控制 -->
+            <div class="w-20 flex items-center gap-1.5 p-1 bg-black/40 border border-cyan-900/40 rounded-sm">
+                 <button onclick="pywebview.api.toggle_mute()" class="focus:outline-none"><span id="icon-volume" class="material-icons-round text-cyan-500 text-xs">volume_up</span></button>
+                 <input type="range" min="0" max="100" value="60" class="w-full h-1 accent-cyan-400 cursor-pointer" oninput="pywebview.api.control('volume', this.value)">
+            </div>
+        </div>
+    </div>
+
+    <!-- 浮動主題選單 (置於 body 根目錄，防 clip-path 裁切) -->
+    <div id="theme-menu">
+        <div class="bg-cyan-950/80 px-3 py-1.5 text-[10px] text-cyan-400 font-mono font-bold border-b border-cyan-800/60">/// SELECT_SKIN</div>
+        <button onclick="pywebview.api.change_theme('needy_theme.html')" class="menu-item">✨ Internet Angel</button>
+        <button onclick="pywebview.api.change_theme('cyberpunk.html')" class="menu-item active-skin">⚡ Cyberpunk</button>
+        <button onclick="pywebview.api.change_theme('mech_theme.html')" class="menu-item">🤖 Cyber Mech</button>
+        <button onclick="pywebview.api.change_theme('index.html')" class="menu-item">🎵 Default Dark</button>
+        <button onclick="pywebview.api.change_theme('light.html')" class="menu-item">🌸 Light Ambient</button>
+        <button onclick="pywebview.api.change_theme('image_theme.html')" class="menu-item">🖼️ Immersive Glass</button>
+    </div>
+
+    <script>
+        const ui = {
+    isDragging: false,
+    currentTrackPath: null,
+    isProcessing: false,
+    
+    initialized: false,
+    toggleThemeMenu: () => {
+        const menu = document.getElementById('theme-menu');
+        const btn = document.getElementById('btn-theme');
+        if (!menu || !btn) return;
+        
+        const isHidden = (menu.style.display === 'none' || menu.style.display === '');
+        if (isHidden) {
+            const rect = btn.getBoundingClientRect();
+            menu.style.position = 'fixed';
+            menu.style.zIndex = '99999';
+            menu.style.bottom = (window.innerHeight - rect.top + 12) + 'px';
+            menu.style.right = (window.innerWidth - rect.right) + 'px';
+            menu.style.display = 'block';
+            setTimeout(() => { document.addEventListener('click', ui.closeThemeMenuOutside); }, 0);
+        } else {
+            ui.closeThemeMenu();
+        }
+    },
+    
+    closeThemeMenu: () => {
+        const menu = document.getElementById('theme-menu');
+        if (menu) menu.style.display = 'none';
+        document.removeEventListener('click', ui.closeThemeMenuOutside);
+    },
+    
+    closeThemeMenuOutside: (e) => {
+        const menu = document.getElementById('theme-menu');
+        const btn = document.getElementById('btn-theme');
+        if (menu && menu.style.display === 'block' && !menu.contains(e.target) && btn && !btn.contains(e.target)) { 
+            ui.closeThemeMenu(); 
+        }
+    },
+
+    init: async () => {
+        if (ui.initialized) return;
+        ui.initialized = true;
+
+        ui.syncState();
+        try { ui.loadFolders(); } catch(e) {}
+
+        if (window.pywebview && pywebview.api) {
+            try {
+                const bootState = await pywebview.api.get_boot_state();
+                ui.updateBootState(bootState);
+                pywebview.api.start_mpv().catch(() => {});
+            } catch(e) {}
+            try { await ui.initEqUI(); } catch(e) {}
+            ui.syncState();
+        }
+
+        setInterval(ui.syncState, 500);
+    },
+
+    // 🎛️ Parametric EQ Controller
+    eqBands: [
+        { freq: '60Hz', label: 'Sub-Bass' },
+        { freq: '170Hz', label: 'Bass' },
+        { freq: '310Hz', label: 'Low-Mid' },
+        { freq: '600Hz', label: 'Mid' },
+        { freq: '1kHz', label: 'Mid-High' },
+        { freq: '3kHz', label: 'Presence' },
+        { freq: '6kHz', label: 'High' },
+        { freq: '12kHz', label: 'Treble' },
+        { freq: '14kHz', label: 'Air' },
+        { freq: '16kHz', label: 'Ultra High' }
+    ],
+    eqPresets: {
+        Flat: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        Rock: [4, 3, 2, 0, -1, 1, 3, 4, 4, 3],
+        Vocal: [-2, -1, 1, 3, 4, 3, 2, 1, 0, 0],
+        Bass: [6, 5, 4, 2, 0, -1, -2, -1, 0, 0],
+        Gaming: [3, 2, 0, -1, 1, 3, 4, 5, 4, 3],
+        Jazz: [3, 2, 1, 2, -1, -1, 0, 1, 2, 3],
+        Pop: [-1, 2, 4, 5, 3, 0, -1, 2, 3, 2],
+        Electronic: [5, 4, 2, 0, -2, 2, 3, 4, 5, 5]
+    },
+    currentEqGains: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    isEqEnabled: false,
+
+    toggleEqModal: () => {
+        const modal = document.getElementById('eq-modal');
+        if (modal) modal.classList.toggle('hidden');
+    },
+    closeEqModal: () => {
+        const modal = document.getElementById('eq-modal');
+        if (modal) modal.classList.add('hidden');
+    },
+    openEqModal: () => {
+        const modal = document.getElementById('eq-modal');
+        if (modal) modal.classList.remove('hidden');
+    },
+
+    initEqUI: async () => {
+        const container = document.getElementById('eq-bands-container');
+        if (!container) return;
+
+        container.innerHTML = ui.eqBands.map((b, idx) => `
+            <div class="flex flex-col items-center gap-1 min-w-0">
+                <span id="eq-db-${idx}" class="text-[10px] font-bold text-yellow-400">0dB</span>
+                <div class="h-28 flex items-center justify-center relative w-full overflow-hidden">
+                    <input type="range" id="eq-slider-${idx}" min="-12" max="12" step="0.5" value="0"
+                        class="w-24 h-1.5 bg-black accent-yellow-400 cursor-pointer rounded-lg -rotate-90 transform origin-center"
+                        oninput="ui.onEqSliderInput(${idx}, this.value)">
+                </div>
+                <span class="text-[10px] font-bold text-cyan-400 mt-1">${b.freq}</span>
+                <span class="text-[8px] text-cyan-600 truncate w-full text-center">${b.label}</span>
+            </div>
+        `).join('');
+
+        if (window.pywebview && pywebview.api && pywebview.api.get_eq_settings) {
+            try {
+                const st = await pywebview.api.get_eq_settings();
+                if (st) {
+                    ui.isEqEnabled = !!st.enabled;
+                    if (st.gains && Array.isArray(st.gains)) {
+                        ui.currentEqGains = st.gains.map(v => parseFloat(v) || 0);
+                    }
+                    const master = document.getElementById('eq-master-switch');
+                    if (master) master.checked = ui.isEqEnabled;
+                    const select = document.getElementById('eq-preset-select');
+                    if (select && st.preset) select.value = st.preset;
+                    ui.syncEqSlidersUI();
+                }
+            } catch(e) {}
+        }
+    },
+
+    onEqSliderInput: (idx, val) => {
+        const numVal = parseFloat(val) || 0;
+        ui.currentEqGains[idx] = numVal;
+        const dbEl = document.getElementById(`eq-db-${idx}`);
+        if (dbEl) dbEl.innerText = (numVal > 0 ? '+' : '') + numVal + 'dB';
+        ui.updateEqCurve();
+
+        if (ui.isEqEnabled) {
+            if (ui._eqDebounceTimer) clearTimeout(ui._eqDebounceTimer);
+            ui._eqDebounceTimer = setTimeout(() => {
+                if (window.pywebview && pywebview.api && pywebview.api.set_eq_settings) {
+                    pywebview.api.set_eq_settings(true, ui.currentEqGains).catch(() => {});
+                }
+            }, 40);
+        }
+    },
+
+    toggleEqMaster: (enabled) => {
+        ui.isEqEnabled = !!enabled;
+        if (window.pywebview && pywebview.api && pywebview.api.set_eq_settings) {
+            pywebview.api.set_eq_settings(ui.isEqEnabled, ui.currentEqGains).catch(() => {});
+        }
+    },
+
+    applyEqPreset: (presetName) => {
+        const gains = ui.eqPresets[presetName] || ui.eqPresets['Flat'];
+        ui.currentEqGains = [...gains];
+        ui.syncEqSlidersUI();
+        if (window.pywebview && pywebview.api && pywebview.api.set_eq_settings) {
+            pywebview.api.set_eq_settings(ui.isEqEnabled, ui.currentEqGains, presetName).catch(() => {});
+        }
+    },
+
+    resetEqGains: () => {
+        const select = document.getElementById('eq-preset-select');
+        if (select) select.value = 'Flat';
+        ui.applyEqPreset('Flat');
+    },
+
+    syncEqSlidersUI: () => {
+        ui.currentEqGains.forEach((val, idx) => {
+            const slider = document.getElementById(`eq-slider-${idx}`);
+            if (slider) slider.value = val;
+            const dbEl = document.getElementById(`eq-db-${idx}`);
+            if (dbEl) dbEl.innerText = (val > 0 ? '+' : '') + val + 'dB';
+        });
+        ui.updateEqCurve();
+    },
+
+    updateEqCurve: () => {
+        const pathEl = document.getElementById('eq-curve-path');
+        if (!pathEl) return;
+        const gains = ui.currentEqGains;
+        const width = 600;
+        const step = width / (gains.length - 1);
+        const points = gains.map((g, i) => {
+            const x = i * step;
+            const y = 30 - (g * 2.2);
+            return { x, y };
+        });
+
+        let d = `M ${points[0].x} ${points[0].y}`;
+        for (let i = 0; i < points.length - 1; i++) {
+            const p1 = points[i];
+            const p2 = points[i + 1];
+            const cx = (p1.x + p2.x) / 2;
+            d += ` Q ${p1.x} ${p1.y}, ${cx} ${(p1.y + p2.y) / 2}`;
+        }
+        d += ` L ${points[points.length - 1].x} ${points[points.length - 1].y}`;
+        pathEl.setAttribute('d', d);
+    },
+
+    syncState: async () => {
+        try {
+            if (!window.pywebview || !pywebview.api || !pywebview.api.get_playback_status) return;
+            const st = await pywebview.api.get_playback_status();
+            if (!st) return;
+
+            if (st.title && st.title !== "AWAITING_MEDIA") {
+                ui.updateTitle(st.title);
+            }
+            if (st.duration > 0) {
+                ui.updateDuration(st.duration);
+            }
+            if (st.position >= 0) {
+                ui.updateProgress(st.position);
+            }
+            if (st.cover_url) {
+                ui.updateCover(st.cover_url);
+            }
+            ui.updatePlayState(!st.is_playing);
+            if (st.is_muted !== undefined) ui.updateMuteState(st.is_muted);
+            if (st.play_mode) ui.updatePlayMode(st.play_mode);
+        } catch(e) {}
+    },
+    updateBootState: (enabled) => {
+        const icon = document.getElementById('icon-boot');
+        if (enabled) {
+            icon.classList.add('text-neon-magenta'); 
+            icon.classList.remove('text-cyan-700');
+        } else {
+            icon.classList.add('text-cyan-700'); 
+            icon.classList.remove('text-neon-magenta');
+        }
+    },
+    encodePath: (str) => encodeURIComponent(str).replace(/'/g, "%27"),
+
+    loadFolders: async () => {
+        const folders = await pywebview.api.get_library_folders();
+        const grid = document.getElementById('folder-grid');
+        
+        grid.innerHTML = folders.map((f, index) => {
+            const safePath = ui.encodePath(f.path);
+            const safeNameAttr = f.name.replace(/"/g, "&quot;");
+            const displayName = f.name.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            const dataCode = `DAT_${(index + 101).toString(16).toUpperCase()}`;
+
+            return `
+            <div class="folder-card rounded-none overflow-hidden cursor-pointer group flex flex-col"
+                data-path="${safePath}"
+                data-name="${safeNameAttr}"
+                onclick="ui.handleFolderClick(this)">
+                
+                <div class="aspect-square bg-black/50 relative overflow-hidden">
+                    <div class="absolute inset-0 z-10 pointer-events-none bg-[linear-gradient(transparent_2px,rgba(0,0,0,0.6)_2px)] bg-[length:100%_4px]"></div>
+                    ${f.cover 
+                        ? `<img src="" data-src="${f.cover}" alt="Cover" class="lazy-img absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110 group-hover:rotate-1 opacity-0 grayscale group-hover:grayscale-0">` 
+                        : `<div class="absolute inset-0 flex items-center justify-center"><span class="material-icons-round text-5xl text-cyan-800/40 group-hover:text-cyan-400/80 transition">folder_open</span></div>`
+                    }
+                    <div class="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-cyan-500/50 z-20" style="clip-path: polygon(0 0, 100% 100%, 0 100%);"></div>
+                </div>
+
+                <div class="p-4 flex-1 flex flex-col justify-between bg-black/20 relative">
+                    <div class="absolute top-0 right-0 p-1"><span class="text-[10px] font-mono text-cyan-800">${dataCode}</span></div>
+                    <div>
+                        <h3 class="font-bold text-cyan-100 text-sm truncate tracking-wider group-hover:text-neon-cyan transition font-['Orbitron']" title="${safeNameAttr}">${displayName}</h3>
+                         <div class="w-10 h-0.5 bg-cyan-800 group-hover:bg-cyan-400 transition mt-2 mb-1"></div>
+                    </div>
+                    <p class="text-[10px] text-cyan-600 font-mono uppercase">/// ACCESSABLE</p>
+                </div>
+            </div>`;
+        }).join('');
+        ui.lazyLoadImages();
+    },
+
+    handleFolderClick: (el) => {
+        if (ui.isProcessing) return;
+        const path = decodeURIComponent(el.dataset.path);
+        const name = el.dataset.name;
+        ui.openFolder(path, name);
+    },
+
+    openFolder: async (path, name) => {
+        const titleEl = document.getElementById('panel-title');
+        titleEl.innerText = name;
+        
+        document.getElementById('layer-folders').classList.add('depth-mode');
+        document.getElementById('layer-tracks').classList.add('active');
+        
+        const list = document.getElementById('track-list');
+        list.innerHTML = `<div class="text-center py-20 text-cyan-500 animate-pulse font-mono tracking-widest">INITIALIZING_SCAN<span class="animate-ping">_</span></div>`;
+        
+        const tracks = await pywebview.api.get_folder_tracks(path);
+        
+        list.innerHTML = tracks.map((t, idx) => {
+            const cleanPath = t.path.replace(/\\/g, '/');
+            const isActive = (cleanPath === ui.currentTrackPath);
+            const safePath = ui.encodePath(t.path);
+            let name = t.filename.replace(/\.[^/.]+$/, ""); 
+            const displayName = name.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            const trackId = String(idx + 1).padStart(2, '0');
+            
+            return `
+            <div class="track-item flex items-center gap-3 p-3 pl-4 transition cursor-pointer group ${isActive ? 'active' : ''}"
+                data-path="${cleanPath}"
+                onclick="ui.handleTrackClick('${safePath}')">
+                
+                <div class="w-10 text-xs text-cyan-600/70 font-mono flex items-center justify-end">
+                    <span class="track-num ${isActive ? 'hidden' : ''}">[${trackId}]</span>
+                    <div class="playing-anim ${isActive ? 'flex' : 'hidden'} gap-1">
+                        <div class="w-1 h-3 bg-yellow-400 animate-pulse"></div>
+                        <div class="w-1 h-5 bg-yellow-400 animate-pulse delay-75"></div>
+                    </div>
+                </div>
+
+                <div class="flex-1 min-w-0 relative">
+                    <div class="track-title text-sm font-semibold text-cyan-300 truncate tracking-wider transition group-hover:text-cyan-100">${displayName}</div>
+                </div>
+            </div>`;
+        }).join('');
+    },
+
+    handleTrackClick: async (encodedPath) => {
+        if (ui.isProcessing) return;
+        const path = decodeURIComponent(encodedPath);
+        ui.isProcessing = true;
+        ui.highlightTrack(path);
+        try { await pywebview.api.play_video(path); } catch (e) {} 
+        finally { setTimeout(() => { ui.isProcessing = false; }, 300); }
+    },
+
+    highlightTrack: (path) => {
+        const cleanPath = path.replace(/\\/g, '/');
+        ui.currentTrackPath = cleanPath; 
+        const trackLayer = document.getElementById('layer-tracks');
+        if (!trackLayer.classList.contains('active')) return;
+
+        document.querySelectorAll('.track-item.active').forEach(el => {
+            el.classList.remove('active');
+            el.querySelector('.track-num').classList.remove('hidden');
+        });
+
+        try {
+            const newActive = document.querySelector(`.track-item[data-path="${CSS.escape(cleanPath)}"]`);
+            if (newActive) {
+                newActive.classList.add('active');
+                newActive.querySelector('.track-num').classList.add('hidden');
+                newActive.scrollIntoView({behavior: "smooth", block: "nearest"});
+            }
+        } catch(e) {}
+    },
+
+    closeFolder: () => {
+        document.getElementById('layer-folders').classList.remove('depth-mode');
+        document.getElementById('layer-tracks').classList.remove('active');
+    },
+
+    scanFolder: async () => { 
+        if (ui.isProcessing) return;
+        ui.isProcessing = true;
+        await pywebview.api.scan_folder(); 
+        await ui.loadFolders();
+        ui.isProcessing = false;
+    },
+
+    toFileUrl: (path) => {
+        if (!path) return '';
+        if (path.startsWith('file://')) return path;
+        return 'file:///' + path.replace(/\\/g, '/');
+    },
+
+    lazyLoadImages: () => {
+        const imgs = document.querySelectorAll('.lazy-img');
+        for (const img of imgs) {
+            const src = img.dataset.src;
+            if (src) {
+                img.src = ui.toFileUrl(src);
+                img.classList.remove('opacity-0', 'hidden');
+            }
+        }
+    },
+
+    updateTitle: (t) => { document.getElementById('player-title').innerText = t; },
+    updateProgress: (s) => {
+        if (ui.isDragging) return;
+        const bar = document.getElementById('seek-bar');
+        bar.value = s;
+        document.getElementById('time-current').innerText = ui.formatTime(s);
+        const percent = (s / bar.max) * 100;
+        bar.style.background = `linear-gradient(90deg, var(--cp-cyan) ${percent}%, rgba(0,247,255,0.2) ${percent}%)`;
+    },
+    updateDuration: (d) => {
+        document.getElementById('seek-bar').max = d;
+        document.getElementById('time-total').innerText = ui.formatTime(d);
+    },
+    updateCover: (url) => {
+        const img = document.getElementById('cover-art');
+        if (url) { img.src = url; img.classList.remove('opacity-0'); }
+        else { img.classList.add('opacity-0'); }
+    },
+    updatePlayState: (p) => {
+        document.getElementById('icon-play').innerText = !p ? 'pause' : 'play_arrow';
+    },
+    updatePlayMode: (mode) => {
+        const icon = document.getElementById('icon-mode');
+        if (!icon) return;
+        const btn = icon.closest('button');
+        if (mode === 'loop') {
+            icon.innerText = 'repeat';
+            if (btn) btn.title = "Mode: Repeat All (列表循環)";
+        } else if (mode === 'shuffle') {
+            icon.innerText = 'shuffle';
+            if (btn) btn.title = "Mode: Shuffle (隨機播放)";
+        } else if (mode === 'one') {
+            icon.innerText = 'repeat_one';
+            if (btn) btn.title = "Mode: Repeat One (單曲循環)";
+        } else if (mode === 'album_continue') {
+            icon.innerText = 'library_music';
+            if (btn) btn.title = "Mode: Album Continue (播完自動銜接下一專輯)";
+        }
+    },
+    updateMuteState: (muted) => {
+        const icon = document.getElementById('icon-volume');
+        if (!icon) return;
+        if (muted) { icon.innerText = 'volume_off'; icon.classList.add('text-red-500'); }
+        else { icon.innerText = 'volume_up'; icon.classList.remove('text-red-500'); }
+    },
+    updateBootState: (enabled) => {
+        const icon = document.getElementById('icon-boot');
+        if (!icon) return;
+        if (enabled) {
+            icon.classList.add('text-neon-magenta');
+            icon.classList.remove('text-cyan-700');
+        } else {
+            icon.classList.add('text-cyan-700');
+            icon.classList.remove('text-neon-magenta');
+        }
+    },
+    updateUpsampleState: (state) => {
+        const btn = document.getElementById('btn-upsample');
+        if (!btn) return;
+        if (state) {
+            btn.innerHTML = 'HI-RES 192K <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block ml-1 animate-ping"></span>';
+            btn.className = "px-2.5 py-0.5 text-[9px] font-bold border border-yellow-400 text-neon-yellow shadow-[0_0_12px_rgba(252,238,10,0.8)] bg-yellow-400/20 transition cursor-pointer font-mono flex items-center";
+        } else {
+            btn.innerHTML = 'HI-RES 192K';
+            btn.className = "px-2 py-0.5 text-[9px] font-bold border border-cyan-800 text-cyan-600 hover:text-neon-cyan hover:border-cyan-400 transition tracking-wider font-mono cursor-pointer";
+        }
+    },
+    updateNormalizeState: (state) => {
+        const btn = document.getElementById('btn-normalize');
+        if (!btn) return;
+        if (state) {
+            btn.innerHTML = 'EBU R128 <span class="w-1.5 h-1.5 rounded-full bg-pink-400 inline-block ml-1 animate-ping"></span>';
+            btn.className = "px-2.5 py-0.5 text-[9px] font-bold border border-pink-500 text-neon-magenta shadow-[0_0_12px_rgba(255,0,230,0.8)] bg-pink-500/20 transition cursor-pointer font-mono flex items-center";
+        } else {
+            btn.innerHTML = 'EBU R128';
+            btn.className = "px-2 py-0.5 text-[9px] font-bold border border-cyan-800 text-cyan-600 hover:text-neon-cyan hover:border-cyan-400 transition tracking-wider font-mono cursor-pointer";
+        }
+    },
+    formatTime: (s) => {
+        if (!s || isNaN(s)) return "00:00";
+        return `${Math.floor(s/60).toString().padStart(2,'0')}:${Math.floor(s%60).toString().padStart(2,'0')}`;
+    },
+    seek: (v) => { pywebview.api.control('seek', v); ui.isDragging = false; },
+    closeApp: () => {
+        document.body.style.filter = 'hue-rotate(90deg) invert(1)';
+        setTimeout(() => pywebview.api.close_app(), 300);
+    }
+};
+
+if (window.pywebview && window.pywebview.api) {
+    ui.init();
+} else {
+    window.addEventListener('pywebviewready', ui.init);
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => { if (!ui.initialized) ui.init(); }, 100);
+    });
+}
+    </script>
+</body>
+</html>

@@ -1,0 +1,2720 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPlay - Mech Enhanced</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&family=Exo+2:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <style>
+        /* ============================================
+           THEME CONFIGURATION SYSTEM
+           主題配置系統 - 可通過 JS 動態修改
+        ============================================ */
+        :root {
+            /* 主色調 - 可配置 */
+            --mech-primary: #ffb300;
+            --mech-primary-rgb: 255, 179, 0;
+            --mech-secondary: #ff6b35;
+            --mech-accent: #ffd54f;
+            
+            /* 背景色調 */
+            --mech-bg-dark: #0a0a0c;
+            --mech-bg-panel: rgba(12, 12, 14, 0.92);
+            --mech-bg-card: rgba(20, 20, 22, 0.6);
+            
+            /* 邊框與發光 */
+            --mech-border: rgba(255, 179, 0, 0.25);
+            --mech-glow: 0 0 20px rgba(255, 179, 0, 0.4);
+            --mech-glow-strong: 0 0 40px rgba(255, 179, 0, 0.6);
+            
+            /* 文字顏色 */
+            --mech-text-primary: #e4e4e7;
+            --mech-text-secondary: #9ca3af;
+            --mech-text-muted: #6b7280;
+            
+            /* 動畫速度 */
+            --anim-speed-fast: 0.15s;
+            --anim-speed-normal: 0.3s;
+            --anim-speed-slow: 0.6s;
+            
+            /* UI 設置 */
+            --ui-density: 1;
+            --particle-count: 25;
+            --scanline-opacity: 0.08;
+        }
+
+        /* 主題變體 - 青色 */
+        [data-theme="cyan"] {
+            --mech-primary: #00d4ff;
+            --mech-primary-rgb: 0, 212, 255;
+            --mech-secondary: #0099cc;
+            --mech-accent: #80e5ff;
+            --mech-border: rgba(0, 212, 255, 0.25);
+            --mech-glow: 0 0 20px rgba(0, 212, 255, 0.4);
+            --mech-glow-strong: 0 0 40px rgba(0, 212, 255, 0.6);
+        }
+
+        /* 主題變體 - 紫色 */
+        [data-theme="purple"] {
+            --mech-primary: #a855f7;
+            --mech-primary-rgb: 168, 85, 247;
+            --mech-secondary: #7c3aed;
+            --mech-accent: #c4b5fd;
+            --mech-border: rgba(168, 85, 247, 0.25);
+            --mech-glow: 0 0 20px rgba(168, 85, 247, 0.4);
+            --mech-glow-strong: 0 0 40px rgba(168, 85, 247, 0.6);
+        }
+
+        /* 主題變體 - 紅色 */
+        [data-theme="red"] {
+            --mech-primary: #ef4444;
+            --mech-primary-rgb: 239, 68, 68;
+            --mech-secondary: #dc2626;
+            --mech-accent: #fca5a5;
+            --mech-border: rgba(239, 68, 68, 0.25);
+            --mech-glow: 0 0 20px rgba(239, 68, 68, 0.4);
+            --mech-glow-strong: 0 0 40px rgba(239, 68, 68, 0.6);
+        }
+
+        /* 主題變體 - 綠色 */
+        [data-theme="green"] {
+            --mech-primary: #22c55e;
+            --mech-primary-rgb: 34, 197, 94;
+            --mech-secondary: #16a34a;
+            --mech-accent: #86efac;
+            --mech-border: rgba(34, 197, 94, 0.25);
+            --mech-glow: 0 0 20px rgba(34, 197, 94, 0.4);
+            --mech-glow-strong: 0 0 40px rgba(34, 197, 94, 0.6);
+        }
+
+        /* ============================================
+           BASE STYLES
+        ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', 'Exo 2', sans-serif;
+            background-color: var(--mech-bg-dark);
+            color: var(--mech-text-primary);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* ============================================
+           DYNAMIC BACKGROUND SYSTEM
+           動態背景系統
+        ============================================ */
+/* ============================================
+           DYNAMIC BACKGROUND SYSTEM (REVISED)
+           動態背景系統 - 修正版
+        ============================================ */
+        .bg-container {
+            position: fixed;
+            inset: 0;
+            z-index: -3;
+            /* 預設無圖片 */
+            background-image: none;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: var(--mech-bg-dark);
+            filter: brightness(0.4) contrast(1.1); 
+            transition: all 1.5s ease-in-out;
+        }
+
+        /* 3. 當進入待機模式時，大幅提高亮度與清晰度 */
+        body.hud-idle .bg-container {
+            filter: brightness(1.0) contrast(1.05); /* 回復原本圖片亮度 */
+            transform: scale(1.02); /* 微微放大產生運鏡感 */
+        }
+
+        /* 額外：待機時讓掃描線變淡，以免遮擋圖片 */
+        body.hud-idle .scanlines,
+        body.hud-idle .grid-overlay {
+            opacity: 0.3;
+            transition: opacity 1s ease;
+        }
+
+        /* 粒子背景 Canvas */
+        #particle-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* 掃描線效果 */
+        .scanlines {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, var(--scanline-opacity)) 2px,
+                rgba(0, 0, 0, var(--scanline-opacity)) 4px
+            );
+            animation: scanline-move 8s linear infinite;
+        }
+
+        @keyframes scanline-move {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(4px); }
+        }
+
+        /* 網格覆蓋 */
+        .grid-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background-image: 
+                linear-gradient(rgba(var(--mech-primary-rgb), 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(var(--mech-primary-rgb), 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.5;
+        }
+
+        /* ============================================
+           3D STAGE SYSTEM
+        ============================================ */
+        #stage-perspective {
+            perspective: 1500px;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ============================================
+           IDLE MODE SYSTEM
+           待機模式系統
+        ============================================ */
+        .hud-content {
+            transition: all var(--anim-speed-slow) cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        body.hud-idle .hud-content {
+            opacity: 0.15;
+            transform: scale(0.95);
+            filter: blur(8px);
+            pointer-events: none;
+        }
+
+        body.hud-idle header {
+            opacity: 0.3;
+            transform: translateY(-30px);
+        }
+
+        /* 待機覆蓋層 */
+        #idle-overlay {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.8s ease 0.3s;
+        }
+
+        body.hud-idle #idle-overlay {
+            opacity: 1;
+        }
+
+        .standby-core {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+
+        .standby-ring {
+            position: absolute;
+            inset: 0;
+            border: 2px solid rgba(var(--mech-primary-rgb), 0.2);
+            border-radius: 50%;
+            animation: standby-pulse 3s ease-in-out infinite;
+        }
+
+        .standby-ring:nth-child(2) {
+            inset: 20px;
+            animation-delay: -0.5s;
+            border-color: rgba(var(--mech-primary-rgb), 0.15);
+        }
+
+        .standby-ring:nth-child(3) {
+            inset: 40px;
+            animation-delay: -1s;
+            border-color: rgba(var(--mech-primary-rgb), 0.1);
+        }
+
+        .standby-text {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 10px;
+            letter-spacing: 8px;
+            color: rgba(var(--mech-primary-rgb), 0.5);
+            text-transform: uppercase;
+        }
+
+        @keyframes standby-pulse {
+            0%, 100% { 
+                transform: scale(0.95); 
+                opacity: 0.3;
+                border-color: rgba(var(--mech-primary-rgb), 0.1);
+            }
+            50% { 
+                transform: scale(1.05); 
+                opacity: 0.8;
+                border-color: rgba(var(--mech-primary-rgb), 0.4);
+            }
+        }
+
+        /* ============================================
+           HEADER STYLES
+        ============================================ */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            padding: 24px 32px 40px; /* 增加底部 padding 讓漸層更自然 */
+            /* 修改背景：使用漸層淡出，而不是硬切的模糊 */
+            background: linear-gradient(180deg, 
+                var(--mech-bg-dark) 0%, 
+                rgba(10,10,12, 0.95) 40%, 
+                rgba(10,10,12, 0.6) 70%, 
+                transparent 100%);
+            /* 使用 mask 讓模糊邊緣柔和消失 */
+            backdrop-filter: blur(8px);
+            -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+            mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+            transition: all var(--anim-speed-slow) ease;
+            margin-bottom: -20px; /* 補償 padding 造成的空間 */
+            pointer-events: none; /* 讓 header 背景不阻擋點擊 */
+        }
+
+        /* 讓 header 內的內容可以被點擊 */
+        header > * {
+            pointer-events: auto;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-hex {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(var(--mech-primary-rgb), 0.2), rgba(var(--mech-primary-rgb), 0.05));
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            border: 1px solid var(--mech-border);
+            animation: logo-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes logo-pulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(var(--mech-primary-rgb), 0.3); }
+            50% { box-shadow: 0 0 20px rgba(var(--mech-primary-rgb), 0.6); }
+        }
+
+        .logo-icon .material-icons-round {
+            color: var(--mech-primary);
+            font-size: 24px;
+            z-index: 1;
+            text-shadow: 0 0 10px rgba(var(--mech-primary-rgb), 0.5);
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 900;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #fff 0%, var(--mech-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-text span {
+            color: var(--mech-primary);
+            -webkit-text-fill-color: var(--mech-primary);
+        }
+
+        /* ============================================
+           BUTTON STYLES
+        ============================================ */
+        .btn-mech {
+            position: relative;
+            padding: 12px 24px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--mech-border);
+            color: var(--mech-primary);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all var(--anim-speed-normal) ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+        }
+
+        .btn-mech::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(var(--mech-primary-rgb), 0.2), transparent);
+            opacity: 0;
+            transition: opacity var(--anim-speed-normal);
+        }
+
+        .btn-mech:hover {
+            background: rgba(var(--mech-primary-rgb), 0.15);
+            border-color: var(--mech-primary);
+            box-shadow: var(--mech-glow);
+            transform: translateY(-2px);
+        }
+
+        .btn-mech:hover::before {
+            opacity: 1;
+        }
+
+        .btn-mech:active {
+            transform: translateY(0);
+        }
+
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            justify-content: center;
+        }
+
+        .btn-danger {
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: #ef4444;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+        }
+
+        /* ============================================
+           FOLDER GRID & CARDS
+        ============================================ */
+        #layer-folders {
+            width: 100%;
+            height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-bottom: 160px;
+            transition: all var(--anim-speed-slow) cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        #layer-folders.depth-mode {
+            transform: scale(0.92) translateZ(-80px);
+            opacity: 0.3;
+            filter: blur(4px);
+            pointer-events: none;
+        }
+
+        #folder-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 24px;
+            padding: 0 32px;
+        }
+
+        .folder-card {
+            position: relative;
+            background: var(--mech-bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            
+            /* 修改 1: 優化動畫效能，只針對會變動的屬性做轉場 */
+            transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1), 
+                        box-shadow 0.3s ease, 
+                        border-color 0.3s ease;
+            
+            /* 修改 2: 告訴瀏覽器這個元素會常變形，請啟用硬體加速 */
+            will-change: transform; 
+            transform-style: preserve-3d;
+            /* 修正閃爍問題 */
+            backface-visibility: hidden; 
+        }
+        .is-scrolling .folder-card {
+            pointer-events: none; /* 關鍵：捲動時滑鼠穿透，不觸發 Hover */
+        }
+        .folder-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(var(--mech-primary-rgb), 0.1), transparent);
+            opacity: 0;
+            transition: opacity var(--anim-speed-normal);
+        }
+
+        .folder-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--mech-primary), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .folder-card:hover {
+            border-color: var(--mech-primary);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.5),
+                var(--mech-glow);
+        }
+
+        .folder-card:hover::before {
+            opacity: 1;
+        }
+
+        .folder-card:hover::after {
+            left: 100%;
+        }
+
+        .folder-cover {
+            aspect-ratio: 1;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2));
+        }
+
+        .folder-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all var(--anim-slow) ease;
+        }
+
+        .folder-card:hover .folder-cover img {
+            transform: scale(1.1);
+            filter: grayscale(0);
+        }
+
+        .folder-cover .folder-icon {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .folder-cover .material-icons-round {
+            font-size: 64px;
+            color: rgba(255, 255, 255, 0.1);
+            transition: all var(--anim-speed-normal);
+        }
+
+        .folder-card:hover .folder-cover .material-icons-round {
+            color: var(--mech-primary);
+            text-shadow: var(--mech-glow);
+            transform: scale(1.1);
+        }
+
+        .folder-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--mech-primary);
+            color: #000;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 8px;
+            clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px);
+        }
+
+        .folder-info {
+            padding: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .folder-name {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--mech-text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: color var(--anim-speed-normal);
+        }
+
+        .folder-card:hover .folder-name {
+            color: var(--mech-primary);
+        }
+
+        /* ============================================
+           TRACKS PANEL (SIDE)
+        ============================================ */
+        #layer-tracks {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            max-width: 520px;
+            height: 100%;
+            background: var(--mech-bg-panel);
+            backdrop-filter: blur(24px) saturate(150%);
+            border-left: 1px solid var(--mech-border);
+            transform: translateX(110%);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -30px 0 60px rgba(0, 0, 0, 0.6);
+        }
+
+        #layer-tracks.active {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        body.hud-idle #layer-tracks.active {
+            transform: translateX(30px);
+            opacity: 0.2;
+            filter: blur(8px);
+        }
+
+        .tracks-header {
+            padding: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-back {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--mech-text-secondary);
+            cursor: pointer;
+            transition: all var(--anim-speed-normal);
+        }
+
+        .btn-back:hover {
+            background: rgba(var(--mech-primary-rgb), 0.15);
+            border-color: var(--mech-primary);
+            color: var(--mech-primary);
+            transform: translateX(-4px);
+        }
+
+        .tracks-title-area {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .tracks-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--mech-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-shadow: 0 0 10px rgba(var(--mech-primary-rgb), 0.3);
+        }
+
+        .tracks-subtitle {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: var(--mech-text-muted);
+            margin-top: 4px;
+        }
+
+        #track-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 20px 160px;
+            scroll-behavior: smooth;
+        }
+
+        .track-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 18px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid transparent;
+            border-left: 3px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all var(--anim-speed-normal);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .track-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 0;
+            background: linear-gradient(90deg, rgba(var(--mech-primary-rgb), 0.2), transparent);
+            transition: width var(--anim-speed-normal);
+        }
+
+        .track-item:hover {
+            background: rgba(var(--mech-primary-rgb), 0.08);
+            border-color: rgba(var(--mech-primary-rgb), 0.2);
+            border-left-color: var(--mech-primary);
+            transform: translateX(8px);
+        }
+
+        .track-item:hover::before {
+            width: 100%;
+        }
+
+        .track-item.active {
+            background: linear-gradient(90deg, rgba(var(--mech-primary-rgb), 0.15), rgba(var(--mech-primary-rgb), 0.05));
+            border-left-color: var(--mech-primary);
+            border-color: rgba(var(--mech-primary-rgb), 0.3);
+        }
+
+        .track-item.active .track-number {
+            color: var(--mech-primary);
+        }
+
+        .track-item.active .track-title {
+            color: var(--mech-primary);
+            text-shadow: 0 0 8px rgba(var(--mech-primary-rgb), 0.4);
+        }
+
+        .track-number {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 12px;
+            color: var(--mech-text-muted);
+            width: 32px;
+            text-align: right;
+            transition: color var(--anim-speed-normal);
+        }
+
+        .track-title {
+            flex: 1;
+            font-size: 14px;
+            color: var(--mech-text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: all var(--anim-speed-normal);
+        }
+
+        .track-item:hover .track-title {
+            color: var(--mech-text-primary);
+        }
+
+        .track-status {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 9px;
+            color: var(--mech-text-muted);
+            opacity: 0;
+            transition: all var(--anim-speed-normal);
+        }
+
+        .track-item:hover .track-status {
+            opacity: 1;
+            color: var(--mech-primary);
+        }
+
+        /* ============================================
+           PLAYER BAR (TACTICAL MILITARY-INDUSTRIAL HUD)
+        ============================================ */
+        .player-bar {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 96%;
+            max-width: 1120px;
+            height: 94px;
+            z-index: 100;
+            background: rgba(10, 10, 14, 0.94);
+            backdrop-filter: blur(28px) saturate(180%);
+            border: 1px solid var(--mech-border);
+            border-top: 3px solid var(--mech-primary);
+            clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+            box-shadow: 
+                0 25px 60px rgba(0, 0, 0, 0.85),
+                var(--mech-glow),
+                inset 0 0 25px rgba(var(--mech-primary-rgb), 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            gap: 24px;
+            transition: all var(--anim-speed-normal) ease;
+        }
+
+        body.hud-idle .player-bar {
+            opacity: 0.35;
+            transform: translateX(-50%) translateY(20px);
+            pointer-events: none;
+        }
+
+        .player-bar.is-playing {
+            border-top-color: var(--mech-accent);
+            box-shadow: 
+                0 25px 60px rgba(0, 0, 0, 0.85),
+                var(--mech-glow-strong),
+                inset 0 0 35px rgba(var(--mech-primary-rgb), 0.15);
+        }
+
+        /* 4 角落軍用邊框 Highlight */
+        .player-bar::before {
+            content: 'SYS_SPEC // MK-IV';
+            position: absolute;
+            top: 2px;
+            right: 20px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 8px;
+            letter-spacing: 2px;
+            color: rgba(var(--mech-primary-rgb), 0.4);
+            pointer-events: none;
+        }
+
+        /* 播放器左側 - 封面與資訊 */
+        .player-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            width: 280px;
+            flex: 0 0 280px;
+            min-width: 0;
+        }
+
+        .cover-art-container {
+            width: 58px;
+            height: 58px;
+            position: relative;
+            flex-shrink: 0;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            overflow: hidden;
+            background: linear-gradient(135deg, #181820, #08080a);
+            border: 1px solid var(--mech-border);
+        }
+
+        .cover-art-container::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 1px solid rgba(var(--mech-primary-rgb), 0.3);
+            pointer-events: none;
+        }
+
+        .player-bar.is-playing .cover-art-container::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(135deg, var(--mech-primary), var(--mech-secondary));
+            opacity: 0.6;
+            animation: cover-glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes cover-glow {
+            0% { opacity: 0.2; }
+            100% { opacity: 0.7; }
+        }
+
+        .cover-art-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all var(--anim-speed-normal);
+        }
+
+        .cover-art-container img.hidden {
+            opacity: 0;
+        }
+
+        .cover-default {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.6);
+        }
+
+        .cover-default .material-icons-round {
+            font-size: 28px;
+            color: var(--mech-primary);
+        }
+
+        .player-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .player-title-container {
+            overflow: hidden;
+            margin-bottom: 8px;
+            width: 100%;
+            mask-image: none; 
+            -webkit-mask-image: none;
+        }
+
+        .player-title-container.mask-active {
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+        }
+
+        .player-title {
+            font-family: 'Orbitron', 'Share Tech Mono', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--mech-primary);
+            white-space: nowrap;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-shadow: 0 0 10px rgba(var(--mech-primary-rgb), 0.5);
+        }
+
+        .player-title.scroll {
+            animation: marquee 12s linear infinite;
+            padding-left: 100%;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* 進度條區域 */
+        .player-progress-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* 軍用 LED 頻譜 (Segmented VU Meter) */
+        .viz-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 22px;
+            width: 38px;
+            padding: 2px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(var(--mech-primary-rgb), 0.2);
+            opacity: 0.4;
+            transition: opacity var(--anim-speed-normal);
+        }
+
+        .viz-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 2.5px;
+            height: 14px;
+            width: 18px;
+        }
+
+        .viz-bar {
+            width: 3px;
+            height: 25%;
+            background: var(--mech-primary);
+            border-radius: 1px;
+            box-shadow: 0 0 6px rgba(var(--mech-primary-rgb), 0.8);
+            transition: height 0.15s ease;
+        }
+
+        .player-bar.is-playing .viz-bar,
+        .is-playing .viz-bar {
+            animation: viz-dance 0.4s ease-in-out infinite alternate;
+        }
+
+        .viz-bar:nth-child(1) { animation-duration: 0.35s; animation-delay: 0s; }
+        .viz-bar:nth-child(2) { animation-duration: 0.52s; animation-delay: 0.12s; }
+        .viz-bar:nth-child(3) { animation-duration: 0.42s; animation-delay: 0.06s; }
+        .viz-bar:nth-child(4) { animation-duration: 0.68s; animation-delay: 0.18s; }
+
+        @keyframes viz-dance {
+            0% { height: 15%; }
+            50% { height: 85%; }
+            100% { height: 40%; }
+        }
+
+        .player-status {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 1px;
+            color: var(--mech-text-secondary);
+            min-width: 55px;
+        }
+
+        /* 自定義雷射滑塊 */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+            height: 20px;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(var(--mech-primary-rgb), 0.2);
+            border-radius: 2px;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            background: var(--mech-primary);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            margin-top: -5px;
+            box-shadow: 0 0 12px rgba(var(--mech-primary-rgb), 0.9);
+            transition: all var(--anim-speed-fast);
+        }
+
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
+            box-shadow: var(--mech-glow-strong);
+        }
+
+        .time-display {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            color: var(--mech-text-secondary);
+            min-width: 42px;
+            text-align: right;
+            letter-spacing: 1px;
+        }
+
+        /* 播放器中央 - 戰術雷達鎖定控制按鈕 */
+        .player-center {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            flex-shrink: 0;
+        }
+
+        .btn-control {
+            background: none;
+            border: none;
+            color: var(--mech-text-secondary);
+            cursor: pointer;
+            transition: all var(--anim-speed-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+        }
+
+        .btn-control:hover {
+            color: var(--mech-primary);
+            transform: scale(1.2);
+            text-shadow: var(--mech-glow);
+        }
+
+        .btn-control .material-icons-round {
+            font-size: 28px;
+        }
+
+        /* 軍用戰術鎖定 Play Button */
+        .btn-play {
+            width: 62px;
+            height: 62px;
+            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+            background: linear-gradient(135deg, rgba(var(--mech-primary-rgb), 0.2), rgba(0,0,0,0.6));
+            border: 1px solid var(--mech-border);
+            position: relative;
+            transition: all var(--anim-speed-normal);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-play::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border: 1px dashed var(--mech-primary);
+            opacity: 0.3;
+            animation: radar-sweep 6s linear infinite;
+            pointer-events: none;
+        }
+
+        .btn-play:hover {
+            border-color: var(--mech-primary);
+            box-shadow: var(--mech-glow-strong);
+            transform: scale(1.06);
+            background: linear-gradient(135deg, rgba(var(--mech-primary-rgb), 0.35), rgba(0,0,0,0.6));
+        }
+
+        .btn-play.playing {
+            border-color: var(--mech-primary);
+            background: linear-gradient(135deg, rgba(var(--mech-primary-rgb), 0.4), rgba(0,0,0,0.7));
+            box-shadow: var(--mech-glow-strong);
+        }
+
+        .btn-play.playing::after {
+            opacity: 0.8;
+            animation: radar-sweep 2s linear infinite;
+        }
+
+        @keyframes radar-sweep {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .btn-play .material-icons-round {
+            font-size: 34px;
+            color: var(--mech-primary);
+            filter: drop-shadow(0 0 6px rgba(var(--mech-primary-rgb), 0.8));
+        }
+
+        /* 播放器右側 - 戰術功能區 */
+        .player-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-shrink: 0;
+        }
+
+        .btn-feature {
+            background: none;
+            border: 1px solid transparent;
+            color: var(--mech-text-muted);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: all var(--anim-speed-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-feature:hover {
+            color: var(--mech-primary);
+            border-color: var(--mech-border);
+            background: rgba(var(--mech-primary-rgb), 0.1);
+        }
+
+        .btn-feature.active {
+            color: var(--mech-primary);
+            border-color: var(--mech-border);
+            background: rgba(var(--mech-primary-rgb), 0.2);
+            box-shadow: var(--mech-glow);
+        }
+
+        .btn-feature .material-icons-round {
+            font-size: 20px;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--mech-border);
+            clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+            padding: 6px 14px;
+        }
+
+        .volume-control input[type=range] {
+            width: 85px;
+        }
+
+        /* ============================================
+           SETTINGS PANEL
+        ============================================ */
+        .settings-panel {
+            position: fixed;
+            top: 80px;
+            right: 24px;
+            width: 280px;
+            background: var(--mech-bg-panel);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--mech-border);
+            border-radius: 12px;
+            padding: 20px;
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all var(--anim-speed-normal);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .settings-panel.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .settings-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--mech-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .settings-section {
+            margin-bottom: 20px;
+        }
+
+        .settings-label {
+            font-size: 11px;
+            color: var(--mech-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 10px;
+        }
+
+        .theme-colors {
+            display: flex;
+            gap: 10px;
+        }
+
+        .theme-color-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all var(--anim-speed-fast);
+            position: relative;
+        }
+
+        .theme-color-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-color-btn.active {
+            border-color: #fff;
+            box-shadow: 0 0 15px currentColor;
+        }
+
+        .theme-color-btn.active::after {
+            content: '✓';
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .theme-amber { background: linear-gradient(135deg, #ffb300, #ff8f00); }
+        .theme-cyan { background: linear-gradient(135deg, #00d4ff, #0099cc); }
+        .theme-purple { background: linear-gradient(135deg, #a855f7, #7c3aed); }
+        .theme-red { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .theme-green { background: linear-gradient(135deg, #22c55e, #16a34a); }
+
+        .toggle-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .toggle-label {
+            font-size: 12px;
+            color: var(--mech-text-secondary);
+        }
+
+        .toggle-switch {
+            width: 44px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: all var(--anim-speed-fast);
+        }
+
+        .toggle-switch.active {
+            background: var(--mech-primary);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all var(--anim-speed-fast);
+        }
+
+        .toggle-switch.active::after {
+            left: 22px;
+        }
+
+        /* ============================================
+           THEME MENU (QUICK SWITCH)
+        ============================================ */
+        .theme-menu {
+            position: fixed;
+            z-index: 99999;
+            width: 200px;
+            background: var(--mech-bg-panel);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--mech-border);
+            border-radius: 12px;
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: opacity var(--anim-speed-normal), transform var(--anim-speed-normal), visibility var(--anim-speed-normal);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), var(--mech-glow);
+        }
+
+        .theme-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .theme-menu-header {
+            background: rgba(var(--mech-primary-rgb), 0.1);
+            padding: 12px 16px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--mech-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            border-bottom: 1px solid var(--mech-border);
+        }
+
+        .theme-menu-item {
+            display: block;
+            width: 100%;
+            padding: 12px 16px;
+            background: none;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--mech-text-secondary);
+            font-size: 12px;
+            text-align: left;
+            cursor: pointer;
+            transition: all var(--anim-speed-fast);
+        }
+
+        .theme-menu-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--mech-text-primary);
+        }
+
+        .theme-menu-item.active {
+            background: rgba(var(--mech-primary-rgb), 0.15);
+            color: var(--mech-primary);
+            border-left: 3px solid var(--mech-primary);
+        }
+
+        /* ============================================
+           LOADING & EMPTY STATES
+        ============================================ */
+        .loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            gap: 16px;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(var(--mech-primary-rgb), 0.2);
+            border-top-color: var(--mech-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-text {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 12px;
+            color: var(--mech-primary);
+            animation: blink 1s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--mech-text-muted);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 12px;
+        }
+
+        /* ============================================
+           SCROLLBAR STYLES
+        ============================================ */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(var(--mech-primary-rgb), 0.4);
+        }
+
+        /* ============================================
+           RESPONSIVE DESIGN
+        ============================================ */
+        @media (max-width: 768px) {
+            .player-bar {
+                height: 70px;
+                padding: 0 16px;
+                gap: 12px;
+            }
+
+            .hide-mobile {
+                display: none !important;
+            }
+
+            .cover-art-container {
+                width: 44px;
+                height: 44px;
+            }
+
+            .player-title {
+                font-size: 12px;
+            }
+
+            .btn-play {
+                width: 44px;
+                height: 44px;
+            }
+
+            .btn-play .material-icons-round {
+                font-size: 24px;
+            }
+
+            .btn-control .material-icons-round {
+                font-size: 22px;
+            }
+
+            #folder-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+                padding: 0 16px;
+            }
+
+            #layer-tracks {
+                max-width: 100%;
+            }
+
+            header {
+                padding: 16px;
+            }
+
+            .logo-icon {
+                width: 36px;
+                height: 36px;
+            }
+
+            .btn-mech span:last-child {
+                display: none;
+            }
+
+            .settings-panel {
+                right: 16px;
+                left: 16px;
+                width: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #folder-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ============================================
+           UTILITY CLASSES
+        ============================================ */
+        .font-orbitron { font-family: 'Orbitron', sans-serif; }
+        .font-mono { font-family: 'Share Tech Mono', monospace; }
+        .text-glow { text-shadow: 0 0 10px rgba(var(--mech-primary-rgb), 0.5); }
+        .text-primary { color: var(--mech-primary); }
+    </style>
+</head>
+<body data-theme="amber">
+    <!-- 動態背景 -->
+    <div class="bg-container"></div>
+    <canvas id="particle-canvas"></canvas>
+    <div class="scanlines"></div>
+    <div class="grid-overlay"></div>
+
+    <!-- 待機覆蓋層 -->
+    <div id="idle-overlay">
+        <div class="standby-core">
+            <div class="standby-ring"></div>
+            <div class="standby-ring"></div>
+            <div class="standby-ring"></div>
+            <div class="standby-text">STANDBY</div>
+        </div>
+    </div>
+
+    <!-- 主舞台 -->
+    <div id="stage-perspective">
+        <!-- 文件夾層 -->
+        <div id="layer-folders">
+            <header class="hud-content">
+                <div class="flex justify-between items-center">
+                    <div class="logo-container">
+                        <div class="logo-icon">
+                            <div class="logo-hex"></div>
+                            <span class="material-icons-round">graphic_eq</span>
+                        </div>
+                        <div>
+                            <h1 class="logo-text">MECH<span>PLAY</span></h1>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="relative w-48 sm:w-64 hide-mobile">
+                            <span class="material-icons-round absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs">search</span>
+                            <input id="search-input" type="text" placeholder="/// SEARCH_MEDIA" oninput="ui.filterFolders(this.value)"
+                                   class="w-full bg-black/60 border border-[var(--mech-border)] rounded pl-9 pr-3 py-1.5 text-xs text-[var(--mech-primary)] font-mono focus:outline-none focus:border-[var(--mech-primary)] focus:shadow-[var(--mech-glow)] transition">
+                        </div>
+
+                        <button onclick="ui.scanFolder()" class="btn-mech">
+                            <span class="material-icons-round text-sm">sync</span>
+                            <span class="hide-mobile">SCAN_DRIVE</span>
+                        </button>
+                        <button onclick="ui.toggleEqModal()" class="btn-mech flex items-center gap-1 text-emerald-400 border-emerald-500/50 hover:border-emerald-400">
+                            <span class="material-icons-round text-sm">equalizer</span>
+                            <span class="hide-mobile">AUDIO_EQ</span>
+                        </button>
+                        <button onclick="ui.toggleSettings()" class="btn-mech btn-icon">
+                            <span class="material-icons-round text-sm">settings</span>
+                        </button>
+                        <button onclick="ui.closeApp()" class="btn-mech btn-icon btn-danger">
+                            <span class="material-icons-round text-sm">power_settings_new</span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <div id="folder-grid" class="hud-content"></div>
+            <div class="h-40"></div>
+        </div>
+
+        <!-- 曲目列表面板 -->
+        <div id="layer-tracks">
+            <div class="tracks-header">
+                <button onclick="ui.closeFolder()" class="btn-back">
+                    <span class="material-icons-round">arrow_back</span>
+                </button>
+                <div class="tracks-title-area">
+                    <h2 id="panel-title" class="tracks-title">LOADING...</h2>
+                    <p class="tracks-subtitle">/// ACCESS_GRANTED /// READY</p>
+                </div>
+            </div>
+            <div id="track-list"></div>
+        </div>
+    </div>
+
+    <!-- 播放器控制條 -->
+    <div class="player-bar" id="player-bar">
+        <div class="player-left">
+            <div class="cover-art-container">
+                <img id="cover-art" src="" class="hidden" alt="Cover">
+                <div class="cover-default" id="cover-default">
+                    <span class="material-icons-round">album</span>
+                </div>
+            </div>
+            <div class="player-info">
+                <div class="player-title-container">
+                    <div id="player-title" class="player-title">AWAITING INPUT</div>
+                </div>
+                <div class="player-status-area flex items-center gap-2">
+                    <div class="viz-container">
+                        <div class="viz-bar"></div>
+                        <div class="viz-bar"></div>
+                        <div class="viz-bar"></div>
+                        <div class="viz-bar"></div>
+                    </div>
+                    <span id="player-status" class="player-status hide-mobile">READY</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="player-center flex flex-col items-center justify-center gap-1.5 flex-1 max-w-[460px]">
+            <div class="flex items-center gap-5">
+                <button onclick="pywebview.api.control('prev')" class="btn-control" title="上一首">
+                    <span class="material-icons-round">skip_previous</span>
+                </button>
+                <button onclick="pywebview.api.control('play_pause')" class="btn-play" id="btn-play" title="播放/暫停">
+                    <span class="material-icons-round" id="icon-play">play_arrow</span>
+                </button>
+                <button onclick="pywebview.api.control('next')" class="btn-control" title="下一首">
+                    <span class="material-icons-round">skip_next</span>
+                </button>
+            </div>
+            <div class="player-progress-area w-full flex items-center gap-2.5">
+                <span id="time-current" class="time-display text-[10px] font-mono text-emerald-400/90 w-9 text-right">00:00</span>
+                <input type="range" id="seek-bar" min="0" max="100" value="0" class="flex-1" onchange="ui.seek(this.value)" oninput="ui.isDragging = true" onmouseup="ui.isDragging = false">
+                <span id="time-total" class="time-display text-[10px] font-mono text-emerald-400/90 w-9 text-left">00:00</span>
+            </div>
+        </div>
+
+        <div class="player-right">
+            <button id="btn-upsample" onclick="pywebview.api.toggle_audio_upsample()" class="btn-feature text-[9px] font-mono px-2 py-1 font-bold border border-emerald-500/40 text-emerald-400/70 hover:text-emerald-300 hover:border-emerald-400 transition" title="Hi-Res Audio 192kHz/32-bit Float Over-Sampling">HI-RES 192K</button>
+            <button id="btn-normalize" onclick="pywebview.api.toggle_audio_normalize()" class="btn-feature text-[9px] font-mono px-2 py-1 font-bold border border-emerald-500/40 text-emerald-400/70 hover:text-emerald-300 hover:border-emerald-400 transition" title="EBU R128 Loudness Auto Normalization">EBU R128</button>
+            <button onclick="pywebview.api.toggle_play_mode()" class="btn-feature" id="btn-mode" title="播放模式">
+                <span class="material-icons-round" id="icon-mode">repeat</span>
+            </button>
+            <button onclick="pywebview.api.toggle_boot_music()" class="btn-feature" id="btn-boot" title="開機音樂">
+                <span class="material-icons-round" id="icon-music_note">music_note</span>
+            </button>
+            <button onclick="ui.toggleThemeMenu()" class="btn-feature hide-mobile" id="btn-theme" title="主題選單">
+                <span class="material-icons-round">palette</span>
+            </button>
+            <div class="volume-control hide-mobile">
+                <button onclick="pywebview.api.toggle_mute()" class="btn-feature" id="btn-volume" title="靜音">
+                    <span class="material-icons-round" id="icon-volume">volume_up</span>
+                </button>
+                <input type="range" min="0" max="100" value="60" oninput="pywebview.api.control('volume', this.value)">
+            </div>
+        </div>
+    </div>
+
+    <!-- 🎛️ Cyber Mech Parametric EQ Custom Modal -->
+    <div id="eq-modal" class="hidden fixed inset-0 z-[999999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4" onclick="ui.closeEqModal()">
+        <div class="w-[620px] bg-[#0c1017] border-2 border-emerald-500/60 p-6 shadow-[0_0_40px_rgba(16,185,129,0.25)] flex flex-col gap-4 font-mono text-emerald-400" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center border-b border-emerald-500/30 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="material-icons-round text-emerald-400 text-xl">equalizer</span>
+                    <h3 class="text-xs font-bold text-emerald-400 tracking-wider">/// AUDIO_EQ // PARAMETRIC_SYSTEM</h3>
+                </div>
+                <div class="flex items-center gap-4">
+                    <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-emerald-400">
+                        <input type="checkbox" id="eq-master-switch" onchange="ui.toggleEqMaster(this.checked)" class="accent-emerald-400 w-4 h-4 cursor-pointer">
+                        <span>EQ_ACTIVE</span>
+                    </label>
+                    <button onclick="ui.closeEqModal()" class="text-emerald-500 hover:text-white font-bold text-xl px-2">×</button>
+                </div>
+            </div>
+
+            <!-- Preset Controls -->
+            <div class="flex justify-between items-center bg-[#070a0f] p-3 border border-emerald-500/20">
+                <div class="flex items-center gap-2 text-xs">
+                    <span class="text-gray-400 font-bold">PRESET:</span>
+                    <select id="eq-preset-select" onchange="ui.applyEqPreset(this.value)" class="bg-[#05070a] text-emerald-300 border border-emerald-500/40 px-3 py-1 text-xs font-bold focus:outline-none cursor-pointer">
+                        <option value="Flat">🎵 Flat (Default / 原音)</option>
+                        <option value="Rock">🎸 Rock (搖滾樂)</option>
+                        <option value="Vocal">🎤 Vocal Boost (人聲增強)</option>
+                        <option value="Bass">💥 Bass Boost (低音重砲)</option>
+                        <option value="Gaming">🎧 Gaming & Anime (動漫遊戲)</option>
+                        <option value="Jazz">🎷 Jazz (爵士樂)</option>
+                        <option value="Pop">🌸 Pop (流行娛樂)</option>
+                        <option value="Electronic">⚡ Cyber Electronic (賽博電子)</option>
+                    </select>
+                </div>
+                <button onclick="ui.resetEqGains()" class="px-4 py-1 bg-[#05070a] hover:bg-emerald-950/60 text-xs font-bold text-emerald-400 border border-emerald-500/40 transition">
+                    FLAT_RESET
+                </button>
+            </div>
+
+            <!-- Frequency Response Curve Preview -->
+            <div class="w-full h-16 bg-[#05070a] border border-emerald-500/30 relative overflow-hidden flex items-center justify-center">
+                <svg id="eq-curve-svg" class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 600 60">
+                    <path id="eq-curve-path" d="M 0 30 Q 300 30 600 30" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" />
+                </svg>
+                <div class="absolute inset-0 flex justify-between items-center px-4 pointer-events-none opacity-40 text-[9px] text-emerald-500 font-bold">
+                    <span>SUB-BASS</span><span>MID</span><span>TREBLE</span>
+                </div>
+            </div>
+
+            <!-- 10-Band Equalizer Sliders (-12dB to +12dB) -->
+            <div id="eq-bands-container" class="grid grid-cols-10 gap-2 bg-[#070a0f] p-4 border border-emerald-500/20">
+            </div>
+
+            <div class="flex justify-between items-center text-[10px] text-emerald-600 border-t border-emerald-500/30 pt-2 font-mono">
+                <span>RANGE: -12dB ~ +12dB</span>
+                <span class="text-emerald-400 font-bold">MECH DSP PIPELINE</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主題快速切換選單 (置於 body 根目錄，防 clip-path 裁切) -->
+    <div class="theme-menu" id="theme-menu">
+        <div class="theme-menu-header">/// SELECT_THEME</div>
+        <button onclick="pywebview.api.change_theme('needy_theme.html')" class="theme-menu-item">✨ Internet Angel</button>
+        <button onclick="pywebview.api.change_theme('cyberpunk.html')" class="theme-menu-item">⚡ Cyberpunk</button>
+        <button onclick="pywebview.api.change_theme('mech_theme.html')" class="theme-menu-item active">🤖 Cyber Mech</button>
+        <button onclick="pywebview.api.change_theme('index.html')" class="theme-menu-item">🎵 Default Dark</button>
+        <button onclick="pywebview.api.change_theme('light.html')" class="theme-menu-item">🌸 Light Ambient</button>
+        <button onclick="pywebview.api.change_theme('image_theme.html')" class="theme-menu-item">🖼️ Immersive Glass</button>
+    </div>
+
+    <!-- 設置面板 -->
+    <div class="settings-panel" id="settings-panel">
+        <div class="settings-header">/// SYSTEM_CONFIG</div>
+        
+        <div class="settings-section">
+            <div class="settings-label">Theme Color</div>
+            <div class="theme-colors">
+                <button class="theme-color-btn theme-amber active" data-theme="amber" onclick="ui.setTheme('amber')"></button>
+                <button class="theme-color-btn theme-cyan" data-theme="cyan" onclick="ui.setTheme('cyan')"></button>
+                <button class="theme-color-btn theme-purple" data-theme="purple" onclick="ui.setTheme('purple')"></button>
+                <button class="theme-color-btn theme-red" data-theme="red" onclick="ui.setTheme('red')"></button>
+                <button class="theme-color-btn theme-green" data-theme="green" onclick="ui.setTheme('green')"></button>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <div class="settings-label">Visual Effects</div>
+            <div class="toggle-option">
+                <span class="toggle-label">Particle Background</span>
+                <div class="toggle-switch active" onclick="ui.toggleParticles(this)"></div>
+            </div>
+            <div class="toggle-option">
+                <span class="toggle-label">Scanlines Overlay</span>
+                <div class="toggle-switch active" onclick="ui.toggleScanlines(this)"></div>
+            </div>
+            <div class="toggle-option">
+                <span class="toggle-label">Grid Pattern</span>
+                <div class="toggle-switch active" onclick="ui.toggleGrid(this)"></div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <div class="settings-label">Background Image (Default: None)</div>
+            <div class="flex items-center gap-2 mt-2">
+                <button class="px-2.5 py-1 text-xs border border-amber-500/40 text-amber-400 hover:bg-amber-500/20 transition rounded" onclick="ui.setCustomBgImage()">🖼️ Select Image</button>
+                <button class="px-2.5 py-1 text-xs border border-red-500/40 text-red-400 hover:bg-red-500/20 transition rounded" onclick="ui.clearCustomBgImage()">🚫 Clear Image</button>
+            </div>
+            <div id="bg-img-status" class="text-[10px] text-amber-500/70 font-mono mt-1">STATUS: NO_IMAGE (DEFAULT)</div>
+        </div>
+
+        <div class="settings-section">
+            <div class="settings-label">Behavior</div>
+            <div class="toggle-option">
+                <span class="toggle-label">Auto Hide HUD</span>
+                <div class="toggle-switch" onclick="ui.toggleAutoHide(this)"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // PARTICLE SYSTEM
+        // ============================================
+        class ParticleSystem {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.particles = [];
+                this.isActive = true;
+                this.resize();
+                this.init();
+                this.animate();
+                
+                window.addEventListener('resize', () => this.resize());
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+
+            init() {
+                const count = parseInt(getComputedStyle(document.body).getPropertyValue('--particle-count')) || 25;
+                this.particles = [];
+                for (let i = 0; i < count; i++) {
+                    this.particles.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: (Math.random() - 0.5) * 0.5,
+                        size: Math.random() * 2 + 1,
+                        opacity: Math.random() * 0.5 + 0.2
+                    });
+                }
+            }
+
+            animate() {
+                if (!this.isActive) return;
+                
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                const primaryColor = getComputedStyle(document.body).getPropertyValue('--mech-primary').trim();
+                
+                this.particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    
+                    if (p.x < 0 || p.x > this.canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > this.canvas.height) p.vy *= -1;
+                    
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = primaryColor;
+                    this.ctx.globalAlpha = p.opacity;
+                    this.ctx.fill();
+                });
+                
+                this.ctx.globalAlpha = 1;
+                requestAnimationFrame(() => this.animate());
+            }
+
+            toggle(active) {
+                this.isActive = active;
+                if (active) this.animate();
+                else this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            }
+        }
+
+        // ============================================
+        // UI CONTROLLER
+        // ============================================
+        const ui = {
+            // 狀態
+            isProcessing: false,
+            isDragging: false,
+            currentTrackPath: null,
+            particles: null,
+            settingsOpen: false,
+            themeMenuOpen: false,
+            autoHideEnabled: true,
+            idleTimeout: null,
+
+            initialized: false,
+            // 初始化
+            init: async () => {
+                if (ui.initialized) return;
+                ui.initialized = true;
+
+                ui.particles = new ParticleSystem(document.getElementById('particle-canvas'));
+                
+                // 立即進行一次狀態同步 (防止切換主題時進度與按鈕延遲)
+                ui.syncState();
+                
+                try { ui.loadFolders(); } catch(e) {}
+                ui.setupScrollOptimization();
+
+                if (window.pywebview && pywebview.api) {
+                    try {
+                        const bootState = await pywebview.api.get_boot_state();
+                        ui.updateBootState(bootState);
+                        pywebview.api.start_mpv().catch(() => {});
+                    } catch(e) {}
+                    ui.syncState();
+                }
+                
+                ui.setupAutoHide();
+                ui.loadThemeSettings();
+                ui.setupKeyboardShortcuts();
+                try { await ui.initEqUI(); } catch(e) {}
+
+                // 持續每 0.5 秒同步狀態與進度時間
+                setInterval(ui.syncState, 500);
+            },
+
+            // 🎛️ Parametric EQ Controller
+            eqBands: [
+                { freq: '60Hz', label: 'Sub-Bass' },
+                { freq: '170Hz', label: 'Bass' },
+                { freq: '310Hz', label: 'Low-Mid' },
+                { freq: '600Hz', label: 'Mid' },
+                { freq: '1kHz', label: 'Mid-High' },
+                { freq: '3kHz', label: 'Presence' },
+                { freq: '6kHz', label: 'High' },
+                { freq: '12kHz', label: 'Treble' },
+                { freq: '14kHz', label: 'Air' },
+                { freq: '16kHz', label: 'Ultra High' }
+            ],
+            eqPresets: {
+                Flat: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                Rock: [4, 3, 2, 0, -1, 1, 3, 4, 4, 3],
+                Vocal: [-2, -1, 1, 3, 4, 3, 2, 1, 0, 0],
+                Bass: [6, 5, 4, 2, 0, -1, -2, -1, 0, 0],
+                Gaming: [3, 2, 0, -1, 1, 3, 4, 5, 4, 3],
+                Jazz: [3, 2, 1, 2, -1, -1, 0, 1, 2, 3],
+                Pop: [-1, 2, 4, 5, 3, 0, -1, 2, 3, 2],
+                Electronic: [5, 4, 2, 0, -2, 2, 3, 4, 5, 5]
+            },
+            currentEqGains: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            isEqEnabled: false,
+
+            toggleEqModal: () => {
+                const modal = document.getElementById('eq-modal');
+                if (modal) modal.classList.toggle('hidden');
+            },
+            closeEqModal: () => {
+                const modal = document.getElementById('eq-modal');
+                if (modal) modal.classList.add('hidden');
+            },
+            openEqModal: () => {
+                const modal = document.getElementById('eq-modal');
+                if (modal) modal.classList.remove('hidden');
+            },
+
+            initEqUI: async () => {
+                const container = document.getElementById('eq-bands-container');
+                if (!container) return;
+
+                container.innerHTML = ui.eqBands.map((b, idx) => `
+                    <div class="flex flex-col items-center gap-1 min-w-0">
+                        <span id="eq-db-${idx}" class="text-[10px] font-bold text-emerald-400">0dB</span>
+                        <div class="h-28 flex items-center justify-center relative w-full overflow-hidden">
+                            <input type="range" id="eq-slider-${idx}" min="-12" max="12" step="0.5" value="0"
+                                class="w-24 h-1.5 bg-[#05070a] accent-emerald-400 cursor-pointer rounded-lg -rotate-90 transform origin-center"
+                                oninput="ui.onEqSliderInput(${idx}, this.value)">
+                        </div>
+                        <span class="text-[10px] font-bold text-emerald-400 mt-1">${b.freq}</span>
+                        <span class="text-[8px] text-emerald-600 truncate w-full text-center">${b.label}</span>
+                    </div>
+                `).join('');
+
+                if (window.pywebview && pywebview.api && pywebview.api.get_eq_settings) {
+                    try {
+                        const st = await pywebview.api.get_eq_settings();
+                        if (st) {
+                            ui.isEqEnabled = !!st.enabled;
+                            if (st.gains && Array.isArray(st.gains)) {
+                                ui.currentEqGains = st.gains.map(v => parseFloat(v) || 0);
+                            }
+                            const master = document.getElementById('eq-master-switch');
+                            if (master) master.checked = ui.isEqEnabled;
+                            const select = document.getElementById('eq-preset-select');
+                            if (select && st.preset) select.value = st.preset;
+                            ui.syncEqSlidersUI();
+                        }
+                    } catch(e) {}
+                }
+            },
+
+            onEqSliderInput: (idx, val) => {
+                const numVal = parseFloat(val) || 0;
+                ui.currentEqGains[idx] = numVal;
+                const dbEl = document.getElementById(`eq-db-${idx}`);
+                if (dbEl) dbEl.innerText = (numVal > 0 ? '+' : '') + numVal + 'dB';
+                ui.updateEqCurve();
+
+                if (ui.isEqEnabled) {
+                    if (ui._eqDebounceTimer) clearTimeout(ui._eqDebounceTimer);
+                    ui._eqDebounceTimer = setTimeout(() => {
+                        if (window.pywebview && pywebview.api && pywebview.api.set_eq_settings) {
+                            pywebview.api.set_eq_settings(true, ui.currentEqGains).catch(() => {});
+                        }
+                    }, 40);
+                }
+            },
+
+            toggleEqMaster: (enabled) => {
+                ui.isEqEnabled = !!enabled;
+                if (window.pywebview && pywebview.api && pywebview.api.set_eq_settings) {
+                    pywebview.api.set_eq_settings(ui.isEqEnabled, ui.currentEqGains).catch(() => {});
+                }
+            },
+
+            applyEqPreset: (presetName) => {
+                const gains = ui.eqPresets[presetName] || ui.eqPresets['Flat'];
+                ui.currentEqGains = [...gains];
+                ui.syncEqSlidersUI();
+                if (window.pywebview && pywebview.api && pywebview.api.set_eq_settings) {
+                    pywebview.api.set_eq_settings(ui.isEqEnabled, ui.currentEqGains, presetName).catch(() => {});
+                }
+            },
+
+            resetEqGains: () => {
+                const select = document.getElementById('eq-preset-select');
+                if (select) select.value = 'Flat';
+                ui.applyEqPreset('Flat');
+            },
+
+            syncEqSlidersUI: () => {
+                ui.currentEqGains.forEach((val, idx) => {
+                    const slider = document.getElementById(`eq-slider-${idx}`);
+                    if (slider) slider.value = val;
+                    const dbEl = document.getElementById(`eq-db-${idx}`);
+                    if (dbEl) dbEl.innerText = (val > 0 ? '+' : '') + val + 'dB';
+                });
+                ui.updateEqCurve();
+            },
+
+            updateEqCurve: () => {
+                const pathEl = document.getElementById('eq-curve-path');
+                if (!pathEl) return;
+                const gains = ui.currentEqGains;
+                const width = 600;
+                const step = width / (gains.length - 1);
+                const points = gains.map((g, i) => {
+                    const x = i * step;
+                    const y = 30 - (g * 2.2);
+                    return { x, y };
+                });
+
+                let d = `M ${points[0].x} ${points[0].y}`;
+                for (let i = 0; i < points.length - 1; i++) {
+                    const p1 = points[i];
+                    const p2 = points[i + 1];
+                    const cx = (p1.x + p2.x) / 2;
+                    d += ` Q ${p1.x} ${p1.y}, ${cx} ${(p1.y + p2.y) / 2}`;
+                }
+                d += ` L ${points[points.length - 1].x} ${points[points.length - 1].y}`;
+                pathEl.setAttribute('d', d);
+            },
+
+            syncState: async () => {
+                try {
+                    if (!window.pywebview || !pywebview.api || !pywebview.api.get_playback_status) return;
+                    const st = await pywebview.api.get_playback_status();
+                    if (!st) return;
+
+                    if (st.title && st.title !== "AWAITING_MEDIA") {
+                        ui.updateTitle(st.title);
+                    }
+                    if (st.duration > 0) {
+                        ui.updateDuration(st.duration);
+                    }
+                    if (st.position >= 0) {
+                        ui.updateProgress(st.position);
+                    }
+                    if (st.cover_url) {
+                        ui.updateCover(st.cover_url);
+                    }
+                    ui.updatePlayState(!st.is_playing);
+                    if (st.is_muted !== undefined) ui.updateMuteState(st.is_muted);
+                    if (st.play_mode) ui.updatePlayMode(st.play_mode);
+                    if (st.is_upsample !== undefined) ui.updateUpsampleState(st.is_upsample);
+                    if (st.is_normalize !== undefined) ui.updateNormalizeState(st.is_normalize);
+                    if (st.is_boot_mode !== undefined) ui.updateBootState(st.is_boot_mode);
+                    if (st.current_path) ui.highlightTrack(st.current_path);
+                } catch(e) {
+                    console.error("syncState error:", e);
+                }
+            },
+
+            setupKeyboardShortcuts: () => {
+                window.addEventListener('keydown', (e) => {
+                    if (e.target.tagName === 'INPUT') return;
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                        pywebview.api.control('play_pause');
+                    } else if (e.code === 'ArrowLeft') {
+                        pywebview.api.control('seek', Math.max(0, (document.getElementById('seek-bar').value - 5)));
+                    } else if (e.code === 'ArrowRight') {
+                        pywebview.api.control('seek', Math.min(document.getElementById('seek-bar').max, (parseFloat(document.getElementById('seek-bar').value) + 5)));
+                    } else if (e.code === 'Escape') {
+                        ui.closeFolder();
+                        ui.closeThemeMenu();
+                        if (ui.settingsOpen) ui.toggleSettings();
+                    }
+                });
+            },
+
+            // 自動隱藏設置
+            setupAutoHide: () => {
+                const resetIdle = () => {
+                    document.body.classList.remove('hud-idle');
+                    clearTimeout(ui.idleTimeout);
+                    if (ui.autoHideEnabled) {
+                        ui.idleTimeout = setTimeout(() => {
+                            if (!ui.isDragging) document.body.classList.add('hud-idle');
+                        }, 1000);
+                    }
+                };
+
+                document.addEventListener('mousemove', resetIdle);
+                document.addEventListener('click', resetIdle);
+                document.addEventListener('keydown', resetIdle);
+                resetIdle();
+            },
+
+            // 捲動效能優化：捲動時鎖定 Hover 效果
+            setupScrollOptimization: () => {
+                const container = document.getElementById('layer-folders');
+                let isScrolling;
+
+                container.addEventListener('scroll', () => {
+                    // 1. 加上 class，CSS 會把 pointer-events 設為 none
+                    container.classList.add('is-scrolling');
+
+                    // 2. 清除之前的計時器
+                    window.clearTimeout(isScrolling);
+
+                    // 3. 設定新的計時器，停止捲動 150ms 後移除 class
+                    isScrolling = setTimeout(() => {
+                        container.classList.remove('is-scrolling');
+                    }, 150);
+                }, { passive: true }); // passive: true 讓捲動更順暢
+            },
+            // 文字解碼特效 (防止重複閃爍修復)
+            setTextScramble: (element, newText, callback) => {
+                if (!element || !newText) return;
+                
+                // 如果目標文字與當前正在解碼的文字完全相同，則不重複啟動動畫
+                if (element.dataset.targetText === newText) return;
+                element.dataset.targetText = newText;
+                
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_#@&%$';
+                let iterations = 0;
+                
+                if (element.dataset.interval) clearInterval(parseInt(element.dataset.interval));
+                
+                const interval = setInterval(() => {
+                    element.innerText = newText.split('').map((letter, index) => {
+                        if (index < iterations) return newText[index];
+                        return chars[Math.floor(Math.random() * chars.length)];
+                    }).join('');
+                    
+                    if (iterations >= newText.length) {
+                        clearInterval(interval);
+                        element.innerText = newText; // 確保最終文字正確
+                        if (callback) callback(); // 執行回調
+                    }
+                    iterations += 0.5;
+                }, 25);
+                
+                element.dataset.interval = interval;
+            },
+
+            // 檢查跑馬燈 (修復版：動態開關遮罩)
+            checkMarquee: () => {
+                const title = document.getElementById('player-title');
+                const container = title.parentElement;
+                
+                // 1. 先移除所有狀態，以便重新計算
+                title.classList.remove('scroll');
+                container.classList.remove('mask-active');
+                
+                // 2. 判斷文字是否超出容器寬度
+                // 這裡加個 2px 緩衝，避免剛好相等時誤判
+                if (title.scrollWidth > container.clientWidth + 2) {
+                    title.classList.add('scroll');
+                    container.classList.add('mask-active'); // 文字太長了，開啟霧面遮罩
+                }
+            },
+
+            // 路徑編碼
+            encodePath: (str) => encodeURIComponent(str).replace(/'/g, "%27"),
+
+            allFolders: [],
+
+            loadFolders: async () => {
+                try {
+                    ui.allFolders = await pywebview.api.get_library_folders();
+                    ui.renderFolders(ui.allFolders);
+                } catch (error) {
+                    console.error('Load folders error:', error);
+                }
+            },
+
+            renderFolders: (folders) => {
+                const grid = document.getElementById('folder-grid');
+                if (!folders || folders.length === 0) {
+                    grid.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1/-1;">
+                            <span class="material-icons-round" style="font-size: 48px; margin-bottom: 16px; opacity: 0.3;">folder_open</span>
+                            <p>/// NO_DATA_FOUND</p>
+                            <p style="margin-top: 8px; font-size: 10px;">Click SCAN_DRIVE to add media</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                grid.innerHTML = folders.map((f, i) => `
+                    <div class="folder-card" onclick="ui.handleFolderClick(this)" data-path="${ui.encodePath(f.path)}" data-name="${f.name.replace(/"/g, '&quot;')}">
+                        <div class="folder-cover">
+                            ${f.cover ? 
+                                `<img src="" data-src="${f.cover}" class="lazy-img" alt="${f.name}">` : 
+                                `<div class="folder-icon"><span class="material-icons-round">folder_open</span></div>`
+                            }
+                            <div class="folder-badge">DIR_${String(i + 1).padStart(2, '0')}</div>
+                        </div>
+                        <div class="folder-info">
+                            <h3 class="folder-name">${f.name}</h3>
+                        </div>
+                    </div>
+                `).join('');
+                
+                ui.lazyLoadImages();
+            },
+
+            filterFolders: (query) => {
+                const q = query.toLowerCase().trim();
+                const filtered = ui.allFolders.filter(f => f.name.toLowerCase().includes(q));
+                ui.renderFolders(filtered);
+            },
+
+            // 文件夾點擊處理
+            handleFolderClick: (el) => {
+                ui.openFolder(decodeURIComponent(el.dataset.path), el.dataset.name);
+            },
+
+            // 打開文件夾
+            openFolder: async (path, name) => {
+                ui.setTextScramble(document.getElementById('panel-title'), name);
+                
+                document.getElementById('layer-folders').classList.add('depth-mode');
+                document.getElementById('layer-tracks').classList.add('active');
+                
+                const list = document.getElementById('track-list');
+                list.innerHTML = `
+                    <div class="loading-state">
+                        <div class="loading-spinner"></div>
+                        <span class="loading-text">SYSTEM SCANNING...</span>
+                    </div>
+                `;
+                
+                try {
+                    const tracks = await pywebview.api.get_folder_tracks(path);
+                    
+                    if (!tracks || tracks.length === 0) {
+                        list.innerHTML = `<div class="empty-state">/// NO_DATA_FOUND</div>`;
+                        return;
+                    }
+                    
+                    list.innerHTML = tracks.map((t, i) => `
+                        <div class="track-item" onclick="ui.handleTrackClick('${ui.encodePath(t.path)}', this)" data-path="${ui.encodePath(t.path)}">
+                            <div class="track-number">${String(i + 1).padStart(2, '0')}</div>
+                            <div class="track-title">${t.filename.replace(/\.[^/.]+$/, '')}</div>
+                            <div class="track-status">READY</div>
+                        </div>
+                    `).join('');
+                } catch (error) {
+                    list.innerHTML = `<div class="empty-state" style="color: #ef4444;">/// READ_ERROR</div>`;
+                }
+            },
+
+            // 曲目點擊處理
+            handleTrackClick: async (encodedPath, el) => {
+                const path = decodeURIComponent(encodedPath);
+                ui.highlightTrack(path);
+                
+                try {
+                    await pywebview.api.play_video(path);
+                } catch (e) {
+                    console.error('Play error:', e);
+                }
+            },
+
+            // 高亮當前曲目
+            highlightTrack: (path) => {
+                if (!path) return;
+                const cleanPath = path.replace(/\\/g, '/');
+                ui.currentTrackPath = cleanPath;
+                
+                document.querySelectorAll('.track-item').forEach(item => {
+                    const rawDataPath = item.dataset.path || '';
+                    let itemPath = rawDataPath;
+                    try { itemPath = decodeURIComponent(rawDataPath); } catch(e) {}
+                    itemPath = itemPath.replace(/\\/g, '/');
+                    
+                    const isActive = (itemPath === cleanPath);
+                    item.classList.toggle('active', isActive);
+                    if (isActive && document.getElementById('layer-tracks').classList.contains('active')) {
+                        try { item.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch(e) {}
+                    }
+                });
+            },
+
+            // 關閉文件夾
+            closeFolder: () => {
+                document.getElementById('layer-folders').classList.remove('depth-mode');
+                document.getElementById('layer-tracks').classList.remove('active');
+            },
+
+            // 掃描文件夾
+            scanFolder: async () => {
+                if (ui.isProcessing) return;
+                ui.isProcessing = true;
+                
+                const grid = document.getElementById('folder-grid');
+                grid.innerHTML = `
+                    <div class="loading-state" style="grid-column: 1/-1;">
+                        <div class="loading-spinner"></div>
+                        <span class="loading-text">SCANNING DRIVE...</span>
+                    </div>
+                `;
+                
+                try {
+                    await pywebview.api.scan_folder();
+                    await ui.loadFolders();
+                } catch (error) {
+                    console.error('Scan error:', error);
+                }
+                
+                ui.isProcessing = false;
+            },
+
+            toFileUrl: (path) => {
+                if (!path) return '';
+                if (path.startsWith('data:') || path.startsWith('http://') || path.startsWith('https://')) return path;
+                let p = path.replace(/\\/g, '/');
+                let drive = '';
+                if (p.length >= 2 && p[1] === ':') {
+                    drive = p.substring(0, 2);
+                    p = p.substring(2);
+                }
+                const parts = p.split('/').filter(Boolean);
+                const encodedRest = parts.map(part => encodeURIComponent(part)).join('/');
+                return 'file:///' + (drive ? drive + '/' : '') + encodedRest;
+            },
+
+            // 懶加載圖片
+            lazyLoadImages: () => {
+                const images = document.querySelectorAll('.lazy-img');
+                for (const img of images) {
+                    const src = img.dataset.src;
+                    if (src) {
+                        img.src = ui.toFileUrl(src);
+                        img.classList.remove('hidden', 'opacity-0');
+                    }
+                }
+            },
+
+            // 更新標題
+            updateTitle: (t) => {
+                const el = document.getElementById('player-title');
+                if (!el || !t || el.dataset.targetText === t) return;
+                
+                el.classList.remove('scroll');
+                ui.setTextScramble(el, t, () => {
+                    const container = el.parentElement;
+                    void el.offsetWidth; 
+                    if (container && el.scrollWidth > container.clientWidth) {
+                        el.classList.add('scroll');
+                    } else {
+                        el.classList.remove('scroll');
+                    }
+                });
+            },
+            // 更新進度
+            updateProgress: (s) => {
+                if (ui.isDragging) return;
+                const bar = document.getElementById('seek-bar');
+                if (!bar) return;
+                const val = parseFloat(s) || 0;
+                bar.value = val;
+                
+                const curEl = document.getElementById('time-current');
+                if (curEl) curEl.innerText = ui.formatTime(val);
+                
+                const max = parseFloat(bar.max) || 100;
+                const percent = max > 0 ? (val / max) * 100 : 0;
+                bar.style.background = `linear-gradient(to right, var(--mech-primary) ${percent}%, rgba(255,255,255,0.15) ${percent}%)`;
+            },
+
+            // 更新總時長
+            updateDuration: (d) => {
+                const bar = document.getElementById('seek-bar');
+                if (bar) bar.max = d || 100;
+                const totEl = document.getElementById('time-total');
+                if (totEl) totEl.innerText = ui.formatTime(d);
+            },
+
+            // 更新封面
+            updateCover: (url) => {
+                const img = document.getElementById('cover-art');
+                const defaultIcon = document.getElementById('cover-default');
+                
+                if (url) {
+                    img.src = url;
+                    img.classList.remove('hidden');
+                    defaultIcon.style.display = 'none';
+                } else {
+                    img.classList.add('hidden');
+                    defaultIcon.style.display = 'flex';
+                }
+            },
+
+            // 更新播放狀態
+            updatePlayState: (p) => {
+                const icon = document.getElementById('icon-play');
+                const btn = document.getElementById('btn-play');
+                const bar = document.getElementById('player-bar');
+                const status = document.getElementById('player-status');
+                
+                icon.innerText = !p ? 'pause' : 'play_arrow';
+                
+                if (!p) {
+                    btn.classList.add('playing');
+                    bar.classList.add('is-playing');
+                    const viz = document.querySelector('.viz-container');
+                    if (viz) viz.classList.add('is-playing');
+                    ui.setTextScramble(status, 'PLAYING');
+                } else {
+                    btn.classList.remove('playing');
+                    bar.classList.remove('is-playing');
+                    const viz = document.querySelector('.viz-container');
+                    if (viz) viz.classList.remove('is-playing');
+                    ui.setTextScramble(status, 'PAUSED');
+                }
+            },
+
+            // 更新播放模式
+            updatePlayMode: (mode) => {
+                const icon = document.getElementById('icon-mode');
+                const btn = document.getElementById('btn-mode');
+                if (!icon) return;
+                
+                if (mode === 'loop') {
+                    icon.innerText = 'repeat';
+                    if (btn) btn.title = "MODE: REPEAT ALL";
+                } else if (mode === 'shuffle') {
+                    icon.innerText = 'shuffle';
+                    if (btn) btn.title = "MODE: SHUFFLE";
+                } else if (mode === 'one') {
+                    icon.innerText = 'repeat_one';
+                    if (btn) btn.title = "MODE: REPEAT ONE";
+                } else if (mode === 'album_continue') {
+                    icon.innerText = 'library_music';
+                    if (btn) btn.title = "MODE: ALBUM CONTINUE";
+                }
+                
+                if (btn) {
+                    if (mode !== 'loop') btn.classList.add('active');
+                    else btn.classList.remove('active');
+                }
+            },
+
+            // 更新開機音樂狀態
+            updateBootState: (enabled) => {
+                const icon = document.getElementById('icon-boot');
+                const btn = document.getElementById('btn-boot');
+                
+                if (enabled) {
+                    btn.classList.add('active');
+                    icon.classList.add('text-glow');
+                } else {
+                    btn.classList.remove('active');
+                    icon.classList.remove('text-glow');
+                }
+            },
+
+            // 更新靜音狀態
+            updateMuteState: (muted) => {
+                const icon = document.getElementById('icon-volume');
+                const btn = document.getElementById('btn-volume');
+                
+                icon.innerText = muted ? 'volume_off' : 'volume_up';
+                
+                if (muted) {
+                    btn.style.color = '#ef4444';
+                } else {
+                    btn.style.color = '';
+                }
+            },
+
+            // 格式化時間
+            formatTime: (s) => {
+                if (!s || isNaN(s)) return '00:00';
+                const mins = Math.floor(s / 60);
+                const secs = Math.floor(s % 60);
+                return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            },
+
+            // 跳轉
+            seek: (v) => pywebview.api.control('seek', v),
+
+            // 關閉應用
+            closeApp: () => pywebview.api.close_app(),
+
+            // ============================================
+            // SETTINGS & THEME
+            // ============================================
+            
+            // 切換設置面板
+            toggleSettings: () => {
+                const panel = document.getElementById('settings-panel');
+                ui.settingsOpen = !ui.settingsOpen;
+                panel.classList.toggle('active', ui.settingsOpen);
+                
+                if (ui.settingsOpen) {
+                    // 延遲加入監聽器，避免點擊按鈕的當下立刻觸發關閉
+                    setTimeout(() => {
+                        document.addEventListener('click', ui.closeSettingsOutside);
+                    }, 100);
+                } else {
+                    // 關閉時務必移除監聽器
+                    document.removeEventListener('click', ui.closeSettingsOutside);
+                }
+            },
+
+            // 點擊外部關閉
+            closeSettingsOutside: (e) => {
+                const panel = document.getElementById('settings-panel');
+                // 檢查點擊目標是否在面板內，或是否為切換按鈕本身
+                // 使用 closest 可以更精確判斷點擊是否發生在子元素上
+                if (!panel.contains(e.target) && !e.target.closest('[onclick="ui.toggleSettings()"]')) {
+                    ui.toggleSettings();
+                }
+            },
+
+            // 設置主題
+            setTheme: (theme) => {
+                document.body.setAttribute('data-theme', theme);
+                
+                // 更新按鈕狀態
+                document.querySelectorAll('.theme-color-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.theme === theme);
+                });
+                
+                // 保存設置
+                localStorage.setItem('mech-theme', theme);
+                
+                // 重新初始化粒子以使用新顏色
+                if (ui.particles) {
+                    ui.particles.init();
+                }
+            },
+
+            // 加載主題設置 (整合 Python config.json 永久存檔)
+            loadThemeSettings: async () => {
+                const savedTheme = localStorage.getItem('mech-theme') || 'amber';
+                ui.setTheme(savedTheme);
+                let savedBg = localStorage.getItem('mech_bg_image');
+                if (window.pywebview && pywebview.api && pywebview.api.get_theme_setting) {
+                    try {
+                        const persistentBg = await pywebview.api.get_theme_setting('mech_bg_image');
+                        if (persistentBg !== undefined) {
+                            savedBg = persistentBg;
+                            if (savedBg) localStorage.setItem('mech_bg_image', savedBg);
+                            else localStorage.removeItem('mech_bg_image');
+                        }
+                    } catch(e) {}
+                }
+                ui.applyBgImage(savedBg);
+            },
+
+            // 壁紙圖片自訂與清除 (開啟 Windows 視窗選擇，寫入 config.json 永久存檔)
+            setCustomBgImage: async () => {
+                let url = null;
+                if (window.pywebview && pywebview.api && pywebview.api.select_image_file) {
+                    url = await pywebview.api.select_image_file();
+                } else {
+                    url = prompt("Please enter image URL or local file path:");
+                }
+                if (url) {
+                    url = url.trim();
+                    localStorage.setItem('mech_bg_image', url);
+                    if (window.pywebview && pywebview.api && pywebview.api.save_theme_setting) {
+                        pywebview.api.save_theme_setting('mech_bg_image', url).catch(() => {});
+                    }
+                    ui.applyBgImage(url);
+                }
+            },
+            clearCustomBgImage: () => {
+                localStorage.removeItem('mech_bg_image');
+                if (window.pywebview && pywebview.api && pywebview.api.save_theme_setting) {
+                    pywebview.api.save_theme_setting('mech_bg_image', null).catch(() => {});
+                }
+                ui.applyBgImage(null);
+            },
+            applyBgImage: (url) => {
+                const container = document.querySelector('.bg-container');
+                const status = document.getElementById('bg-img-status');
+                if (container) {
+                    if (url) {
+                        const formatted = (url.startsWith('http') || url.startsWith('file:') || url.startsWith('data:')) ? url : ui.formatMediaUrl(url);
+                        container.style.backgroundImage = `url('${formatted}')`;
+                        if (status) status.innerText = 'STATUS: CUSTOM_IMAGE_ACTIVE';
+                    } else {
+                        container.style.backgroundImage = 'none';
+                        if (status) status.innerText = 'STATUS: NO_IMAGE (DEFAULT)';
+                    }
+                }
+            },
+
+            // 切換粒子效果
+            toggleParticles: (el) => {
+                el.classList.toggle('active');
+                const active = el.classList.contains('active');
+                if (ui.particles) ui.particles.toggle(active);
+                localStorage.setItem('mech-particles', active);
+            },
+
+            // 切換掃描線
+            toggleScanlines: (el) => {
+                el.classList.toggle('active');
+                const active = el.classList.contains('active');
+                document.querySelector('.scanlines').style.display = active ? 'block' : 'none';
+                localStorage.setItem('mech-scanlines', active);
+            },
+
+            // 切換網格
+            toggleGrid: (el) => {
+                el.classList.toggle('active');
+                const active = el.classList.contains('active');
+                document.querySelector('.grid-overlay').style.display = active ? 'block' : 'none';
+                localStorage.setItem('mech-grid', active);
+            },
+
+            // 切換自動隱藏
+            toggleAutoHide: (el) => {
+                el.classList.toggle('active');
+                ui.autoHideEnabled = el.classList.contains('active');
+                localStorage.setItem('mech-autohide', ui.autoHideEnabled);
+            },
+
+            // 切換主題選單 (動態定位，避免 clip-path 裁切)
+            toggleThemeMenu: () => {
+                const menu = document.getElementById('theme-menu');
+                const btn = document.getElementById('btn-theme');
+                if (!menu || !btn) return;
+
+                ui.themeMenuOpen = !ui.themeMenuOpen;
+                if (ui.themeMenuOpen) {
+                    const rect = btn.getBoundingClientRect();
+                    menu.style.position = 'fixed';
+                    menu.style.zIndex = '99999';
+                    menu.style.bottom = (window.innerHeight - rect.top + 12) + 'px';
+                    menu.style.right = (window.innerWidth - rect.right) + 'px';
+                    menu.classList.add('active');
+                    setTimeout(() => document.addEventListener('click', ui.closeThemeMenuOutside), 0);
+                } else {
+                    ui.closeThemeMenu();
+                }
+            },
+            closeThemeMenu: () => {
+                const menu = document.getElementById('theme-menu');
+                if (menu) menu.classList.remove('active');
+                ui.themeMenuOpen = false;
+                document.removeEventListener('click', ui.closeThemeMenuOutside);
+            },
+
+            formatMediaUrl: (path) => {
+                if (!path) return '';
+                let p = path.replace(/\\/g, '/');
+                let drive = '';
+                if (p.length >= 2 && p[1] === ':') {
+                    drive = p.substring(0, 2);
+                    p = p.substring(2);
+                }
+                const parts = p.split('/').filter(Boolean);
+                const encodedRest = parts.map(part => encodeURIComponent(part)).join('/');
+                return 'file:///' + (drive ? drive + '/' : '') + encodedRest;
+            },
+            encodePath: (p) => encodeURIComponent((p || '').replace(/\\/g, '/')),
+            initMediaSession: () => {},
+            updateMediaSession: (title, artist, coverUrl) => {},
+            updateMediaSessionState: (isPaused) => {},
+            updateUpsampleState: (state) => {
+                const btn = document.getElementById('btn-upsample');
+                if (btn) {
+                    if (state) {
+                        btn.classList.add('border-amber-400', 'text-amber-300', 'bg-amber-500/20');
+                        btn.classList.remove('border-emerald-500/40', 'text-emerald-400/70');
+                    } else {
+                        btn.classList.remove('border-amber-400', 'text-amber-300', 'bg-amber-500/20');
+                        btn.classList.add('border-emerald-500/40', 'text-emerald-400/70');
+                    }
+                }
+            },
+            updateNormalizeState: (state) => {
+                const btn = document.getElementById('btn-normalize');
+                if (btn) {
+                    if (state) {
+                        btn.classList.add('border-cyan-400', 'text-cyan-300', 'bg-cyan-500/20');
+                        btn.classList.remove('border-emerald-500/40', 'text-emerald-400/70');
+                    } else {
+                        btn.classList.remove('border-cyan-400', 'text-cyan-300', 'bg-cyan-500/20');
+                        btn.classList.add('border-emerald-500/40', 'text-emerald-400/70');
+                    }
+                }
+            },
+
+            closeThemeMenuOutside: (e) => {
+                const menu = document.getElementById('theme-menu');
+                const btn = document.getElementById('btn-theme');
+                if (menu && ui.themeMenuOpen && !menu.contains(e.target) && btn && !btn.contains(e.target)) {
+                    ui.closeThemeMenu();
+                }
+            }
+        };
+
+        // 初始化 (支援冷啟動與熱切換雙重相容)
+        if (window.pywebview && window.pywebview.api) {
+            ui.init();
+        } else {
+            window.addEventListener('pywebviewready', ui.init);
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(() => { if (!ui.initialized) ui.init(); }, 100);
+            });
+        }
+    </script>
+</body>
+</html>

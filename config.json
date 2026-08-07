@@ -1,0 +1,31 @@
+{
+    "mpv_path": "./bin/mpv.exe",
+    "ipc_pipe": "\\\\.\\pipe\\mpv_satellite_v3",
+    "startup_args": "--geometry=50%x50%",
+    "theme": "dark",
+    "boot_music": true,
+    "theme_file": "needy_theme.html",
+    "custom_wallpaper": null,
+    "audio_upsample": true,
+    "audio_normalize": true,
+    "custom_boot_track": "",
+    "noir_mode": false,
+    "theme_settings": {
+        "eq_enabled": false,
+        "eq_gains": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "eq_preset": "Flat",
+        "needy_preset_wallpaper": "default"
+    },
+    "play_mode": "album_continue"
+}

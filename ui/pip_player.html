@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPlay Mini PiP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            font-family: 'DotGothic16', sans-serif;
+        }
+        body {
+            background: #f4ecfd;
+            border: 2px solid #ff4081;
+            box-shadow: inset 0 0 12px rgba(255, 64, 129, 0.4), 0 8px 25px rgba(45, 12, 85, 0.5);
+            border-radius: 6px;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            padding: 6px 10px;
+            gap: 6px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* 🖤 Goth Dark / Noir Mode for PIP Player */
+        body.noir-mode {
+            background: #1a1824 !important;
+            border: 2px solid #f472b6 !important;
+            box-shadow: inset 0 0 12px rgba(244, 114, 182, 0.4), 0 8px 25px rgba(0, 0, 0, 0.8) !important;
+            color: #ffffff !important;
+        }
+
+        body.noir-mode .pip-header {
+            background: linear-gradient(90deg, #6b21a8 0%, #be185d 100%) !important;
+            color: #ffffff !important;
+        }
+
+        body.noir-mode #pip-title {
+            color: #ffffff !important;
+        }
+
+        body.noir-mode #pip-time {
+            color: #f3f4f6 !important;
+        }
+
+        body.noir-mode input[type=range]::-webkit-slider-runnable-track {
+            background: #332d44 !important;
+            border-color: #f472b6 !important;
+        }
+
+        body.noir-mode input[type=range]::-webkit-slider-thumb {
+            background: #ec4899 !important;
+        }
+
+        body.noir-mode .cover-box {
+            border-color: #f472b6 !important;
+            background: #242030 !important;
+        }
+
+        body.noir-mode #pip-fallback {
+            background: #242030 !important;
+            color: #f472b6 !important;
+        }
+
+        body.noir-mode button span {
+            color: #f472b6 !important;
+        }
+
+        .pip-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(90deg, #7c4dff 0%, #ff4081 100%);
+            color: white;
+            padding: 2px 6px;
+            font-size: 9px;
+            border-radius: 3px;
+            cursor: move;
+        }
+
+        .pip-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .cover-box {
+            width: 48px;
+            height: 48px;
+            border: 1.5px solid #8258ff;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #ffffff;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .cover-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+            height: 12px;
+            cursor: pointer;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            background: #e2cbf7;
+            border: 1px solid #6b33a8;
+            border-radius: 2px;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 12px;
+            width: 10px;
+            background: #ff4081;
+            border: 1px solid #ffffff;
+            margin-top: -4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="pip-header" pywebview-drag-region>
+        <span class="font-bold tracking-wider">📌 MPlay // Picture-in-Picture Mini Player</span>
+        <button onclick="pip.close()" class="text-white hover:text-yellow-200 text-xs font-bold px-1">✕</button>
+    </div>
+
+    <div class="pip-content">
+        <div class="cover-box">
+            <img id="pip-cover" src="" alt="Cover" class="opacity-0 transition-opacity">
+            <div id="pip-fallback" class="absolute inset-0 flex items-center justify-center bg-[#f0e1ff] text-[#8258ff]">
+                <span class="material-icons-round text-xl">music_note</span>
+            </div>
+        </div>
+
+        <div class="flex-1 min-w-0 flex flex-col justify-center">
+            <div id="pip-title" class="text-xs font-bold text-[#3b1166] truncate mb-1">AWAITING_MEDIA</div>
+            
+            <div class="flex items-center gap-2 mb-1">
+                <button onclick="pywebview.api.toggle_play_mode()" class="text-[#7c4dff] hover:text-[#ff4081] transition" title="Mode"><span id="pip-icon-mode" class="material-icons-round text-sm">repeat</span></button>
+                <button onclick="pip.control('prev')" class="text-[#3b1166] hover:text-[#ff4081] transition"><span class="material-icons-round text-base">skip_previous</span></button>
+                <button onclick="pip.control('play_pause')" class="w-6 h-6 bg-[#ff4081] text-white rounded-full flex items-center justify-center shadow hover:scale-105 transition">
+                    <span id="pip-icon-play" class="material-icons-round text-sm">play_arrow</span>
+                </button>
+                <button onclick="pip.control('next')" class="text-[#3b1166] hover:text-[#ff4081] transition"><span class="material-icons-round text-base">skip_next</span></button>
+                <span id="pip-time" class="text-[10px] font-mono text-[#52278c] ml-auto">00:00 / 00:00</span>
+            </div>
+
+            <input type="range" id="pip-seek" min="0" max="100" value="0" class="w-full" onchange="pip.seek(this.value)" oninput="pip.isDragging=true" onmouseup="pip.isDragging=false">
+        </div>
+
+        <img id="pip-ame" src="../boot2/GIF2/choten-chan-idle.gif" alt="Ame-Chan" class="w-10 h-10 object-contain flex-shrink-0" onerror="this.style.display='none'">
+    </div>
+
+    <script>
+        const pip = {
+            isDragging: false,
+
+            init: () => {
+                setInterval(pip.syncState, 300);
+            },
+
+            syncState: async () => {
+                if (window.pywebview && pywebview.api && pywebview.api.get_playback_status) {
+                    try {
+                        const st = await pywebview.api.get_playback_status();
+                        if (st) {
+                            if (st.is_noir_mode) {
+                                document.body.classList.add('noir-mode');
+                            } else {
+                                document.body.classList.remove('noir-mode');
+                            }
+
+                            document.getElementById('pip-title').innerText = st.title || 'AWAITING_MEDIA';
+                            document.getElementById('pip-icon-play').innerText = st.is_playing ? 'pause' : 'play_arrow';
+                            if (st.play_mode) pip.updatePlayMode(st.play_mode);
+                            
+                            const seek = document.getElementById('pip-seek');
+                            if (!pip.isDragging) {
+                                seek.max = st.duration || 100;
+                                seek.value = st.position || 0;
+                            }
+                            
+                            const cur = pip.fmtTime(st.position);
+                            const tot = pip.fmtTime(st.duration);
+                            document.getElementById('pip-time').innerText = `${cur} / ${tot}`;
+
+                            const coverImg = document.getElementById('pip-cover');
+                            const fallback = document.getElementById('pip-fallback');
+                            if (st.cover_url) {
+                                if (coverImg.src !== st.cover_url) coverImg.src = st.cover_url;
+                                coverImg.classList.remove('opacity-0');
+                                fallback.classList.add('opacity-0');
+                            } else {
+                                coverImg.classList.add('opacity-0');
+                                fallback.classList.remove('opacity-0');
+                            }
+
+                            if (pywebview.api.get_theme_settings) {
+                                pywebview.api.get_theme_settings().then(ts => {
+                                    if (ts && (ts.needy_sticker_image || ts.needy_avatar_image)) {
+                                        const sPath = ts.needy_sticker_image || ts.needy_avatar_image;
+                                        const ameImg = document.getElementById('pip-ame');
+                                        if (ameImg && sPath && ameImg.src !== sPath) {
+                                            ameImg.src = sPath;
+                                            ameImg.style.display = 'block';
+                                        }
+                                    }
+                                }).catch(() => {});
+                            }
+                        }
+                    } catch(e) {}
+                }
+            },
+
+            updatePlayMode: (mode) => {
+                const icon = document.getElementById('pip-icon-mode');
+                if (!icon) return;
+                if (mode === 'loop') icon.innerText = 'repeat';
+                else if (mode === 'shuffle') icon.innerText = 'shuffle';
+                else if (mode === 'one') icon.innerText = 'repeat_one';
+                else if (mode === 'album_continue') icon.innerText = 'library_music';
+            },
+
+            fmtTime: (s) => {
+                if (!s || isNaN(s)) return "00:00";
+                return `${Math.floor(s/60).toString().padStart(2,'0')}:${Math.floor(s%60).toString().padStart(2,'0')}`;
+            },
+
+            control: (action) => {
+                if (window.pywebview && pywebview.api) {
+                    pywebview.api.control(action);
+                }
+            },
+
+            seek: (val) => {
+                pip.isDragging = false;
+                if (window.pywebview && pywebview.api) {
+                    pywebview.api.control('seek', val);
+                }
+            },
+
+            close: () => {
+                if (window.pywebview && pywebview.api && pywebview.api.close_pip_window) {
+                    pywebview.api.close_pip_window();
+                }
+            }
+        };
+
+        window.addEventListener('pywebviewready', pip.init);
+    </script>
+</body>
+</html>

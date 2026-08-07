@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPlay - Immersive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <style>
+        /* --- 核心背景設定 (GPU 加速) --- */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0; padding: 0; overflow: hidden;
+            color: #ffffff;
+            background-color: #121212;
+            background-image: none; 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body::before {
+            content: '';
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.85) 100%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* --- 高效能毛玻璃 UI 組件 --- */
+        .glass-panel {
+            background: rgba(20, 20, 20, 0.75);
+            -webkit-backdrop-filter: blur(16px) saturate(120%);
+            backdrop-filter: blur(16px) saturate(120%);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+
+        /* 3D 舞台 */
+        #stage-perspective { perspective: 1200px; width: 100vw; height: 100vh; overflow: hidden; }
+
+        /* 主畫面層 */
+        #layer-folders {
+            width: 100%; height: 100vh; overflow-y: auto; overflow-x: hidden;
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s ease;
+            padding-bottom: 120px;
+            will-change: transform;
+            transform: translateZ(0);
+        }
+
+        /* 進入資料夾後的景深效果 */
+        #layer-folders.depth-mode {
+            transform: scale(0.94) translateZ(-60px);
+            filter: brightness(0.6) blur(2px);
+            pointer-events: none;
+        }
+
+        /* 側邊欄 (Tracklist) */
+        #layer-tracks {
+            position: absolute; top: 0; right: 0;
+            width: 450px; height: 100%; display: flex; flex-direction: column;
+            background: rgba(15, 15, 15, 0.85);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(255, 255, 255, 0.15);
+            transform: translateX(105%) translateZ(0); opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
+            z-index: 50;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+        }
+        #layer-tracks.active { transform: translateX(0) translateZ(0); opacity: 1; }
+
+        /* 資料夾卡片 - 高效玻璃質感 (移除內嵌 multi-pass blur 以大幅降低 GPU 開銷) */
+        .folder-card {
+            background: rgba(30, 30, 30, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: transform 0.25s ease, background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+            contain: content;
+            transform: translateZ(0);
+        }
+        .folder-card:hover {
+            transform: translateY(-4px) translateZ(0);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* 歌曲列表項 */
+        .track-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background-color 0.15s ease, color 0.15s ease;
+            color: rgba(255, 255, 255, 0.8);
+            contain: content;
+        }
+        .track-item:hover { background: rgba(255, 255, 255, 0.1); color: white; }
+        .track-item.active {
+            background: rgba(255, 255, 255, 0.18);
+            border-left: 3px solid #fff;
+        }
+        .track-item.active .track-title { color: #fff; font-weight: 600; }
+        
+        /* 播放動畫 */
+        .playing-anim { display: none; gap: 2px; align-items: flex-end; height: 12px; }
+        .track-item.active .playing-anim { display: flex; }
+        .bar { width: 3px; background: #fff; animation: bounce 1s infinite ease-in-out; }
+        .bar:nth-child(1) { height: 6px; animation-delay: 0s; }
+        .bar:nth-child(2) { height: 10px; animation-delay: 0.2s; }
+        .bar:nth-child(3) { height: 8px; animation-delay: 0.4s; }
+        @keyframes bounce { 0%, 100% { transform: scaleY(0.5); } 50% { transform: scaleY(1); } }
+
+        /* 播放器 Bar */
+        .player-bar {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateZ(0);
+            width: 90%; max-width: 800px; height: 80px;
+            z-index: 100;
+            border-radius: 24px;
+            @apply glass-panel; 
+            will-change: transform;
+            backface-visibility: hidden;
+        }
+        
+        input[type=range] { -webkit-appearance: none; background: transparent; }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 12px; width: 12px; border-radius: 50%;
+            background: #fff; margin-top: -4px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 4px; background: rgba(255, 255, 255, 0.2); border-radius: 2px;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.4); }
+
+        #theme-menu {
+            background: rgba(25, 25, 25, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+        }
+        #theme-menu button:hover { background: rgba(255,255,255,0.1); }
+        #theme-menu button.border-b { border-color: rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body>
+
+    <div id="stage-perspective">
+        <div id="layer-folders">
+            <header class="flex justify-between items-center mb-6 sticky top-0 z-10 p-8 pb-4 bg-transparent">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 rounded-full glass-panel border-0">
+                        <span class="material-icons-round text-white text-3xl">filter_hdr</span>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold tracking-tight text-white drop-shadow-md">Immersive Library</h1>
+                        <p class="text-xs text-gray-300 font-mono mt-1 opacity-80">VISUAL FOCUS MODE</p>
+                    </div>
+                </div>
+                <div class="flex gap-3 items-center">
+                    <button onclick="ui.toggleEqModal()" class="px-4 py-2 glass-panel hover:bg-white/20 text-white rounded-full transition flex items-center gap-2">
+                        <span class="material-icons-round text-sm">equalizer</span> Audio EQ
+                    </button>
+                    <button onclick="ui.scanFolder()" class="px-4 py-2 glass-panel hover:bg-white/20 text-white rounded-full transition flex items-center gap-2">
+                        <span class="material-icons-round text-sm">add</span> 匯入
+                    </button>
+                    <button onclick="ui.closeApp()" class="p-2 text-white/70 hover:text-white hover:bg-red-500/50 rounded-full transition"><span class="material-icons-round">power_settings_new</span></button>
+                </div>
+            </header>
+
+            <div id="folder-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-8">
+                </div>
+            <div class="h-32"></div>
+        </div>
+
+        <div id="layer-tracks">
+            <div class="p-6 flex items-center gap-4 flex-shrink-0 border-b border-white/10">
+                <button onclick="ui.closeFolder()" class="p-2 hover:bg-white/10 rounded-full transition text-white" title="Back">
+                    <span class="material-icons-round text-xl">arrow_back_ios_new</span>
+                </button>
+                <div class="overflow-hidden">
+                    <h2 id="panel-title" class="text-lg font-bold truncate text-white drop-shadow">Folder Name</h2>
+                    <p class="text-xs text-gray-300 font-mono tracking-wider opacity-70">TRACKLIST</p>
+                </div>
+            </div>
+            <div id="track-list" class="flex-1 overflow-y-auto p-4 space-y-1 pb-32 scroll-smooth"></div>
+        </div>
+    </div>
+
+    <!-- 🎛️ Glassmorphic Parametric EQ Custom Modal -->
+    <div id="eq-modal" class="hidden fixed inset-0 z-[999999] bg-black/60 backdrop-blur-xl flex items-center justify-center p-4" onclick="ui.closeEqModal()">
+        <div class="w-[620px] bg-slate-900/90 border border-white/20 rounded-2xl p-6 shadow-2xl flex flex-col gap-4 font-sans text-white" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="material-icons-round text-emerald-400 text-xl">equalizer</span>
+                    <h3 class="text-sm font-bold text-white tracking-wider">Parametric Equalizer</h3>
+                </div>
+                <div class="flex items-center gap-4">
+                    <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-emerald-400">
+                        <input type="checkbox" id="eq-master-switch" onchange="ui.toggleEqMaster(this.checked)" class="accent-emerald-400 w-4 h-4 cursor-pointer">
+                        <span>EQ ENABLED</span>
+                    </label>
+                    <button onclick="ui.closeEqModal()" class="text-gray-400 hover:text-white font-bold text-xl px-2">×</button>
+                </div>
+            </div>
+
+            <!-- Preset Controls -->
+            <div class="flex justify-between items-center bg-white/5 p-3 rounded-xl border border-white/10">
+                <div class="flex items-center gap-2 text-xs">
+                    <span class="text-gray-300 font-bold">Preset:</span>
+                    <select id="eq-preset-select" onchange="ui.applyEqPreset(this.value)" class="bg-slate-800 text-emerald-300 border border-white/20 rounded-lg px-3 py-1 text-xs font-bold focus:outline-none cursor-pointer">
+                        <option value="Flat">🎵 Flat (Default / 原音)</option>
+                        <option value="Rock">🎸 Rock (搖滾樂)</option>
+                        <option value="Vocal">🎤 Vocal Boost (人聲增強)</option>
+                        <option value="Bass">💥 Bass Boost (低音重砲)</option>
+                        <option value="Gaming">🎧 Gaming & Anime (動漫遊戲)</option>
+                        <option value="Jazz">🎷 Jazz (爵士樂)</option>
+                        <option value="Pop">🌸 Pop (流行娛樂)</option>
+                        <option value="Electronic">⚡ Cyber Electronic (賽博電子)</option>
+                    </select>
+                </div>
+                <button onclick="ui.resetEqGains()" class="px-4 py-1 bg-white/10 hover:bg-white/20 text-xs font-bold text-white rounded-lg border border-white/20 transition">
+                    Flat Reset
+                </button>
+            </div>
+
+            <!-- Frequency Response Curve Preview -->
+            <div class="w-full h-16 bg-slate-950/80 border border-white/10 rounded-xl relative overflow-hidden flex items-center justify-center">
+                <svg id="eq-curve-svg" class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 600 60">
+                    <path id="eq-curve-path" d="M 0 30 Q 300 30 600 30" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" />
+                </svg>
+                <div class="absolute inset-0 flex justify-between items-center px-4 pointer-events-none opacity-40 text-[9px] text-emerald-400 font-bold">
+                    <span>SUB-BASS</span><span>MID</span><span>TREBLE</span>
+                </div>
+            </div>
+
+            <!-- 10-Band Equalizer Sliders (-12dB to +12dB) -->
+            <div id="eq-bands-container" class="grid grid-cols-10 gap-2 bg-white/5 p-4 rounded-xl border border-white/10">
+            </div>
+
+            <div class="flex justify-between items-center text-[10px] text-gray-400 border-t border-white/10 pt-2 font-mono">
+                <span>Range: -12dB ~ +12dB</span>
+                <span class="text-emerald-400 font-bold">Real-time Glass Audio Engine</span>
+            </div>
+        </div>
+    </div>
+
+            <div id="folder-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-8">
+                </div>
+            <div class="h-32"></div>
+        </div>
+
+        <div id="layer-tracks">
+            <div class="p-6 flex items-center gap-4 flex-shrink-0 border-b border-white/10">
+                <button onclick="ui.closeFolder()" class="p-2 hover:bg-white/10 rounded-full transition text-white" title="Back">
+                    <span class="material-icons-round text-xl">arrow_back_ios_new</span>
+                </button>
+                <div class="overflow-hidden">
+                    <h2 id="panel-title" class="text-lg font-bold truncate text-white drop-shadow">Folder Name</h2>
+                    <p class="text-xs text-gray-400 font-mono">TRACKLIST</p>
+                </div>
+            </div>
+            <div id="track-list" class="flex-1 overflow-y-auto p-4 space-y-2 pb-32 scroll-smooth"></div>
+        </div>
+    </div>
+
+    <div class="player-bar flex items-center px-6 gap-4">
+        <div class="w-12 h-12 bg-white/10 rounded-lg overflow-hidden flex-shrink-0 relative group shadow-sm border border-white/10">
+            <img id="cover-art" src="" alt="Cover" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity">
+            <span class="material-icons-round absolute inset-0 flex items-center justify-center text-white/30">music_note</span>
+        </div>
+
+        <div class="flex-1 flex flex-col justify-center">
+            <div class="flex justify-between items-end mb-1">
+                <div id="player-title" class="text-sm font-bold text-white truncate max-w-[200px] drop-shadow">Ready to Play</div>
+                <div class="flex items-center gap-3">
+                    <button id="btn-upsample" onclick="pywebview.api.toggle_audio_upsample()" class="px-2 py-0.5 text-[9px] font-bold border border-white/30 text-white/70 rounded hover:bg-white/20 transition" title="Hi-Res Audio 192kHz/32-bit Float Over-Sampling">HI-RES 192K</button>
+                    <button id="btn-normalize" onclick="pywebview.api.toggle_audio_normalize()" class="px-2 py-0.5 text-[9px] font-bold border border-white/30 text-white/70 rounded hover:bg-white/20 transition" title="EBU R128 Loudness Auto Normalization">EBU R128</button>
+                    <button onclick="pywebview.api.toggle_play_mode()" class="text-white/60 hover:text-white transition">
+                        <span id="icon-mode" class="material-icons-round text-lg">repeat</span>
+                    </button>
+                    <button onclick="pywebview.api.control('prev')" class="text-white/60 hover:text-white transition"><span class="material-icons-round">skip_previous</span></button>
+                    <button onclick="pywebview.api.control('play_pause')" class="w-10 h-10 bg-white text-black rounded-full flex items-center justify-center hover:scale-105 transition shadow-lg shadow-white/20">
+                        <span class="material-icons-round text-xl" id="icon-play">play_arrow</span>
+                    </button>
+                    <button onclick="pywebview.api.control('next')" class="text-white/60 hover:text-white transition"><span class="material-icons-round">skip_next</span></button>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 text-[10px] text-white/60 font-mono">
+                <span id="time-current">00:00</span>
+                <input type="range" id="seek-bar" min="0" max="100" value="0" class="flex-1 h-1 accent-white" onchange="ui.seek(this.value)" oninput="ui.isDragging = true" onmouseup="ui.isDragging = false">
+                <span id="time-total">00:00</span>
+            </div>
+        </div>
+        
+        <div class="w-auto flex items-center gap-4 relative">
+            <button onclick="pywebview.api.toggle_boot_music()" class="group relative text-white/60 hover:text-white transition hover:scale-110">
+                <span id="icon-boot" class="material-icons-round">music_note</span>
+            </button>
+             <div class="relative">
+                <button onclick="ui.toggleThemeMenu()" class="text-white/60 hover:text-white transition hover:scale-110">
+                    <span class="material-icons-round">palette</span>
+                </button>
+                <div id="theme-menu" class="hidden absolute bottom-12 right-0 w-44 bg-black/80 backdrop-blur-md rounded-xl shadow-xl overflow-hidden z-50 flex-col border border-white/10">
+                    <button onclick="pywebview.api.change_theme('needy_theme.html')" class="px-4 py-2 text-left text-xs transition border-b border-white/10 text-gray-300 hover:bg-white/10">✨ Internet Angel</button>
+                    <button onclick="pywebview.api.change_theme('cyberpunk.html')" class="px-4 py-2 text-left text-xs transition border-b border-white/10 text-gray-300 hover:bg-white/10">⚡ Cyberpunk</button>
+                    <button onclick="pywebview.api.change_theme('mech_theme.html')" class="px-4 py-2 text-left text-xs transition border-b border-white/10 text-gray-300 hover:bg-white/10">🤖 Cyber Mech</button>
+                    <button onclick="pywebview.api.change_theme('index.html')" class="px-4 py-2 text-left text-xs transition border-b border-white/10 text-gray-300 hover:bg-white/10">🎵 Default Dark</button>
+                    <button onclick="pywebview.api.change_theme('light.html')" class="px-4 py-2 text-left text-xs transition border-b border-white/10 text-gray-300 hover:bg-white/10">🌸 Light Ambient</button>
+                    <button onclick="pywebview.api.change_theme('image_theme.html')" class="px-4 py-2 text-left text-xs transition text-white font-bold bg-white/20">🖼️ Immersive Glass</button>
+                </div>
+            </div>
+
+            <!-- Custom Background Image Button (Default: None) -->
+            <button onclick="ui.setCustomBgImage()" class="text-white/60 hover:text-white transition hover:scale-105 p-1 rounded bg-white/10 hover:bg-white/20 flex items-center gap-1" title="Select Background Image (Default: None)">
+                <span class="material-icons-round text-sm">wallpaper</span>
+                <span class="text-[10px] hide-mobile">Background</span>
+            </button>
+
+            <div class="w-24 flex items-center gap-2 group">
+                 <button onclick="pywebview.api.toggle_mute()" class="focus:outline-none">
+                     <span id="icon-volume" class="material-icons-round text-white/60 text-xs hover:text-white transition">volume_up</span>
+                 </button>
+                 <input type="range" min="0" max="100" value="60" class="w-full h-1 accent-white cursor-pointer" oninput="pywebview.api.control('volume', this.value)">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ui = {
+            isDragging: false, currentTrackPath: null, isProcessing: false,
+            toggleThemeMenu: () => {
+                const menu = document.getElementById('theme-menu');
+                if (menu.classList.contains('hidden')) {
+                    menu.classList.remove('hidden'); menu.classList.add('flex');
+                    setTimeout(() => { document.addEventListener('click', ui.closeThemeMenuOutside); }, 0);
+                } else { ui.closeThemeMenu(); }
+            },
+            closeThemeMenu: () => {
+                const menu = document.getElementById('theme-menu');
+                menu.classList.add('hidden'); menu.classList.remove('flex');
+                document.removeEventListener('click', ui.closeThemeMenuOutside);
+            },
+            closeThemeMenuOutside: (e) => {
+                const menu = document.getElementById('theme-menu');
+                if (!menu.contains(e.target) && !e.target.closest('button[onclick="ui.toggleThemeMenu()"]')) { ui.closeThemeMenu(); }
+            },
+            setCustomBgImage: async () => {
+                let url = null;
+                if (window.pywebview && pywebview.api && pywebview.api.select_image_file) {
+                    url = await pywebview.api.select_image_file();
+                } else {
+                    url = prompt("Please enter image URL or local file path:");
+                }
+                if (url) {
+                    url = url.trim();
+                    localStorage.setItem('glass_bg_image', url);
+                    if (window.pywebview && pywebview.api && pywebview.api.save_theme_setting) {
+                        pywebview.api.save_theme_setting('glass_bg_image', url).catch(() => {});
+                    }
+                    ui.applyBgImage(url);
+                } else {
+                    localStorage.removeItem('glass_bg_image');
+                    if (window.pywebview && pywebview.api && pywebview.api.save_theme_setting) {
+                        pywebview.api.save_theme_setting('glass_bg_image', null).catch(() => {});
+                    }
+                    ui.applyBgImage(null);
+                }
+            },
+            applyBgImage: (url) => {
+                if (url) {
+                    const formatted = (url.startsWith('http') || url.startsWith('file:') || url.startsWith('data:')) ? url : ui.toFileUrl(url);
+                    document.body.style.backgroundImage = `url('${formatted}')`;
+                } else {
+                    document.body.style.backgroundImage = 'none';
+                }
+            },
+
+            init: async () => {
+                let savedBg = localStorage.getItem('glass_bg_image');
+                if (window.pywebview && pywebview.api && pywebview.api.get_theme_setting) {
+                    try {
+                        const persistentBg = await pywebview.api.get_theme_setting('glass_bg_image');
+                        if (persistentBg !== undefined) {
+                            savedBg = persistentBg;
+                            if (savedBg) localStorage.setItem('glass_bg_image', savedBg);
+                            else localStorage.removeItem('glass_bg_image');
+                        }
+                    } catch(e) {}
+                }
+                ui.applyBgImage(savedBg);
+                ui.syncState();
+                try { await ui.loadFolders(); } catch(e) {}
+                if (window.pywebview && pywebview.api) {
+                        try {
+                        const bootState = await pywebview.api.get_boot_state();
+                        ui.updateBootState(bootState);
+                        pywebview.api.start_mpv().catch(() => {});
+                    } catch(e) {}
+                     ui.syncState();
+                }
+                try { await ui.initEqUI(); } catch(e) {}
+                setInterval(ui.syncState, 500);
+            },
+
+            // 🎛️ Parametric EQ Controller
+            eqBands: [
+                { freq: '60Hz', label: 'Sub-Bass' },
+                { freq: '170Hz', label: 'Bass' },
+                { freq: '310Hz', label: 'Low-Mid' },
+                { freq: '600Hz', label: 'Mid' },
+                { freq: '1kHz', label: 'Mid-High' },
+                { freq: '3kHz', label: 'Presence' },
+                { freq: '6kHz', label: 'High' },
+                { freq: '12kHz', label: 'Treble' },
+                { freq: '14kHz', label: 'Air' },
+                { freq: '16kHz', label: 'Ultra High' }
+            ],
+            eqPresets: {
+                Flat: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                Rock: [4, 3, 2, 0, -1, 1, 3, 4, 4, 3],
+                Vocal: [-2, -1, 1, 3, 4, 3, 2, 1, 0, 0],
+                Bass: [6, 5, 4, 2, 0, -1, -2, -1, 0, 0],
+                Gaming: [3, 2, 0, -1, 1, 3, 4, 5, 4, 3],
+                Jazz: [3, 2, 1, 2, -1, -1, 0, 1, 2, 3],
+                Pop: [-1, 2, 4, 5, 3, 0, -1, 2, 3, 2],
+                Electronic: [5, 4, 2, 0, -2, 2, 3, 4, 5, 5]
+            },
+            currentEqGains: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            isEqEnabled: false,
+
+            toggleEqModal: () => {
+                const modal = document.getElementById('eq-modal');
+                if (modal) modal.classList.toggle('hidden');
+            },
+            closeEqModal: () => {
+                const modal = document.getElementById('eq-modal');
+                if (modal) modal.classList.add('hidden');
+            },
+            openEqModal: () => {
+                const modal = document.getElementById('eq-modal');
+                if (modal) modal.classList.remove('hidden');
+            },
+
+            initEqUI: async () => {
+                const container = document.getElementById('eq-bands-container');
+                if (!container) return;
+
+                container.innerHTML = ui.eqBands.map((b, idx) => `
+                    <div class="flex flex-col items-center gap-1 min-w-0">
+                        <span id="eq-db-${idx}" class="text-[10px] font-bold text-emerald-400">0dB</span>
+                        <div class="h-28 flex items-center justify-center relative w-full overflow-hidden">
+                            <input type="range" id="eq-slider-${idx}" min="-12" max="12" step="0.5" value="0"
+                                class="w-24 h-1.5 bg-slate-800 accent-emerald-400 cursor-pointer rounded-lg -rotate-90 transform origin-center"
+                                oninput="ui.onEqSliderInput(${idx}, this.value)">
+                        </div>
+                        <span class="text-[10px] font-bold text-gray-200 mt-1">${b.freq}</span>
+                        <span class="text-[8px] text-gray-400 truncate w-full text-center">${b.label}</span>
+                    </div>
+                `).join('');
+
+                if (window.pywebview && pywebview.api && pywebview.api.get_eq_settings) {
+                    try {
+                        const st = await pywebview.api.get_eq_settings();
+                        if (st) {
+                            ui.isEqEnabled = !!st.enabled;
+                            if (st.gains && Array.isArray(st.gains)) {
+                                ui.currentEqGains = st.gains.map(v => parseFloat(v) || 0);
+                            }
+                            const master = document.getElementById('eq-master-switch');
+                            if (master) master.checked = ui.isEqEnabled;
+                            const select = document.getElementById('eq-preset-select');
+                            if (select && st.preset) select.value = st.preset;
+                            ui.syncEqSlidersUI();
+                        }
+                    } catch(e) {}
+                }
+            },
+
+            onEqSliderInput: (idx, val) => {
+                const numVal = parseFloat(val) || 0;
+                ui.currentEqGains[idx] = numVal;
+                const dbEl = document.getElementById(`eq-db-${idx}`);
+                if (dbEl) dbEl.innerText = (numVal > 0 ? '+' : '') + numVal + 'dB';
+                ui.updateEqCurve();
+
+                if (ui.isEqEnabled) {
+                    if (ui._eqDebounceTimer) clearTimeout(ui._eqDebounceTimer);
+                    ui._eqDebounceTimer = setTimeout(() => {
+                        if (window.pywebview && pywebview.api && pywebview.api.set_eq_settings) {
+                            pywebview.api.set_eq_settings(true, ui.currentEqGains).catch(() => {});
+                        }
+                    }, 40);
+                }
+            },
+
+            toggleEqMaster: (enabled) => {
+                ui.isEqEnabled = !!enabled;
+                if (window.pywebview && pywebview.api && pywebview.api.set_eq_settings) {
+                    pywebview.api.set_eq_settings(ui.isEqEnabled, ui.currentEqGains).catch(() => {});
+                }
+            },
+
+            applyEqPreset: (presetName) => {
+                const gains = ui.eqPresets[presetName] || ui.eqPresets['Flat'];
+                ui.currentEqGains = [...gains];
+                ui.syncEqSlidersUI();
+                if (window.pywebview && pywebview.api && pywebview.api.set_eq_settings) {
+                    pywebview.api.set_eq_settings(ui.isEqEnabled, ui.currentEqGains, presetName).catch(() => {});
+                }
+            },
+
+            resetEqGains: () => {
+                const select = document.getElementById('eq-preset-select');
+                if (select) select.value = 'Flat';
+                ui.applyEqPreset('Flat');
+            },
+
+            syncEqSlidersUI: () => {
+                ui.currentEqGains.forEach((val, idx) => {
+                    const slider = document.getElementById(`eq-slider-${idx}`);
+                    if (slider) slider.value = val;
+                    const dbEl = document.getElementById(`eq-db-${idx}`);
+                    if (dbEl) dbEl.innerText = (val > 0 ? '+' : '') + val + 'dB';
+                });
+                ui.updateEqCurve();
+            },
+
+            updateEqCurve: () => {
+                const pathEl = document.getElementById('eq-curve-path');
+                if (!pathEl) return;
+                const gains = ui.currentEqGains;
+                const width = 600;
+                const step = width / (gains.length - 1);
+                const points = gains.map((g, i) => {
+                    const x = i * step;
+                    const y = 30 - (g * 2.2);
+                    return { x, y };
+                });
+
+                let d = `M ${points[0].x} ${points[0].y}`;
+                for (let i = 0; i < points.length - 1; i++) {
+                    const p1 = points[i];
+                    const p2 = points[i + 1];
+                    const cx = (p1.x + p2.x) / 2;
+                    d += ` Q ${p1.x} ${p1.y}, ${cx} ${(p1.y + p2.y) / 2}`;
+                }
+                d += ` L ${points[points.length - 1].x} ${points[points.length - 1].y}`;
+                pathEl.setAttribute('d', d);
+            },
+
+            syncState: async () => {
+                try {
+                    if (!window.pywebview || !pywebview.api || !pywebview.api.get_playback_status) return;
+                    const st = await pywebview.api.get_playback_status();
+
+                    if (st.title && st.title !== "AWAITING_MEDIA") {
+                        ui.updateTitle(st.title);
+                    }
+                    if (st.duration > 0) {
+                        ui.updateDuration(st.duration);
+                    }
+                    if (st.position >= 0) {
+                        ui.updateProgress(st.position);
+                    }
+                    if (st.cover_url) {
+                        ui.updateCover(st.cover_url);
+                    }
+                    ui.updatePlayState(!st.is_playing);
+                    if (st.is_muted !== undefined) ui.updateMuteState(st.is_muted);
+                    if (st.play_mode) ui.updatePlayMode(st.play_mode);
+                    if (st.is_upsample !== undefined) ui.updateUpsampleState(st.is_upsample);
+                    if (st.is_normalize !== undefined) ui.updateNormalizeState(st.is_normalize);
+                    if (st.is_boot_mode !== undefined) ui.updateBootState(st.is_boot_mode);
+                    if (st.current_path) ui.highlightTrack(st.current_path);
+                } catch(e) {
+                    console.error("syncState error:", e);
+                }
+            },
+            updateBootState: (enabled) => {
+                const icon = document.getElementById('icon-boot');
+                icon.classList.toggle('text-white', enabled);
+                icon.classList.toggle('text-white/60', !enabled);
+            },
+            encodePath: (str) => encodeURIComponent(str).replace(/'/g, "%27"),
+            loadFolders: async () => {
+                const folders = await pywebview.api.get_library_folders();
+                const grid = document.getElementById('folder-grid');
+                grid.innerHTML = folders.map(f => {
+                    const safePath = ui.encodePath(f.path);
+                    const safeNameAttr = f.name.replace(/"/g, "&quot;");
+                    const displayName = f.name.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                    // --- 樣式修改：毛玻璃卡片 ---
+                    return `
+                    <div class="folder-card rounded-2xl overflow-hidden cursor-pointer relative group"
+                        data-path="${safePath}" data-name="${safeNameAttr}" onclick="ui.handleFolderClick(this)">
+                        <div class="aspect-square bg-black/20 relative overflow-hidden">
+                            ${f.cover ? `<img src="" data-src="${f.cover}" alt="Cover" class="lazy-img absolute inset-0 w-full h-full object-cover transition duration-500 group-hover:scale-110 opacity-0">` : `<div class="absolute inset-0 flex items-center justify-center"><span class="material-icons-round text-5xl text-white/30">folder</span></div>`}
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-medium text-white text-sm truncate drop-shadow-sm" title="${safeNameAttr}">${displayName}</h3>
+                        </div>
+                    </div>`;
+                }).join('');
+                ui.lazyLoadImages();
+            },
+            handleFolderClick: (el) => {
+                if (ui.isProcessing) return;
+                ui.openFolder(decodeURIComponent(el.dataset.path), el.dataset.name);
+            },
+            openFolder: async (path, name) => {
+                ui.lastHighlightedPath = null;
+                document.getElementById('panel-title').innerText = name;
+                document.getElementById('layer-folders').classList.add('depth-mode');
+                document.getElementById('layer-tracks').classList.add('active');
+                const list = document.getElementById('track-list');
+                list.innerHTML = `<div class="text-center py-10 text-white/50 animate-pulse">Loading...</div>`;
+                const tracks = await pywebview.api.get_folder_tracks(path);
+                list.innerHTML = tracks.map((t, idx) => {
+                    const cleanPath = t.path.replace(/\\/g, '/');
+                    const isActive = (cleanPath === ui.currentTrackPath);
+                    const safePath = ui.encodePath(t.path);
+                    let name = t.filename.replace(/\.[^/.]+$/, "");
+                    const displayName = name.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                    // --- 樣式修改：白色系列表 ---
+                    return `
+                    <div class="track-item flex items-center gap-3 p-3 rounded-lg cursor-pointer group ${isActive ? 'active' : ''}"
+                        data-path="${cleanPath}" onclick="ui.handleTrackClick('${safePath}')">
+                        <div class="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-xs text-white/70 font-mono">
+                            <span class="track-num ${isActive ? 'hidden' : ''}">${String(idx + 1).padStart(2, '0')}</span>
+                            <div class="playing-anim ${isActive ? 'flex' : ''}"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="track-title text-sm font-medium truncate">${displayName}</div>
+                        </div>
+                    </div>`;
+                }).join('');
+            },
+            handleTrackClick: async (encodedPath) => {
+                if (ui.isProcessing) return;
+                const path = decodeURIComponent(encodedPath);
+                ui.isProcessing = true; ui.highlightTrack(path);
+                try { await pywebview.api.play_video(path); } catch (e) {} finally { setTimeout(() => { ui.isProcessing = false; }, 300); }
+            },
+            highlightTrack: (path) => {
+                if (!path) return;
+                const cleanPath = path.replace(/\\/g, '/');
+                if (cleanPath === ui.lastHighlightedPath) return;
+                ui.lastHighlightedPath = cleanPath;
+                ui.currentTrackPath = cleanPath; 
+                
+                document.querySelectorAll('.track-item').forEach(el => {
+                    const itemPath = (el.dataset.path || '').replace(/\\/g, '/');
+                    const isActive = (itemPath === cleanPath);
+                    el.classList.toggle('active', isActive);
+                    
+                    const num = el.querySelector('.track-num');
+                    if (num) num.classList.toggle('hidden', isActive);
+                    const anim = el.querySelector('.playing-anim');
+                    if (anim) {
+                        anim.classList.toggle('flex', isActive);
+                        anim.classList.toggle('hidden', !isActive);
+                    }
+                    if (isActive) {
+                        try { el.scrollIntoView({behavior: "smooth", block: "nearest"}); } catch(e) {}
+                    }
+                });
+            },
+            closeFolder: () => {
+                document.getElementById('layer-folders').classList.remove('depth-mode');
+                document.getElementById('layer-tracks').classList.remove('active');
+            },
+            scanFolder: async () => {
+                if (ui.isProcessing) return; ui.isProcessing = true;
+                await pywebview.api.scan_folder(); await ui.loadFolders(); ui.isProcessing = false;
+            },
+            toFileUrl: (path) => {
+                if (!path) return '';
+                if (path.startsWith('data:') || path.startsWith('http://') || path.startsWith('https://')) return path;
+                let p = path.replace(/\\/g, '/');
+                let drive = '';
+                if (p.length >= 2 && p[1] === ':') {
+                    drive = p.substring(0, 2);
+                    p = p.substring(2);
+                }
+                const parts = p.split('/').filter(Boolean);
+                const encodedRest = parts.map(part => encodeURIComponent(part)).join('/');
+                return 'file:///' + (drive ? drive + '/' : '') + encodedRest;
+            },
+            lazyLoadImages: () => {
+                const imgs = document.querySelectorAll('.lazy-img');
+                for (const img of imgs) {
+                    const src = img.dataset.src;
+                    if (src) {
+                        img.src = ui.toFileUrl(src);
+                        img.classList.remove('opacity-0', 'hidden');
+                    }
+                }
+            },
+            updateTitle: (t) => { document.getElementById('player-title').innerText = t; },
+            updateProgress: (s) => {
+                if (ui.isDragging) return;
+                const bar = document.getElementById('seek-bar');
+                if (!bar) return;
+                const val = parseFloat(s) || 0;
+                bar.value = val;
+                const curEl = document.getElementById('time-current');
+                if (curEl) curEl.innerText = ui.formatTime(val);
+            },
+            updateDuration: (d) => {
+                const bar = document.getElementById('seek-bar');
+                if (bar) bar.max = d || 100;
+                const totEl = document.getElementById('time-total');
+                if (totEl) totEl.innerText = ui.formatTime(d);
+            },
+            updateCover: (url) => {
+                const img = document.getElementById('cover-art');
+                if (url) { img.src = url; img.classList.remove('opacity-0'); } else { img.classList.add('opacity-0'); }
+            },
+            updatePlayState: (p) => { document.getElementById('icon-play').innerText = !p ? 'pause' : 'play_arrow'; },
+            updatePlayMode: (mode) => {
+                const icon = document.getElementById('icon-mode');
+                if (!icon) return;
+                if (mode === 'loop') icon.innerText = 'repeat';
+                else if (mode === 'shuffle') icon.innerText = 'shuffle';
+                else if (mode === 'one') icon.innerText = 'repeat_one';
+                else if (mode === 'album_continue') icon.innerText = 'library_music';
+                icon.classList.toggle('text-white', mode !== 'loop'); 
+                icon.classList.toggle('text-white/60', mode === 'loop');
+            },
+            updateMuteState: (muted) => {
+                const icon = document.getElementById('icon-volume');
+                icon.innerText = muted ? 'volume_off' : 'volume_up';
+                icon.classList.toggle('text-red-400', muted); icon.classList.toggle('text-white/60', !muted);
+            },
+            formatMediaUrl: (path) => {
+                if (!path) return '';
+                let p = path.replace(/\\/g, '/');
+                let drive = '';
+                if (p.length >= 2 && p[1] === ':') {
+                    drive = p.substring(0, 2);
+                    p = p.substring(2);
+                }
+                const parts = p.split('/').filter(Boolean);
+                const encodedRest = parts.map(part => encodeURIComponent(part)).join('/');
+                return 'file:///' + (drive ? drive + '/' : '') + encodedRest;
+            },
+            encodePath: (p) => encodeURIComponent((p || '').replace(/\\/g, '/')),
+            initMediaSession: () => {},
+            updateMediaSession: (title, artist, coverUrl) => {},
+            updateMediaSessionState: (isPaused) => {},
+            updateUpsampleState: (state) => {
+                const btn = document.getElementById('btn-upsample');
+                if (btn) {
+                    if (state) {
+                        btn.classList.add('bg-white', 'text-black', 'border-white', 'shadow');
+                        btn.classList.remove('text-white/70', 'border-white/30');
+                    } else {
+                        btn.classList.remove('bg-white', 'text-black', 'border-white', 'shadow');
+                        btn.classList.add('text-white/70', 'border-white/30');
+                    }
+                }
+            },
+            updateNormalizeState: (state) => {
+                const btn = document.getElementById('btn-normalize');
+                if (btn) {
+                    if (state) {
+                        btn.classList.add('bg-pink-500', 'text-white', 'border-pink-400', 'shadow');
+                        btn.classList.remove('text-white/70', 'border-white/30');
+                    } else {
+                        btn.classList.remove('bg-pink-500', 'text-white', 'border-pink-400', 'shadow');
+                        btn.classList.add('text-white/70', 'border-white/30');
+                    }
+                }
+            },
+            formatTime: (s) => { if (!s || isNaN(s)) return "00:00"; return `${Math.floor(s/60).toString().padStart(2,'0')}:${Math.floor(s%60).toString().padStart(2,'0')}`; },
+            seek: (v) => { pywebview.api.control('seek', v); ui.isDragging = false; },
+            closeApp: () => pywebview.api.close_app()
+        };
+        window.addEventListener('pywebviewready', ui.init);
+    </script>
+</body>
+</html>

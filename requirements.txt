@@ -1,0 +1,9 @@
+# MPlay (MPV2) - Python Environment Requirements
+# Environment: mpv_ctrl
+pywebview>=5.0.0
+python-mpv>=1.0.8
+pythonnet>=3.0.0
+clr-loader>=0.2.10
+cffi>=1.15.0
+pyinstaller>=6.10.0
+pywin32-ctypes>=0.2.3

@@ -1,0 +1,3818 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPlay - NEEDY GIRL OVERDOSE // INTERNET ANGEL OS</title>
+    <script src="https://cdn.tailwindcss.com" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&family=VT323&family=Plus+Jakarta+Sans:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <style>
+        :root {
+            --angel-pink: #ff45c8;
+            --angel-violet: #8258ff;
+            --angel-cyan: #63f4ff;
+            --angel-blue: #2054ff;
+            --angel-paper: #fff5ff;
+            --angel-ink: #1b1233;
+            --angel-surface: rgba(36, 26, 70, 0.88);
+            --win-bg: #ece0f8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            font-family: 'DotGothic16', 'VT323', sans-serif;
+        }
+
+        body {
+            background-color: #edd9ff;
+            background-image: 
+                linear-gradient(135deg, rgba(255, 69, 200, 0.12) 25%, transparent 25%),
+                linear-gradient(225deg, rgba(255, 69, 200, 0.12) 25%, transparent 25%),
+                linear-gradient(45deg, rgba(130, 88, 255, 0.12) 25%, transparent 25%),
+                linear-gradient(315deg, rgba(130, 88, 255, 0.12) 25%, #edd9ff 25%);
+            background-position: 10px 0, 10px 0, 0 0, 0 0;
+            background-size: 20px 20px;
+            background-repeat: repeat;
+            color: var(--angel-ink);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            transition: background-image 0.3s ease;
+        }
+
+        
+        /* 🖤 Soft Cozy Dark Mode (Obsidian Rose / 柔和暗黑美學) CSS */
+        body.noir-mode {
+            background-color: #1a1824 !important;
+            background-image: 
+                linear-gradient(135deg, rgba(244, 114, 182, 0.08) 25%, transparent 25%),
+                linear-gradient(225deg, rgba(244, 114, 182, 0.08) 25%, transparent 25%),
+                linear-gradient(45deg, rgba(167, 139, 250, 0.08) 25%, transparent 25%),
+                linear-gradient(315deg, rgba(167, 139, 250, 0.08) 25%, #1a1824 25%);
+            color: #f3f4f6 !important;
+        }
+
+        body.noir-mode .xp-window {
+            background: #242030 !important;
+            border: 2px solid #a78bfa !important;
+            box-shadow: inset 1px 1px 0 #3b354d, inset -1px -1px 0 #12101a, 4px 4px 18px rgba(0, 0, 0, 0.5) !important;
+            color: #ffffff !important;
+        }
+
+        body.noir-mode .xp-titlebar {
+            background: linear-gradient(90deg, #6b21a8 0%, #be185d 100%) !important;
+            color: #ffffff !important;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5) !important;
+        }
+
+        body.noir-mode .xp-btn {
+            background: #332d42 !important;
+            border-color: #6b7280 !important;
+            color: #f472b6 !important;
+        }
+        body.noir-mode .xp-btn:hover {
+            background: #ec4899 !important;
+            color: #ffffff !important;
+        }
+
+        body.noir-mode .desktop-icon-box {
+            background: #242030 !important;
+            border-color: #f472b6 !important;
+            box-shadow: 2px 2px 0 #000000 !important;
+            color: #f472b6 !important;
+        }
+
+        body.noir-mode .desktop-icon-label {
+            background: rgba(30, 26, 40, 0.95) !important;
+            color: #ffffff !important;
+        }
+
+        body.noir-mode .folder-card {
+            background: #201c2c !important;
+            border: 2px solid #a78bfa !important;
+            box-shadow: 4px 4px 0 #000000 !important;
+        }
+
+        body.noir-mode .folder-card:hover {
+            border-color: #f472b6 !important;
+            box-shadow: 0 10px 20px rgba(244, 114, 182, 0.3), 5px 7px 0 #6b21a8 !important;
+        }
+
+        body.noir-mode .folder-card h3 {
+            color: #ffffff !important;
+        }
+
+        body.noir-mode .track-item {
+            background: #2a2538 !important;
+            border-color: #443c57 !important;
+            color: #ffffff !important;
+        }
+
+        body.noir-mode .track-item .track-title {
+            color: #ffffff !important;
+            font-weight: 600 !important;
+        }
+
+        body.noir-mode .track-item:hover {
+            background: #38304a !important;
+            border-color: #f472b6 !important;
+        }
+
+        body.noir-mode .track-item.active {
+            background: #831843 !important;
+            border: 2px solid #f472b6 !important;
+            box-shadow: 0 2px 10px rgba(244, 114, 182, 0.4), 2px 2px 0 #500724 !important;
+        }
+
+        body.noir-mode .track-item.active .track-title {
+            color: #ffffff !important;
+            text-shadow: 0 0 8px rgba(255,255,255,0.6) !important;
+        }
+
+        body.noir-mode .player-bar {
+            background: #201c2c !important;
+            border: 2px solid #f472b6 !important;
+            box-shadow: inset 1px 1px 0 #3b354d, inset -1px -1px 0 #100d17, 0 8px 25px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        body.noir-mode #player-title {
+            color: #ffffff !important;
+            font-weight: bold !important;
+        }
+
+        body.noir-mode #time-current, body.noir-mode #time-total {
+            color: #f3f4f6 !important;
+        }
+
+        body.noir-mode input[type=range]::-webkit-slider-runnable-track {
+            background: #332d44 !important;
+            border-color: #f472b6 !important;
+        }
+
+        body.noir-mode input[type=range]::-webkit-slider-thumb {
+            background: #ec4899 !important;
+            box-shadow: 1px 1px 0 #831843 !important;
+        }
+
+        body.noir-mode .pixel-bar {
+            background: #f472b6 !important;
+        }
+
+        body.noir-mode .stat-box {
+            background: #201c2c !important;
+            border-color: #a78bfa !important;
+            box-shadow: 2px 2px 0 #000000 !important;
+        }
+
+        body.noir-mode .stat-title {
+            color: #f472b6 !important;
+        }
+
+        body.noir-mode .stat-value {
+            color: #ffffff !important;
+        }
+
+        body.noir-mode .ame-avatar-box {
+            background: linear-gradient(135deg, #2e283d, #1a1626) !important;
+            border-color: #f472b6 !important;
+            box-shadow: 2px 2px 0 #000000 !important;
+        }
+
+        body.noir-mode .ame-speech-bubble {
+            background: #1e1a29 !important;
+            border-color: #f472b6 !important;
+            color: #f472b6 !important;
+        }
+
+        body.noir-mode .xp-context-menu {
+            background: #242030 !important;
+            border-color: #f472b6 !important;
+            box-shadow: inset 1px 1px 0 #3b354d, inset -1px -1px 0 #100d17, 4px 4px 14px rgba(0, 0, 0, 0.6) !important;
+        }
+
+        body.noir-mode .xp-menu-item {
+            color: #ffffff !important;
+        }
+
+        body.noir-mode .xp-menu-item:hover {
+            background: #ec4899 !important;
+            color: #ffffff !important;
+        }
+
+        
+        /* 🖤 Dark Mode Container Overrides (Album Info, Favorites, Top 10, Task Manager) */
+        body.noir-mode .folder-card .bg-white {
+            background-color: #282336 !important;
+            border-color: #a78bfa !important;
+        }
+        body.noir-mode .folder-card h3 {
+            color: #ffffff !important;
+        }
+
+        body.noir-mode #folder-grid {
+            background-color: #1a1726 !important;
+        }
+
+        body.noir-mode #pagination-bar {
+            background-color: #242032 !important;
+            color: #ffffff !important;
+            border-color: #a78bfa !important;
+        }
+
+        body.noir-mode #items-per-page-select,
+        body.noir-mode #search-input {
+            background-color: #1c1828 !important;
+            color: #ffffff !important;
+            border-color: #a78bfa !important;
+        }
+
+        body.noir-mode #favorites-window {
+            background-color: #242032 !important;
+        }
+        body.noir-mode #favorites-list {
+            background-color: #1a1726 !important;
+        }
+        body.noir-mode #favorites-window > div:nth-child(2) {
+            background-color: #2c253b !important;
+            color: #f472b6 !important;
+            border-color: #a78bfa !important;
+        }
+        body.noir-mode #favorites-window span {
+            color: #ffffff !important;
+        }
+
+        body.noir-mode #top10-window {
+            background-color: #242032 !important;
+        }
+        body.noir-mode #top10-list {
+            background-color: #1a1726 !important;
+        }
+        body.noir-mode #top10-window > div:nth-child(2) {
+            background-color: #2c253b !important;
+            color: #f472b6 !important;
+            border-color: #a78bfa !important;
+        }
+        body.noir-mode #top10-window span,
+        body.noir-mode #top10-window div {
+            color: #ffffff !important;
+        }
+
+        body.noir-mode #taskmanager-window {
+            background-color: #242032 !important;
+        }
+        body.noir-mode #taskmanager-window .bg-\[\#fff0fb\],
+        body.noir-mode #taskmanager-window .bg-\[\#fffafc\] {
+            background-color: #1a1726 !important;
+            color: #ffffff !important;
+        }
+        body.noir-mode #taskmanager-window div,
+        body.noir-mode #taskmanager-window span {
+            color: #ffffff !important;
+        }
+        body.noir-mode #taskmanager-window .stat-title {
+            color: #f472b6 !important;
+        }
+
+        body.noir-mode #playlist-window {
+            background-color: #242032 !important;
+        }
+        body.noir-mode #playlist-list {
+            background-color: #1a1726 !important;
+        }
+
+
+        
+        /* 🖤 Playlist & TaskManager Dark Mode Slate (#1a1726) Overrides */
+        body.noir-mode #playlist-window {
+            background-color: #242032 !important;
+        }
+        body.noir-mode #playlist-window #track-list,
+        body.noir-mode #playlist-window .bg-\[\#fdf8ff\] {
+            background-color: #1a1726 !important;
+            color: #ffffff !important;
+        }
+        body.noir-mode #playlist-window #track-list div {
+            color: #f472b6 !important;
+        }
+
+        body.noir-mode #taskmanager-window {
+            background-color: #242032 !important;
+        }
+        body.noir-mode #taskmanager-window .bg-\[\#f8f2ff\] {
+            background-color: #1a1726 !important;
+            color: #ffffff !important;
+        }
+        body.noir-mode #taskmanager-window .stat-box {
+            background-color: #242032 !important;
+            border-color: #a78bfa !important;
+            box-shadow: 2px 2px 0 #000000 !important;
+        }
+        body.noir-mode #taskmanager-window .stat-title {
+            color: #f472b6 !important;
+        }
+        body.noir-mode #taskmanager-window .stat-value {
+            color: #ffffff !important;
+        }
+
+
+        
+        /* 🌸 Multi-Selection & Marquee Selection CSS */
+        .folder-card.is-selected {
+            border: 2px solid #ff4081 !important;
+            box-shadow: 0 0 15px rgba(255, 64, 129, 0.5), 4px 4px 0 #6b33a8 !important;
+            transform: translateY(-2px);
+        }
+        body.noir-mode .folder-card.is-selected {
+            border: 2px solid #f472b6 !important;
+            box-shadow: 0 0 15px rgba(244, 114, 182, 0.5), 4px 4px 0 #a78bfa !important;
+        }
+        .folder-card.is-selected::after {
+            content: "✓ SELECTED";
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: #ff4081;
+            color: #ffffff;
+            font-size: 8px;
+            font-weight: bold;
+            font-family: monospace;
+            padding: 1px 4px;
+            border-radius: 2px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+            z-index: 20;
+        }
+
+        #selection-marquee {
+            position: fixed;
+            border: 1.5px dashed #ff4081;
+            background: rgba(255, 64, 129, 0.18);
+            pointer-events: none;
+            z-index: 99999;
+            display: none;
+        }
+
+        
+        /* 🖤 Video Player Window Dark Mode Overrides */
+        body.noir-mode #video-window {
+            background-color: #242032 !important;
+        }
+        body.noir-mode #video-window .bg-\[\#eadefc\] {
+            background-color: #1a1726 !important;
+            color: #ffffff !important;
+        }
+        body.noir-mode #video-window #video-screen-container {
+            border-color: #f472b6 !important;
+        }
+
+        /* 📌 融合 Windows 桌面 (Picture-in-Picture Mini Player 接口) */
+        #btn-pip-restore { display: none !important; }
+
+
+
+        .pixel-decorations {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .floating-icon {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0.45;
+            animation: float-pulse 6s ease-in-out infinite alternate;
+        }
+
+        @keyframes float-pulse {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-15px) rotate(8deg); }
+        }
+
+        .walking-mascot {
+            position: fixed;
+            bottom: 105px;
+            left: -80px;
+            width: 48px;
+            height: 48px;
+            z-index: 80;
+            pointer-events: auto;
+            cursor: pointer;
+            animation: walk-across 28s linear infinite;
+        }
+
+        @keyframes walk-across {
+            0% { left: -80px; transform: scaleX(1); }
+            48% { left: calc(100vw + 20px); transform: scaleX(1); }
+            50% { left: calc(100vw + 20px); transform: scaleX(-1); }
+            98% { left: -80px; transform: scaleX(-1); }
+            100% { left: -80px; transform: scaleX(1); }
+        }
+
+        /* Retro Windows XP Beveled Frame */
+        .xp-window {
+            background: #f4ecfd;
+            border: 2px solid #6b33a8;
+            box-shadow: 
+                inset 1px 1px 0 #ffffff,
+                inset -1px -1px 0 #4a1f78,
+                4px 4px 15px rgba(45, 12, 85, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            pointer-events: auto;
+            transition: opacity 0.2s ease, transform 0.05s linear;
+        }
+
+        .xp-window.is-maximized {
+            position: fixed !important;
+            top: 10px !important;
+            left: 85px !important;
+            right: 16px !important;
+            bottom: 108px !important;
+            z-index: 150 !important;
+            width: auto !important;
+            height: auto !important;
+            transform: none !important;
+            box-shadow: 0 0 40px rgba(130, 88, 255, 0.5) !important;
+            opacity: 1 !important;
+        }
+
+        .xp-window.is-minimized, .xp-window.hidden {
+            display: none !important;
+            pointer-events: none !important;
+            visibility: hidden !important;
+        }
+
+        .xp-titlebar {
+            background: linear-gradient(90deg, #7c4dff 0%, #ff4081 100%);
+            padding: 4px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #ffffff;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 0 #3a0066;
+            flex-shrink: 0;
+            cursor: move;
+        }
+
+        .xp-btn-box {
+            display: flex;
+            gap: 3px;
+        }
+
+        .xp-btn {
+            width: 16px;
+            height: 14px;
+            background: #e2cbf7;
+            border: 1px solid #ffffff;
+            border-right-color: #55218c;
+            border-bottom-color: #55218c;
+            color: #3b1166;
+            font-size: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .xp-btn:hover { background: #ff77d9; color: #fff; }
+
+        .xp-resizer {
+            position: absolute;
+            right: 1px;
+            bottom: 1px;
+            width: 14px;
+            height: 14px;
+            cursor: se-resize;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b33a8;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        .xp-resizer::after {
+            content: "◢";
+            font-size: 10px;
+            color: #8258ff;
+        }
+
+        /* Left Desktop Icons Container */
+        .desktop-icons {
+            position: fixed;
+            left: 14px;
+            top: 12px;
+            width: 70px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+            padding-top: 2px;
+            overflow-y: auto;
+            max-height: calc(100vh - 120px);
+            z-index: 100;
+        }
+
+        .desktop-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            cursor: pointer;
+            width: 64px;
+            padding: 3px;
+            border: 1px solid transparent;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            position: relative;
+        }
+
+        .desktop-icon:hover, .desktop-icon.drag-over {
+            background: rgba(124, 77, 255, 0.3);
+            border-color: #ff4081;
+            border-radius: 6px;
+            transform: translateY(-2px) scale(1.06);
+        }
+
+        .desktop-icon:hover .desktop-icon-box {
+            box-shadow: 0 0 14px rgba(255, 64, 129, 0.7), 2px 4px 0 #4a148c;
+            border-color: #ff4081;
+        }
+
+        .desktop-icon-box {
+            width: 36px;
+            height: 36px;
+            background: #ffffff;
+            border: 2px solid #8258ff;
+            box-shadow: 2px 2px 0 #4a148c;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff4081;
+            transition: all 0.2s ease;
+        }
+
+        .desktop-icon-label {
+            font-size: 8.5px;
+            color: #3b1166;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.88);
+            padding: 1px 4px;
+            border-radius: 2px;
+            font-weight: bold;
+            line-height: 1.1;
+        }
+
+        .folder-grid {
+            flex: 1;
+            overflow-y: auto;
+            padding: 14px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+            align-content: start;
+        }
+
+        .folder-card {
+            background: #ffffff;
+            border: 2px solid #8258ff;
+            box-shadow: 4px 4px 0 #52278c;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.2s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-height: 185px;
+            flex-shrink: 0;
+        }
+
+        .folder-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: #ff4081;
+            box-shadow: 0 10px 20px rgba(130, 88, 255, 0.3), 5px 7px 0 #c2185b;
+        }
+
+        .folder-cover-wrapper {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            min-height: 100px;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #f5e6ff 0%, #d8b4fe 100%);
+            position: relative;
+            overflow: hidden;
+            border-bottom: 2px solid #d1b3ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .folder-cover-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.3s ease;
+        }
+
+        .folder-card:hover .folder-cover-wrapper img {
+            transform: scale(1.08);
+        }
+
+        .folder-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: rgba(27, 18, 51, 0.85);
+            border: 1px solid #ff4081;
+            color: #ff4081;
+            font-size: 8px;
+            font-family: 'Press Start 2P', cursive;
+            padding: 2px 5px;
+            border-radius: 3px;
+            z-index: 5;
+            box-shadow: 1px 1px 0 #000;
+        }
+
+        .btn-fullart {
+            position: absolute;
+            top: 32px;
+            right: 6px;
+            background: rgba(27, 18, 51, 0.85);
+            border: 1px solid #ff4081;
+            color: #ff4081;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            z-index: 6;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .folder-card:hover .btn-fullart { opacity: 1; }
+
+        .track-item {
+            background: #ffffff;
+            border: 1px solid #d1b3ff;
+            margin-bottom: 4px;
+            padding: 6px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .track-item:hover {
+            background: #f5e6ff;
+            border-color: #ff4081;
+            transform: translateX(3px);
+        }
+
+        .track-item.active {
+            background: #ffdbf3;
+            border: 2px solid #ff4081;
+            box-shadow: 0 2px 8px rgba(255, 64, 129, 0.3), 2px 2px 0 #c2185b;
+            transform: translateX(4px);
+        }
+
+        .track-item.active .track-title {
+            color: #d81b60;
+            font-weight: bold;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+        }
+
+        .stat-box {
+            background: #ffffff;
+            border: 1.5px solid #8258ff;
+            padding: 4px 6px;
+            border-radius: 4px;
+            box-shadow: 2px 2px 0 #52278c;
+        }
+
+        .stat-title {
+            font-size: 8px;
+            color: #7b1fa2;
+            font-family: 'Press Start 2P', cursive;
+            margin-bottom: 2px;
+        }
+
+        .stat-value {
+            font-size: 10.5px;
+            color: #d81b60;
+            font-weight: bold;
+        }
+
+        .ame-avatar-box {
+            position: relative;
+            background: linear-gradient(135deg, #f3e5ff, #e1bee7);
+            border: 1.5px solid #8258ff;
+            border-radius: 4px;
+            padding: 5px 7px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            cursor: pointer;
+            box-shadow: 2px 2px 0 #52278c;
+        }
+
+        .ame-gif-frame {
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            background: #ffffff;
+            border: 1px solid #ff4081;
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ame-gif-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .ame-speech-bubble {
+            flex: 1;
+            background: #ffffff;
+            border: 1px solid #7c4dff;
+            border-radius: 5px;
+            padding: 4px 6px;
+            font-size: 9px;
+            color: #4a148c;
+            line-height: 1.3;
+            box-shadow: 1px 1px 0 #311b92;
+        }
+
+        .player-bar {
+            position: fixed;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 95%;
+            max-width: 1060px;
+            height: 80px;
+            background: #f4ecfd;
+            border: 2px solid #6b33a8;
+            box-shadow: 
+                inset 1px 1px 0 #ffffff,
+                inset -1px -1px 0 #4a1f78,
+                0 8px 25px rgba(74, 31, 120, 0.4);
+            border-radius: 6px;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            gap: 12px;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            background: #e2cbf7;
+            border: 1px solid #6b33a8;
+            border-radius: 2px;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 16px;
+            background: #ff4081;
+            border: 1px solid #ffffff;
+            box-shadow: 1px 1px 0 #880e4f;
+            margin-top: -5px;
+        }
+
+        .pixel-viz {
+            display: flex;
+            gap: 3px;
+            align-items: flex-end;
+            height: 20px;
+            width: 36px;
+            padding: 2px;
+            background: rgba(43, 20, 77, 0.25);
+            border: 1px solid #c8a3ff;
+            border-radius: 2px;
+        }
+
+        .pixel-bar {
+            flex: 1;
+            background: #8258ff;
+            height: 3px;
+            border-radius: 1px;
+            opacity: 0.4;
+            transition: height 0.2s ease, opacity 0.2s ease, background 0.2s ease;
+        }
+
+        .player-bar.is-playing .pixel-bar { opacity: 1; }
+        .player-bar.is-playing .pixel-bar:nth-child(1) { animation: wave-bar-1 0.42s ease-in-out infinite alternate; }
+        .player-bar.is-playing .pixel-bar:nth-child(2) { animation: wave-bar-2 0.35s ease-in-out infinite alternate; }
+        .player-bar.is-playing .pixel-bar:nth-child(3) { animation: wave-bar-3 0.48s ease-in-out infinite alternate; }
+        .player-bar.is-playing .pixel-bar:nth-child(4) { animation: wave-bar-4 0.38s ease-in-out infinite alternate; }
+
+        @keyframes wave-bar-1 { 0% { height: 15%; background: #8258ff; } 100% { height: 95%; background: #ff45c8; } }
+        @keyframes wave-bar-2 { 0% { height: 60%; background: #ff4081; } 100% { height: 40%; background: #63f4ff; } }
+        @keyframes wave-bar-3 { 0% { height: 25%; background: #63f4ff; } 100% { height: 100%; background: #ff45c8; } }
+        @keyframes wave-bar-4 { 0% { height: 75%; background: #ff45c8; } 100% { height: 35%; background: #8258ff; } }
+
+        #artwork-modal, #wallpaper-modal, #delete-modal, #eq-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 8, 30, 0.82);
+            backdrop-filter: blur(8px);
+            z-index: 400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: opacity 0.25s ease;
+        }
+
+        #artwork-modal.hidden, #wallpaper-modal.hidden, #delete-modal.hidden, #eq-modal.hidden { display: none !important; }
+
+        .xp-context-menu {
+            position: fixed;
+            z-index: 999;
+            background: #f4ecfd;
+            border: 2px solid #6b33a8;
+            box-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #4a1f78, 4px 4px 14px rgba(45, 12, 85, 0.4);
+            border-radius: 4px;
+            padding: 3px;
+            min-width: 175px;
+            display: none;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .xp-menu-item {
+            padding: 5px 8px;
+            font-size: 11px;
+            color: #3b1166;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.15s ease;
+        }
+
+        .xp-menu-item:hover {
+            background: #ff4081;
+            color: #ffffff;
+        }
+
+        .xp-menu-divider {
+            height: 1px;
+            background: #d1b3ff;
+            margin: 2px 0;
+        }
+
+        .rank-badge {
+            width: 22px;
+            height: 22px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 10px;
+            flex-shrink: 0;
+            font-family: 'Press Start 2P', cursive;
+        }
+        .rank-1 { background: #ffe564; color: #b78100; border: 1.5px solid #d4a000; box-shadow: 1px 1px 0 #8c6900; }
+        .rank-2 { background: #e0e0e0; color: #555555; border: 1.5px solid #aaaaaa; box-shadow: 1px 1px 0 #666666; }
+        .rank-3 { background: #f0b084; color: #8a4112; border: 1.5px solid #c87640; box-shadow: 1px 1px 0 #783b14; }
+        .rank-other { background: #e2cbf7; color: #52278c; border: 1px solid #a578ff; }
+
+        #xp-toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff4081;
+            color: white;
+            border: 2px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        #xp-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(10px);
+        }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #edd9ff; }
+        ::-webkit-scrollbar-thumb { background: #a578ff; border: 1px solid #ffffff; }
+    </style>
+
+        
+</head>
+<body oncontextmenu="ui.showDesktopContextMenu(event); return false;">
+    <div id="selection-marquee"></div>
+
+    <!-- 🌸 Stage 1: 純色無圖預設遮擋 (1s) -->
+    <div id="pure-splash-screen" style="position: fixed; inset: 0; z-index: 99999999; background: #0f071b; opacity: 1; pointer-events: auto; transition: opacity 0.6s ease;"></div>
+
+    <!-- 🌸 Stage 2: 復古 Y2K 開機自動登錄歡迎動畫 (1~2s) -->
+    <div id="login-screen" class="fixed inset-0 z-[999999] flex flex-col items-center justify-center transition-opacity duration-700 bg-cover bg-center select-none bg-[#0f071b]" style="background-image: none;">
+        <div class="absolute inset-0 bg-[#0f071b]/88"></div>
+
+        <div class="relative z-10 w-[380px] p-6 bg-[#f4ecfd]/90 border-2 border-[#6b33a8] rounded-lg shadow-[0_12px_40px_rgba(45,12,85,0.6)] flex flex-col items-center text-center">
+            <div id="login-avatar-box" class="w-20 h-20 bg-white border-2 border-[#ff4081] rounded-full overflow-hidden mb-3 shadow-[0_0_15px_rgba(255,64,129,0.5)] flex items-center justify-center">
+                <span id="login-avatar-icon" class="material-icons-round text-4xl text-[#ff4081]">favorite</span>
+                <img id="login-avatar-img" src="" alt="Avatar" class="w-full h-full object-contain hidden">
+            </div>
+
+            <div class="text-sm font-bold text-[#ff4081] tracking-widest font-mono mb-1">INTERNET_ANGEL_OS</div>
+            <div class="text-xs font-bold text-[#3b1166] mb-3">Welcome, P-Chan! 💕</div>
+
+            <div id="login-status-text" class="text-[11px] font-bold text-[#7b1fa2] font-mono mb-2 animate-pulse">
+                ⚡ AUTO-LOGGING IN...
+            </div>
+
+            <div class="w-full bg-[#e2cbf7] h-3 border border-[#6b33a8] rounded-sm overflow-hidden p-0.5 shadow-inner">
+                <div id="login-progress-bar" class="bg-gradient-to-r from-[#ff4081] to-[#7c4dff] h-full rounded-xs transition-all duration-300" style="width: 25%;"></div>
+            </div>
+
+            <div class="text-[9px] text-[#6b33a8] font-mono mt-3 opacity-80">
+                System Preloading // Sound Engine & Theme Initializing...
+            </div>
+        </div>
+    </div>
+
+    
+
+            <div class="text-[9px] text-[#6b33a8] font-mono mt-3 opacity-80">
+                System Preloading // Sound Engine & Theme Initializing...
+            </div>
+        </div>
+    </div>
+
+    <div class="pixel-decorations">
+        <span class="floating-icon" style="top: 10%; left: 5%;">🌙</span>
+        <span class="floating-icon" style="top: 25%; right: 8%; animation-delay: -2s;">⭐</span>
+        <span class="floating-icon" style="bottom: 20%; left: 12%; animation-delay: -4s;">💊</span>
+        <span class="floating-icon" style="top: 70%; right: 15%; animation-delay: -1s;">🎀</span>
+    </div>
+
+
+
+    <div id="xp-toast">✨ Ame-Chan Toast</div>
+
+    <!-- Left Desktop App Icons Bar -->
+    <div class="desktop-icons">
+                <div class="desktop-icon" onclick="ui.toggleWindow('video-window')" title="Open Media Video Player Window (if pure audio, shows cover image)">
+            <div class="desktop-icon-box" style="color: #00b0ff;">
+                <span class="material-icons-round text-2xl">ondemand_video</span>
+            </div>
+            <span class="desktop-icon-label">Video Screen</span>
+        </div>
+
+        <div class="desktop-icon" onclick="ui.toggleWindow('layer-folders')" title="Open Media Explorer">
+            <div class="desktop-icon-box">
+                <span class="material-icons-round text-2xl">computer</span>
+            </div>
+            <span class="desktop-icon-label">Explorer</span>
+        </div>
+
+        <!-- 📌 融合 Windows 桌面 (PIP Always-On-Top Mini Widget) -->
+        <div class="desktop-icon" onclick="ui.togglePipMode()" title="Toggle Windows Desktop PIP Mode (Always-On-Top Mini Widget)">
+            <div class="desktop-icon-box" style="color: #ff4081;">
+                <span class="material-icons-round text-2xl">picture_in_picture_alt</span>
+            </div>
+            <span class="desktop-icon-label">PIP Desktop</span>
+        </div>
+
+        <div class="desktop-icon" id="icon-favorites" 
+             onclick="ui.toggleWindow('favorites-window')" 
+             ondragover="ui.handleDragOver(event)" 
+             ondragleave="ui.handleDragLeave(event)"
+             ondrop="ui.handleDropFavorite(event)" 
+             title="Open Favorites (Drag tracks here to favorite)">
+            <div class="desktop-icon-box" style="color: #ffb300;">
+                <span class="material-icons-round text-2xl">star</span>
+            </div>
+            <span class="desktop-icon-label">Favorites</span>
+        </div>
+
+        <div class="desktop-icon" onclick="ui.toggleWindow('top10-window')" title="Open Top 10 Liked Tracks Ranking">
+            <div class="desktop-icon-box" style="color: #ff9100;">
+                <span class="material-icons-round text-2xl">emoji_events</span>
+            </div>
+            <span class="desktop-icon-label">Top 10</span>
+        </div>
+
+        <div class="desktop-icon" onclick="ui.toggleWindow('playlist-window')" title="Open Playlist Tracks">
+            <div class="desktop-icon-box" style="color: #ff4081;">
+                <span class="material-icons-round text-2xl">queue_music</span>
+            </div>
+            <span class="desktop-icon-label">Playlist</span>
+        </div>
+
+        <div class="desktop-icon" onclick="ui.toggleWindow('taskmanager-window')" title="Open Telemetry Monitor">
+            <div class="desktop-icon-box" style="color: #7b1fa2;">
+                <span class="material-icons-round text-2xl">assessment</span>
+            </div>
+            <span class="desktop-icon-label">Telemetry</span>
+        </div>
+
+        <div class="desktop-icon" onclick="ui.arrangeWindows()" title="Reset & Auto Arrange All Desktop Windows">
+            <div class="desktop-icon-box" style="color: #00e676;">
+                <span class="material-icons-round text-2xl">auto_fix_high</span>
+            </div>
+            <span class="desktop-icon-label">Auto Layout</span>
+        </div>
+
+        <div class="desktop-icon" onclick="ui.toggleDecorationsModal()" title="Customize Images & GIFs (預設皆無)">
+            <div class="desktop-icon-box" style="color: #e91e63;">
+                <span class="material-icons-round text-2xl">palette</span>
+            </div>
+            <span class="desktop-icon-label">Theme Art</span>
+        </div>
+
+        <div class="desktop-icon" onclick="ui.scanFolder()" title="Scan Local Directory">
+            <div class="desktop-icon-box" style="color: #8258ff;">
+                <span class="material-icons-round text-2xl">folder_special</span>
+            </div>
+            <span class="desktop-icon-label">Scan Drive</span>
+        </div>
+
+        <div class="desktop-icon" onclick="pywebview.api.toggle_boot_music()" title="Toggle Boot Music">
+            <div class="desktop-icon-box" style="color: #d81b60;">
+                <span class="material-icons-round text-2xl">library_music</span>
+            </div>
+            <span class="desktop-icon-label">Boot BGM</span>
+        </div>
+
+        <div class="desktop-icon" onclick="ui.toggleEqModal()" title="Parametric Equalizer & Audio Filters">
+            <div class="desktop-icon-box" style="color: #00e676;">
+                <span class="material-icons-round text-2xl">equalizer</span>
+            </div>
+            <span class="desktop-icon-label">Audio EQ</span>
+        </div>
+    </div>
+
+    <!-- Center Media Explorer Window -->
+    <div id="layer-folders" class="xp-window" style="position: fixed; left: 85px; top: 12px; z-index: 120;">
+        <div class="xp-titlebar">
+            <span>🌸 INTERNET ANGEL // MEDIA EXPLORER v2.5</span>
+            <div class="xp-btn-box">
+                <div class="xp-btn" onclick="ui.minimizeWindow('layer-folders')" title="Minimize">_</div>
+                <div class="xp-btn" onclick="ui.maximizeWindow('layer-folders')" title="Maximize">□</div>
+                <div class="xp-btn" onclick="ui.closeWindow('layer-folders')" title="Close">X</div>
+            </div>
+        </div>
+
+        <div class="p-2.5 bg-[#eadefc] border-b border-[#a578ff] flex items-center justify-between gap-3 flex-shrink-0">
+            <div class="flex items-center gap-2 flex-1">
+                <span class="text-xs text-[#52278c] font-bold">SEARCH:</span>
+                <input id="search-input" type="text" placeholder="/// TYPE KEYWORD / LYRICS / SONG / FOLDER..." oninput="ui.onSearchInput(this.value)"
+                       class="flex-1 bg-white border border-[#8258ff] rounded px-3 py-1 text-xs text-[#3b1166] focus:outline-none focus:border-[#ff4081]">
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="ui.scanFolder()" class="px-3 py-1 bg-[#8258ff] hover:bg-[#ff4081] text-white text-xs font-bold rounded shadow transition">
+                    + SCAN
+                </button>
+            </div>
+        </div>
+
+        <div id="folder-grid" class="folder-grid"></div>
+
+        <div id="pagination-bar" class="px-3 py-1.5 bg-[#eadefc] border-t border-[#a578ff] flex items-center justify-between text-xs text-[#52278c] font-bold flex-shrink-0">
+            <div class="flex items-center gap-1.5">
+                <span class="text-[10px]">PAGING:</span>
+                <select id="items-per-page-select" onchange="ui.changeItemsPerPage(this.value)" class="bg-white border border-[#8258ff] rounded px-1.5 py-0.5 text-[10px] text-[#3b1166]">
+                    <option value="6">6 / PAGE</option>
+                    <option value="8">8 / PAGE</option>
+                    <option value="12">12 / PAGE</option>
+                    <option value="27">27 / PAGE</option>
+                    <option value="all">ALL SCROLL</option>
+                </select>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="ui.prevPage()" id="btn-prev-page" class="px-2 py-0.5 bg-[#8258ff] hover:bg-[#ff4081] text-white rounded text-[10px] disabled:opacity-40 transition">◀ PREV</button>
+                <span id="page-indicator" class="font-mono text-[10px] text-[#7b1fa2]">PAGE 1 / 1</span>
+                <button onclick="ui.nextPage()" id="btn-next-page" class="px-2 py-0.5 bg-[#8258ff] hover:bg-[#ff4081] text-white rounded text-[10px] disabled:opacity-40 transition">NEXT ▶</button>
+            </div>
+        </div>
+        <div class="xp-resizer"></div>
+    </div>
+
+    <!-- ⭐ Favorites Collection Window -->
+    <div id="favorites-window" class="xp-window is-minimized hidden" style="display: none;"
+         ondragover="ui.handleDragOver(event)" 
+         ondragleave="ui.handleDragLeave(event)"
+         ondrop="ui.handleDropFavorite(event)">
+        <div class="xp-titlebar">
+            <span>⭐ FAVORITES // COLLECTION</span>
+            <div class="xp-btn-box">
+                <div class="xp-btn" onclick="ui.minimizeWindow('favorites-window')" title="Minimize">_</div>
+                <div class="xp-btn" onclick="ui.maximizeWindow('favorites-window')" title="Maximize">□</div>
+                <div class="xp-btn" onclick="ui.closeWindow('favorites-window')" title="Close">X</div>
+            </div>
+        </div>
+        <div class="p-2 bg-[#fff0fb] border-b border-[#ffb300] text-[10px] text-[#8c5000] font-bold flex items-center justify-between">
+            <span>💡 Drag track here to favorite</span>
+            <div class="flex items-center gap-1.5">
+                <button onclick="ui.playFavoritesList()" class="px-2 py-0.5 bg-[#ff4081] hover:bg-[#d81b60] text-white rounded text-[9px] font-bold flex items-center gap-1 shadow-xs cursor-pointer" title="Play All Favorites">
+                    ▶ PLAY ALL
+                </button>
+                <button onclick="ui.loadFavorites()" class="px-2 py-0.5 bg-[#ffb300] hover:bg-[#ff8f00] text-white rounded text-[9px] font-bold">Refresh</button>
+            </div>
+        </div>
+        <div id="favorites-list" class="flex-1 overflow-y-auto p-2 bg-[#fffafc]">
+            <div class="text-center py-12 text-[#ff8f00] text-xs font-mono">/// NO_FAVORITES_YET</div>
+        </div>
+        <div class="xp-resizer"></div>
+    </div>
+
+    <!-- 🏆 Top 10 Ranking Window -->
+    <div id="top10-window" class="xp-window is-minimized hidden" style="display: none;">
+        <div class="xp-titlebar" style="background: linear-gradient(90deg, #ff9100 0%, #ff4081 100%);">
+            <span>🏆 TOP 10 RANKING // LIKED TRACKS</span>
+            <div class="xp-btn-box">
+                <div class="xp-btn" onclick="ui.minimizeWindow('top10-window')" title="Minimize">_</div>
+                <div class="xp-btn" onclick="ui.maximizeWindow('top10-window')" title="Maximize">□</div>
+                <div class="xp-btn" onclick="ui.closeWindow('top10-window')" title="Close">X</div>
+            </div>
+        </div>
+        <div class="p-2 bg-[#fff8e1] border-b border-[#ff9100] text-[10px] text-[#b76e00] font-bold flex items-center justify-between">
+            <span>📊 Score = Retention % + Listen Bonus + Fav + Plays</span>
+            <div class="flex items-center gap-1.5">
+                <button onclick="ui.playTop10List()" class="px-2 py-0.5 bg-[#ff4081] hover:bg-[#d81b60] text-white rounded text-[9px] font-bold flex items-center gap-1 shadow-xs cursor-pointer" title="Play Top 10 Rankings">
+                    ▶ PLAY ALL
+                </button>
+                <button onclick="ui.loadTop10()" class="px-2 py-0.5 bg-[#ff9100] hover:bg-[#e65100] text-white rounded text-[9px] font-bold">🔄 Refresh</button>
+            </div>
+        </div>
+        <div id="top10-list" class="flex-1 overflow-y-auto p-2 bg-[#fffde7]">
+            <div class="text-center py-12 text-[#ff9100] text-xs font-mono">/// LOADING_RANKINGS...</div>
+        </div>
+        <div class="xp-resizer"></div>
+    </div>
+
+        <!-- 🎬 Media Screen / Video Player Window -->
+    <div id="video-window" class="xp-window is-minimized hidden" style="position: fixed; left: 120px; top: 70px; width: 440px; height: 320px; display: none; z-index: 125;">
+        <div class="xp-titlebar" style="background: linear-gradient(90deg, #00b0ff 0%, #7c4dff 100%);">
+            <span>🎬 MEDIA SCREEN // VIDEO PLAYER</span>
+            <div class="xp-btn-box">
+                <div class="xp-btn" onclick="ui.minimizeWindow('video-window')" title="Minimize">_</div>
+                <div class="xp-btn" onclick="ui.maximizeWindow('video-window')" title="Maximize">□</div>
+                <div class="xp-btn" onclick="ui.closeWindow('video-window')" title="Close">X</div>
+            </div>
+        </div>
+        
+        <div class="flex-1 bg-[#120a24] p-2 flex flex-col items-center justify-center relative overflow-hidden group">
+            <div id="video-screen-container" class="w-full h-full bg-black rounded border-2 border-[#8258ff] relative overflow-hidden flex items-center justify-center">
+                
+                <!-- Pure Audio View: Album Cover Art Display -->
+                <div id="video-screen-audio-view" class="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-[#1a0f35] to-[#0a0518] p-3 text-center">
+                    <div class="w-28 h-28 rounded-lg border-2 border-[#ff4081] overflow-hidden shadow-[0_0_20px_rgba(255,64,129,0.4)] mb-2 relative flex items-center justify-center bg-[#251642] cursor-pointer" onclick="ui.openFullArtFromPlayer()" title="Click to view full cover">
+                        <img id="video-screen-cover" src="" alt="Album Cover" class="w-full h-full object-cover opacity-0 transition-opacity">
+                        <div id="video-screen-fallback" class="absolute inset-0 flex flex-col items-center justify-center text-[#ff4081]">
+                            <span class="material-icons-round text-5xl">music_note</span>
+                            <span class="text-[9px] font-mono mt-1 text-[#a78bfa]">PURE_AUDIO</span>
+                        </div>
+                    </div>
+                    <div id="video-screen-title" class="text-xs font-bold text-white truncate max-w-full px-2 font-mono">AWAITING_MEDIA</div>
+                    <div id="video-screen-subtitle" class="text-[10px] text-[#f472b6] font-mono mt-0.5">AUDIO_TRACK // COVER_MODE</div>
+                </div>
+
+                <!-- Video View Display (Actual Video Frame Rendering) -->
+                <div id="video-screen-video-view" class="absolute inset-0 hidden bg-black flex flex-col items-center justify-center overflow-hidden">
+                    <video id="video-screen-player" class="w-full h-full object-contain bg-black" muted playsinline loop preload="auto"></video>
+                    <div id="video-screen-video-fallback" class="absolute inset-0 flex flex-col items-center justify-center bg-black hidden">
+                        <div class="text-[#00b0ff] text-xs font-mono font-bold animate-pulse mb-1">🎬 PLAYING VIDEO FILE</div>
+                        <div id="video-screen-file-name" class="text-white text-xs font-bold font-mono px-4 text-center truncate max-w-full"></div>
+                    </div>
+                </div>
+
+                <div class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_60%,rgba(0,0,0,0.6)_100%)]"></div>
+            </div>
+        </div>
+
+        <div class="p-2 bg-[#eadefc] border-t border-[#a578ff] flex items-center justify-between text-xs text-[#52278c] font-bold flex-shrink-0">
+            <span id="video-screen-mode-tag" class="text-[10px] font-mono text-[#ff4081]">Mode: Cover Art</span>
+            <div class="flex items-center gap-1.5">
+                <button onclick="pywebview.api.control('prev')" class="px-2 py-0.5 bg-[#8258ff] hover:bg-[#ff4081] text-white rounded text-[10px]">◀ PREV</button>
+                <button onclick="pywebview.api.control('play_pause')" class="px-2 py-0.5 bg-[#ff4081] hover:bg-[#d81b60] text-white rounded text-[10px]">▶ PLAY</button>
+                <button onclick="pywebview.api.control('next')" class="px-2 py-0.5 bg-[#8258ff] hover:bg-[#ff4081] text-white rounded text-[10px]">NEXT ▶</button>
+            </div>
+        </div>
+        <div class="xp-resizer"></div>
+    </div>
+
+    <!-- 📋 Playlist Window -->
+    <div id="playlist-window" class="xp-window" style="position: fixed; right: 16px; top: 12px; width: 330px; z-index: 120;">
+        <div class="xp-titlebar">
+            <span id="panel-title">📋 PLAYLIST TRACKS</span>
+            <div class="xp-btn-box">
+                <div class="xp-btn" onclick="ui.minimizeWindow('playlist-window')" title="Minimize">_</div>
+                <div class="xp-btn" onclick="ui.maximizeWindow('playlist-window')" title="Maximize">□</div>
+                <div class="xp-btn" onclick="ui.closeWindow('playlist-window')" title="Close">X</div>
+            </div>
+        </div>
+        <div id="track-list" class="flex-1 overflow-y-auto p-2 bg-[#fdf8ff]">
+            <div class="text-center py-8 text-[#8258ff] text-xs">Select a folder on the left to load tracks...</div>
+        </div>
+        <div class="xp-resizer"></div>
+    </div>
+
+    <!-- 📊 Task Manager Telemetry Window -->
+    <div id="taskmanager-window" class="xp-window" style="position: fixed; right: 16px; width: 330px; z-index: 120;">
+        <div class="xp-titlebar">
+            <span>📊 Task Manager Telemetry</span>
+            <div class="xp-btn-box">
+                <div class="xp-btn" onclick="ui.minimizeWindow('taskmanager-window')" title="Minimize">_</div>
+                <div class="xp-btn" onclick="ui.maximizeWindow('taskmanager-window')" title="Maximize">□</div>
+                <div class="xp-btn" onclick="ui.closeWindow('taskmanager-window')" title="Close">X</div>
+            </div>
+        </div>
+        
+        <div class="p-2 space-y-1.5 bg-[#f8f2ff] flex-1 overflow-y-auto">
+            <div id="ame-avatar-box" class="ame-avatar-box" onclick="ui.onAmeClick()" title="Click Ame-Chan to interact!" style="display: none;">
+                <div class="ame-gif-frame">
+                    <img id="ame-gif" src="../boot2/GIF/choten-chan-idle.gif" alt="Ame-Chan Avatar">
+                </div>
+                <div class="ame-speech-bubble" id="ame-speech">
+                    Ame-Chan is listening to music with you! ✨
+                </div>
+            </div>
+
+            <div class="stat-grid">
+                <div class="stat-box">
+                    <div class="stat-title">CURRENT TRACK</div>
+                    <div id="tele-track" class="stat-value truncate">Ready</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title">ARTIST / ALBUM</div>
+                    <div id="tele-artist" class="stat-value truncate">Internet Angel</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title">PLAY COUNT</div>
+                    <div id="tele-playcount" class="stat-value">0 Tracks</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title">AUDIO DECODER</div>
+                    <div id="tele-decoder" class="stat-value" style="color: #7b1fa2;">192kHz // 32-bit Float</div>
+                </div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-title flex justify-between">
+                    <span>LIKE COUNTER (SCORE)</span>
+                    <span id="tele-likes" class="text-[#ff4081]">0.0 ♥</span>
+                </div>
+                <div class="w-full bg-gray-200 h-2 border border-[#8258ff] mt-1 rounded-xs overflow-hidden">
+                    <div id="tele-like-bar" class="bg-gradient-to-r from-[#ff4081] to-[#7c4dff] h-full transition-all duration-300" style="width: 50%;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="xp-resizer"></div>
+    </div>
+
+    <!-- Retro Context Menus -->
+    <div id="context-menu-track" class="xp-context-menu">
+        <div class="xp-menu-item" onclick="ui.onContextPlay()"><span class="material-icons-round text-sm text-[#ff4081]">play_arrow</span> ▶ Play Now</div>
+        <div class="xp-menu-item" onclick="ui.onContextFavorite()"><span class="material-icons-round text-sm text-[#ffb300]">star</span> ⭐ Toggle Favorite</div>
+        <div class="xp-menu-item" onclick="ui.onContextSetBootBGM()"><span class="material-icons-round text-sm text-[#d81b60]">library_music</span> 🎵 Set as Boot Music</div>
+        <div class="xp-menu-divider"></div>
+        <div class="xp-menu-item" onclick="ui.onContextInfo()"><span class="material-icons-round text-sm text-[#7c4dff]">info</span> 📊 View Retention Info</div>
+        <div class="xp-menu-divider"></div>
+        <div class="xp-menu-item" onclick="ui.promptDeleteTrack()"><span class="material-icons-round text-sm text-red-500">delete_forever</span> 🗑️ Delete Track</div>
+    </div>
+
+    <div id="context-menu-folder" class="xp-context-menu">
+        <div class="xp-menu-item" onclick="ui.onContextFolderOpen()"><span class="material-icons-round text-sm text-[#ff4081]">folder_open</span> 📁 Open Album</div>
+        <div class="xp-menu-divider"></div>
+        <div class="xp-menu-item" onclick="ui.promptDeleteFolder()"><span class="material-icons-round text-sm text-red-500">delete_forever</span> 🗑️ Delete Album</div>
+    </div>
+
+    <div id="context-menu-desktop" class="xp-context-menu">
+        <div class="xp-menu-item" onclick="ui.togglePipMode(); ui.closeContextMenus()"><span class="material-icons-round text-sm text-[#ff4081]">picture_in_picture_alt</span> 📌 PIP Desktop Mode</div>
+        <div class="xp-menu-item" onclick="ui.arrangeWindows(); ui.closeContextMenus()"><span class="material-icons-round text-sm text-[#00e676]">auto_fix_high</span> ✨ Auto Layout</div>
+        <div class="xp-menu-divider"></div>
+        <div class="xp-menu-item" onclick="ui.toggleWindow('favorites-window'); ui.closeContextMenus()"><span class="material-icons-round text-sm text-[#ffb300]">star</span> ⭐ Open Favorites</div>
+        <div class="xp-menu-item" onclick="ui.toggleWindow('top10-window'); ui.closeContextMenus()"><span class="material-icons-round text-sm text-[#ff9100]">emoji_events</span> 🏆 Open Top 10</div>
+        <div class="xp-menu-item" onclick="ui.toggleWindow('layer-folders'); ui.closeContextMenus()"><span class="material-icons-round text-sm text-[#8258ff]">computer</span> 📁 Open Explorer</div>
+        <div class="xp-menu-item" onclick="ui.toggleWindow('playlist-window'); ui.closeContextMenus()"><span class="material-icons-round text-sm text-[#ff4081]">queue_music</span> 📋 Open Playlist</div>
+        <div class="xp-menu-item" onclick="ui.toggleWindow('taskmanager-window'); ui.closeContextMenus()"><span class="material-icons-round text-sm text-[#7b1fa2]">assessment</span> 📊 Open Telemetry</div>
+        <div class="xp-menu-divider"></div>
+        <div class="xp-menu-item" onclick="ui.openWallpaperModal(); ui.closeContextMenus()"><span class="material-icons-round text-sm text-[#00b0ff]">wallpaper</span> 🖼️ Wallpaper Settings</div>
+    </div>
+
+    <!-- 🗑️ Delete Confirmation Modal -->
+    <div id="delete-modal" class="hidden">
+        <div class="xp-window max-w-sm w-full p-3" onclick="event.stopPropagation()">
+            <div class="xp-titlebar mb-3" style="background: linear-gradient(90deg, #d32f2f 0%, #ff4081 100%);">
+                <span id="delete-modal-title">🗑️ CONFIRM DELETE</span>
+                <div class="xp-btn-box"><div class="xp-btn" onclick="ui.closeDeleteModal()">X</div></div>
+            </div>
+            <div class="space-y-3 bg-[#fff0f0] p-3 rounded border border-red-400">
+                <div class="flex items-center gap-3">
+                    <img id="jine-pien-img" src="../boot2/GIF/jine_pien.png" alt="Pien Cat" class="w-14 h-14 object-contain flex-shrink-0" style="display: none;">
+                    <div id="delete-modal-msg" class="text-xs font-bold text-[#5a0000] break-words flex-1">
+                        Are you sure you want to remove this item?
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 p-2 bg-white rounded border border-red-300">
+                    <input type="checkbox" id="chk-delete-disk" class="w-4 h-4 text-red-500 rounded focus:ring-red-400 cursor-pointer">
+                    <label for="chk-delete-disk" class="text-xs font-bold text-red-600 cursor-pointer select-none">
+                        ⚠️ Permanently delete real local files from hard drive
+                    </label>
+                </div>
+
+                <div class="pt-2 flex justify-end gap-2">
+                    <button onclick="ui.closeDeleteModal()" class="px-3 py-1.5 bg-gray-200 hover:bg-gray-300 text-xs font-bold text-[#3b1166] rounded border border-gray-400">
+                        CANCEL
+                    <button onclick="ui.executeDelete()" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded shadow transition">
+                        🗑️ DELETE
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🖼️ Full Artwork / Cover Modal -->
+    <div id="artwork-modal" class="hidden" onclick="ui.closeFullArt()">
+        <div class="xp-window max-w-lg w-full p-3 flex flex-col items-center gap-3 relative shadow-2xl" onclick="event.stopPropagation()">
+            <div class="xp-titlebar w-full">
+                <span id="modal-art-title">🖼️ FULL ARTWORK</span>
+                <div class="xp-btn-box">
+                    <div class="xp-btn" onclick="ui.closeFullArt()" title="Close">X</div>
+                </div>
+            </div>
+            <div class="w-full h-80 bg-black/40 border border-[#8258ff] rounded overflow-hidden flex items-center justify-center p-2">
+                <img id="modal-art-img" src="" alt="Full Artwork" class="max-w-full max-h-full object-contain rounded shadow-lg">
+            </div>
+            <div class="flex justify-end w-full">
+                <button onclick="ui.closeFullArt()" class="px-4 py-1 bg-[#ff4081] hover:bg-[#d81b60] text-white text-xs font-bold rounded shadow cursor-pointer">CLOSE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🌸 Custom Theme Artwork, Wallpaper & GIF Settings Modal -->
+    <div id="decorations-modal" class="hidden fixed inset-0 z-[999999] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="w-[450px] max-h-[90vh] overflow-y-auto bg-[#f4ecfd] border-2 border-[#ff4081] rounded-xl p-5 shadow-[0_15px_50px_rgba(255,64,129,0.4)] flex flex-col gap-3.5 font-mono">
+            <div class="flex justify-between items-center border-b border-[#ff4081]/30 pb-2">
+                <h3 class="text-xs font-bold text-[#ff4081] flex items-center gap-1.5">
+                    <span class="material-icons-round text-base">auto_awesome</span>
+                    <span>Theme Art & Wallpaper Manager</span>
+                </h3>
+                <button onclick="ui.toggleDecorationsModal()" class="text-[#6b33a8] hover:text-red-500 font-bold text-lg px-1">×</button>
+            </div>
+            
+            <!-- 0. Desktop Wallpaper & Presets -->
+            <div class="flex flex-col gap-2 bg-white p-3 rounded-lg border border-[#e2cbf7]">
+                <div class="flex justify-between items-center text-xs font-bold text-[#3b1166]">
+                    <span>Desktop Wallpaper & Presets</span>
+                    <span id="decor-wallpaper-status" class="text-[10px] text-pink-600 font-bold">Lattice (Default)</span>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="ui.selectCustomWallpaper()" class="flex-1 py-1.5 text-xs bg-[#8258ff] hover:bg-[#6e3bff] text-white rounded font-bold transition flex items-center justify-center gap-1">🖼️ Select Wallpaper</button>
+                    <button onclick="ui.resetWallpaper()" class="px-3 py-1.5 text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 rounded font-bold transition">🚫 Reset</button>
+                </div>
+                <div class="grid grid-cols-4 gap-1.5 mt-1">
+                    <button onclick="ui.setPresetWallpaper('default')" class="p-1.5 border border-[#e2cbf7] rounded bg-white hover:bg-[#ffdbf3] text-[10px] font-bold text-[#3b1166] flex flex-col items-center gap-0.5">
+                        <span class="material-icons-round text-sm text-[#ff4081]">grid_on</span>Lattice
+                    </button>
+                    <button onclick="ui.setPresetWallpaper('cyber')" class="p-1.5 border border-[#e2cbf7] rounded bg-white hover:bg-[#ffdbf3] text-[10px] font-bold text-[#3b1166] flex flex-col items-center gap-0.5">
+                        <span class="material-icons-round text-sm text-[#7c4dff]">dark_mode</span>Neon
+                    </button>
+                    <button onclick="ui.setPresetWallpaper('angel')" class="p-1.5 border border-[#e2cbf7] rounded bg-white hover:bg-[#ffdbf3] text-[10px] font-bold text-[#3b1166] flex flex-col items-center gap-0.5">
+                        <span class="material-icons-round text-sm text-[#ff4081]">favorite</span>Angel
+                    </button>
+                    <button onclick="ui.setPresetWallpaper('dark')" class="p-1.5 border border-[#e2cbf7] rounded bg-white hover:bg-[#ffdbf3] text-[10px] font-bold text-[#3b1166] flex flex-col items-center gap-0.5">
+                        <span class="material-icons-round text-sm text-[#63f4ff]">memory</span>Cyber
+                    </button>
+                </div>
+            </div>
+
+            <!-- 1. Boot & Background Image -->
+            <div class="flex flex-col gap-2 bg-white p-3 rounded-lg border border-[#e2cbf7]">
+                <div class="flex justify-between items-center text-xs font-bold text-[#3b1166]">
+                    <span>1. Boot & Background Image</span>
+                    <span id="decor-bg-status" class="text-[10px] text-pink-600 font-bold">Default: None</span>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="ui.setNeedyBgImage()" class="flex-1 py-1.5 text-xs bg-[#ff4081] hover:bg-[#e0336f] text-white rounded font-bold transition flex items-center justify-center gap-1">🖼️ Select Image/GIF</button>
+                    <button onclick="ui.clearNeedyBgImage()" class="px-3 py-1.5 text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 rounded font-bold transition">🚫 Clear</button>
+                </div>
+            </div>
+
+            <!-- 2. Character Avatar & GIF -->
+            <div class="flex flex-col gap-2 bg-white p-3 rounded-lg border border-[#e2cbf7]">
+                <div class="flex justify-between items-center text-xs font-bold text-[#3b1166]">
+                    <span>2. Character Avatar & GIF</span>
+                    <span id="decor-avatar-status" class="text-[10px] text-pink-600 font-bold">Default: None</span>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="ui.setNeedyAvatarImage()" class="flex-1 py-1.5 text-xs bg-[#7c4dff] hover:bg-[#651fff] text-white rounded font-bold transition flex items-center justify-center gap-1">🌸 Select Avatar/GIF</button>
+                    <button onclick="ui.clearNeedyAvatarImage()" class="px-3 py-1.5 text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 rounded font-bold transition">🚫 Clear</button>
+                </div>
+            </div>
+
+            <!-- 3. Sticker Image -->
+            <div class="flex flex-col gap-2 bg-white p-3 rounded-lg border border-[#e2cbf7]">
+                <div class="flex justify-between items-center text-xs font-bold text-[#3b1166]">
+                    <span>3. Sticker & Dialog Graphic</span>
+                    <span id="decor-sticker-status" class="text-[10px] text-pink-600 font-bold">Default: None</span>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="ui.setNeedyStickerImage()" class="flex-1 py-1.5 text-xs bg-[#00b0ff] hover:bg-[#0091ea] text-white rounded font-bold transition flex items-center justify-center gap-1">🐱 Select Sticker</button>
+                    <button onclick="ui.clearNeedyStickerImage()" class="px-3 py-1.5 text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 rounded font-bold transition">🚫 Clear</button>
+                </div>
+            </div>
+
+            <div class="text-[10px] text-[#7b1fa2] opacity-80 text-center">
+                💖 Note: All settings are permanently saved to config.json automatically!
+            </div>
+        </div>
+    </div>
+
+    <!-- 🎛️ Parametric EQ & Audio Filter Custom Modal -->
+    <div id="eq-modal" class="hidden fixed inset-0 z-[999999] bg-black/70 backdrop-blur-md flex items-center justify-center p-4" onclick="ui.closeEqModal()">
+        <div class="w-[620px] bg-[#1a0f2e] border-2 border-[#00e676] rounded-xl p-5 shadow-[0_0_50px_rgba(0,230,118,0.35)] flex flex-col gap-4 font-mono text-white" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center border-b border-[#00e676]/30 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="material-icons-round text-[#00e676] text-xl">equalizer</span>
+                    <h3 class="text-xs font-bold text-[#00e676] tracking-wider">PARAMETRIC EQUALIZER & AUDIO FILTERS</h3>
+                </div>
+                <div class="flex items-center gap-3">
+                    <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-[#00e676]">
+                        <input type="checkbox" id="eq-master-switch" onchange="ui.toggleEqMaster(this.checked)" class="accent-[#00e676] w-4 h-4 cursor-pointer">
+                        <span>EQ ENABLED</span>
+                    </label>
+                    <button onclick="ui.closeEqModal()" class="text-gray-400 hover:text-white font-bold text-lg px-2">×</button>
+                </div>
+            </div>
+
+            <!-- Preset Controls -->
+            <div class="flex justify-between items-center bg-[#251540] p-3 rounded-lg border border-[#00e676]/20">
+                <div class="flex items-center gap-2 text-xs">
+                    <span class="text-gray-300 font-bold">Preset:</span>
+                    <select id="eq-preset-select" onchange="ui.applyEqPreset(this.value)" class="bg-[#120822] text-[#00e676] border border-[#00e676]/40 rounded px-2.5 py-1 text-xs font-bold focus:outline-none cursor-pointer">
+                        <option value="Flat">🎵 Flat (Default / 原音)</option>
+                        <option value="Rock">🎸 Rock (搖滾樂)</option>
+                        <option value="Vocal">🎤 Vocal Boost (人聲增強)</option>
+                        <option value="Bass">💥 Bass Boost (低音重砲)</option>
+                        <option value="Gaming">🎧 Gaming & Anime (動漫遊戲)</option>
+                        <option value="Jazz">🎷 Jazz (爵士樂)</option>
+                        <option value="Pop">🌸 Pop (流行娛樂)</option>
+                        <option value="Electronic">⚡ Cyber Electronic (賽博電子)</option>
+                    </select>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="ui.resetEqGains()" class="px-3 py-1 bg-white/10 hover:bg-white/20 text-xs font-bold text-gray-200 rounded border border-white/20 transition">
+                        🔄 Flat Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Frequency Response Curve Preview -->
+            <div class="w-full h-16 bg-[#0f071b] border border-[#00e676]/30 rounded-lg relative overflow-hidden flex items-center justify-center">
+                <svg id="eq-curve-svg" class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 600 60">
+                    <path id="eq-curve-path" d="M 0 30 Q 300 30 600 30" fill="none" stroke="#00e676" stroke-width="2.5" stroke-linecap="round" />
+                </svg>
+                <div class="absolute inset-0 flex justify-between items-center px-4 pointer-events-none opacity-25 text-[9px] text-[#00e676] font-bold">
+                    <span>SUB-BASS</span><span>MID</span><span>TREBLE</span>
+                </div>
+            </div>
+
+            <!-- 10-Band Equalizer Sliders (-12dB to +12dB) -->
+            <div id="eq-bands-container" class="grid grid-cols-10 gap-2 bg-[#251540] p-3.5 rounded-lg border border-[#00e676]/20">
+            </div>
+
+            <div class="flex justify-between items-center text-[10px] text-gray-400 border-t border-[#00e676]/20 pt-2">
+                <span>10-Band Parametric Filter Range: -12dB ~ +12dB</span>
+                <span class="text-[#00e676] font-bold">Real-time MPV Audio Engine</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Player Control Bar & Standalone PIP Mini Widget -->
+    <div class="player-bar" id="player-bar">
+        <div class="w-14 h-14 bg-white border-2 border-[#8258ff] rounded overflow-hidden relative flex-shrink-0 shadow cursor-pointer" onclick="ui.openFullArtFromPlayer()" title="View Full Cover">
+            <img id="cover-art" src="" alt="Cover" class="w-full h-full object-cover opacity-0 transition-opacity">
+            <div id="cover-fallback" class="absolute inset-0 flex items-center justify-center bg-[#f0e1ff] text-[#8258ff]">
+                <span class="material-icons-round">music_note</span>
+            </div>
+        </div>
+
+        <div class="flex-1 flex flex-col justify-center min-w-0">
+            <div class="flex justify-between items-center mb-1">
+                <div class="flex items-center gap-2 max-w-[280px] truncate">
+                    <div id="player-title" class="text-xs font-bold text-[#3b1166] truncate">AWAITING_MEDIA</div>
+                    <button id="btn-player-fav" onclick="ui.toggleCurrentFavorite()" class="text-[#ffb300] hover:scale-125 transition" title="Favorite this song">
+                        <span class="material-icons-round text-base" id="icon-player-fav">star_border</span>
+                    </button>
+                </div>
+                <div class="flex items-center gap-2.5">
+                    <button onclick="pywebview.api.toggle_play_mode()" class="text-[#7c4dff] hover:text-[#ff4081] transition" title="Mode">
+                        <span id="icon-mode" class="material-icons-round text-lg">repeat</span>
+                    </button>
+                    <button onclick="pywebview.api.control('prev')" class="text-[#3b1166] hover:text-[#ff4081] transition"><span class="material-icons-round text-xl">skip_previous</span></button>
+                    <button onclick="pywebview.api.control('play_pause')" class="w-8 h-8 bg-[#ff4081] text-white border border-white rounded flex items-center justify-center shadow hover:scale-105 active:scale-95 transition">
+                        <span class="material-icons-round text-lg" id="icon-play">play_arrow</span>
+                    </button>
+                    <button onclick="pywebview.api.control('next')" class="text-[#3b1166] hover:text-[#ff4081] transition"><span class="material-icons-round text-xl">skip_next</span></button>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 text-xs text-[#52278c] font-mono">
+                <div class="pixel-viz">
+                    <div class="pixel-bar"></div>
+                    <div class="pixel-bar"></div>
+                    <div class="pixel-bar"></div>
+                    <div class="pixel-bar"></div>
+                </div>
+                <span id="time-current">00:00</span>
+                <input type="range" id="seek-bar" min="0" max="100" value="0" aria-label="Seek" class="flex-1"
+                       onchange="ui.seek(this.value)" oninput="ui.isDragging = true" onmouseup="ui.isDragging = false">
+                <span id="time-total">00:00</span>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <!-- 📌 Restore Button in PIP Mode -->
+            <button id="btn-pip-restore" onclick="ui.togglePipMode()" class="hidden px-2 py-1 text-[10px] font-bold rounded border border-[#ff4081] bg-[#ffdbf3] text-[#d81b60] shadow-xs transition cursor-pointer flex items-center gap-1" title="Restore Full OS Desktop">
+                <span class="material-icons-round text-sm">open_in_full</span> Restore OS
+            </button>
+
+            <button onclick="ui.toggleNoirMode()" id="btn-noir-mode" class="px-2 py-1 text-[10px] font-bold rounded border border-[#ff4081] bg-[#ffdbf3] text-[#d81b60] shadow-xs transition cursor-pointer" title="Toggle Goth Dark / Angel Pink Mode (黑 / 白)">
+                ☯️ 黑 / 白
+            </button>
+            <button onclick="pywebview.api.toggle_audio_upsample()" id="btn-upsample" class="px-2 py-1 text-[10px] font-bold rounded border border-[#ff4081] bg-[#ffdbf3] text-[#d81b60] shadow-xs transition cursor-pointer" title="Toggle Hi-Res Audio Upsampling (192kHz/32-bit Float)">
+                💎 Hi-Res 192k
+            </button>
+            <button onclick="pywebview.api.toggle_audio_normalize()" id="btn-normalize" class="px-2 py-1 text-[10px] font-bold rounded border border-[#ff4081] bg-[#ffdbf3] text-[#d81b60] shadow-xs transition cursor-pointer" title="Toggle EBU R128 Loudness Normalization">
+                ⚖️ EBU R128 ON
+            </button>
+            <button onclick="ui.openWallpaperModal()" class="text-[#7c4dff] hover:text-[#ff4081] transition" title="Wallpaper">
+                <span class="material-icons-round text-lg">wallpaper</span>
+            </button>
+            <button onclick="pywebview.api.toggle_boot_music()" class="text-[#7c4dff] hover:text-[#ff4081] transition" title="Boot BGM">
+                <span id="icon-boot" class="material-icons-round text-lg">music_note</span>
+            </button>
+            <div class="relative">
+                <button onclick="ui.toggleThemeMenu()" class="text-[#7c4dff] hover:text-[#ff4081] transition" title="Theme Menu">
+                    <span class="material-icons-round text-lg">palette</span>
+                </button>
+                <div id="theme-menu" class="hidden absolute bottom-10 right-0 w-44 bg-[#f4ecfd] border-2 border-[#6b33a8] shadow-2xl rounded overflow-hidden z-50 flex-col">
+                    <button onclick="pywebview.api.change_theme('needy_theme.html')" class="px-3 py-2 text-left text-xs text-[#ff4081] font-bold bg-[#ffdbf3] border-b border-[#d1b3ff]">✨ Internet Angel</button>
+                    <button onclick="pywebview.api.change_theme('cyberpunk.html')" class="px-3 py-2 text-left text-xs text-[#3b1166] hover:bg-[#ffdbf3] border-b border-[#d1b3ff]">⚡ Cyberpunk</button>
+                    <button onclick="pywebview.api.change_theme('mech_theme.html')" class="px-3 py-2 text-left text-xs text-[#3b1166] hover:bg-[#ffdbf3] border-b border-[#d1b3ff]">🤖 Cyber Mech</button>
+                    <button onclick="pywebview.api.change_theme('index.html')" class="px-3 py-2 text-left text-xs text-[#3b1166] hover:bg-[#ffdbf3] border-b border-[#d1b3ff]">🎵 Default Dark</button>
+                    <button onclick="pywebview.api.change_theme('light.html')" class="px-3 py-2 text-left text-xs text-[#3b1166] hover:bg-[#ffdbf3] border-b border-[#d1b3ff]">🌸 Light Ambient</button>
+                    <button onclick="pywebview.api.change_theme('image_theme.html')" class="px-3 py-2 text-left text-xs text-[#3b1166] hover:bg-[#ffdbf3]">🖼️ Immersive Glass</button>
+                </div>
+            </div>
+            <div class="flex items-center gap-1 bg-white border border-[#8258ff] px-2 py-1 rounded">
+                 <button onclick="pywebview.api.toggle_mute()" class="text-[#7c4dff]">
+                     <span id="icon-volume" class="material-icons-round text-sm">volume_up</span>
+                 </button>
+                 <input type="range" min="0" max="100" value="60" aria-label="Vol" class="w-16" oninput="pywebview.api.control('volume', this.value)">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ui = {
+            isDragging: false,
+            currentTrackPath: null,
+            isProcessing: false,
+            allFolders: [],
+            sessionPlayCount: 0,
+            currentCoverUrl: null,
+            currentPage: 1,
+            itemsPerPage: 6,
+            filteredFolders: [],
+            contextTrackPath: null,
+            contextFolderPath: null,
+            deleteTargetType: null,
+            deleteTargetPath: null,
+            topZIndex: 120,
+            gifCache: {},
+            searchDebounceTimer: null,
+
+            quotes: [
+                "Ame-Chan is playing the best BGM for you! ✨",
+                "P-Chan~ Today's music stream is super cute right! 💖",
+                "I love this song so much! Let's listen together! 🎶",
+                "Internet Angel descent! Blow all worries away! ⚡",
+                "Play another song P-Chan! Ame-Chan is always here! 🎀"
+            ],
+
+            preloadGifs: async () => {
+                const gifFiles = [
+                    'choten-chan-idle.gif',
+                    'choten-chan-jumping.gif',
+                    'choten-chan-review.gif'
+                ];
+                for (const fn of gifFiles) {
+                    try {
+                        if (window.pywebview && pywebview.api && pywebview.api.get_gif_b64) {
+                            const b64 = await pywebview.api.get_gif_b64(fn);
+                            if (b64) ui.gifCache[fn] = b64;
+                        }
+                    } catch(e) {}
+                }
+            },
+
+            setGif: (elementId, filename) => {
+                const img = document.getElementById(elementId);
+                if (!img) return;
+
+                // 若使用者已設定自訂頭像/GIF 圖片，優先顯示自訂圖片
+                const customAvatar = localStorage.getItem('needy_avatar_image');
+                if (customAvatar) {
+                    img.src = (customAvatar.startsWith('http') || customAvatar.startsWith('file:') || customAvatar.startsWith('data:')) ? customAvatar : ui.toFileUrl(customAvatar);
+                    return;
+                }
+
+                if (ui.gifCache[filename]) {
+                    img.src = ui.gifCache[filename];
+                } else if (window.pywebview && pywebview.api && pywebview.api.get_gif_b64) {
+                    pywebview.api.get_gif_b64(filename).then(b64 => {
+                        if (b64) {
+                            ui.gifCache[filename] = b64;
+                            img.src = b64;
+                        }
+                    }).catch(() => {});
+                }
+            },
+
+            calcAdaptiveItemsPerPage: () => {
+                // 智慧視窗動態判定：依據媒體瀏覽器 (layer-folders) 實體寬高進行精確調配
+                const expWin = document.getElementById('layer-folders');
+                const w = (expWin && expWin.offsetWidth > 100) ? expWin.offsetWidth : window.innerWidth;
+                const h = (expWin && expWin.offsetHeight > 100) ? expWin.offsetHeight : window.innerHeight;
+                
+                if (w >= 950 || h >= 780) return 27; // 2K高解析 / 最大化大視窗
+                if (w >= 660 || h >= 560) return 12; // 1080p標準 / 中型視窗
+                return 6;                            // 低解析 / 緊湊小視窗
+            },
+
+            initAdaptivePagination: () => {
+                const defaultItems = ui.calcAdaptiveItemsPerPage();
+                ui.itemsPerPage = defaultItems;
+                const sel = document.getElementById('items-per-page-select');
+                if (sel) sel.value = defaultItems.toString();
+            },
+
+            onWindowResizeAdaptive: () => {
+                if (ui.resizeDebounceTimer) clearTimeout(ui.resizeDebounceTimer);
+                ui.resizeDebounceTimer = setTimeout(() => {
+                    const newItems = ui.calcAdaptiveItemsPerPage();
+                    if (ui.itemsPerPage !== newItems && ui.itemsPerPage !== 9999) {
+                        ui.itemsPerPage = newItems;
+                        const sel = document.getElementById('items-per-page-select');
+                        if (sel) sel.value = newItems.toString();
+                        ui.renderFolders(ui.filteredFolders);
+                    }
+                }, 120);
+            },
+
+            onContextSetBootBGM: async () => {
+                if (ui.contextTrackPath && window.pywebview && pywebview.api && pywebview.api.set_boot_track) {
+                    const res = await pywebview.api.set_boot_track(ui.contextTrackPath);
+                    if (res && res.success) {
+                        ui.toast(`🎵 Set Boot BGM: ${res.track}`);
+                    }
+                }
+                ui.closeContextMenus();
+            },
+
+                        toggleNoirMode: async () => {
+                const isNoir = document.body.classList.toggle('noir-mode');
+                localStorage.setItem('mplay_noir_mode', isNoir ? 'true' : 'false');
+                if (window.pywebview && pywebview.api && pywebview.api.save_noir_mode) {
+                    await pywebview.api.save_noir_mode(isNoir);
+                }
+                const btn = document.getElementById('btn-noir-mode');
+                if (btn) {
+                    btn.innerText = isNoir ? '☯️ 黑 (Goth)' : '☯️ 白 (Pink)';
+                }
+                if (ui.currentWallpaperUrl) {
+                    ui.applyWallpaper(ui.currentWallpaperUrl);
+                }
+                ui.toast(isNoir ? '🖤 Switched to Goth Dark Mode (黑)' : '🌸 Switched to Angel Pink Mode (白)');
+            },
+
+            initNoirMode: () => {
+                if (localStorage.getItem('mplay_noir_mode') === 'true') {
+                    document.body.classList.add('noir-mode');
+                    const btn = document.getElementById('btn-noir-mode');
+                    if (btn) btn.innerText = '☯️ 黑 (Goth)';
+                }
+            },
+
+                        initLoginSequence: () => {
+                const splash = document.getElementById('pure-splash-screen');
+                const loginScreen = document.getElementById('login-screen');
+                const bar = document.getElementById('login-progress-bar');
+                const statusText = document.getElementById('login-status-text');
+
+                // Stage 1: 純圖片遮擋 (0.8s)
+                setTimeout(() => {
+                    if (splash) {
+                        splash.style.opacity = '0';
+                        setTimeout(() => { splash.style.display = 'none'; }, 500);
+                    }
+                }, 800);
+
+                // Stage 2: 歡迎登錄動畫 (0.8s -> 2.2s)
+                if (!loginScreen) return;
+                let step = 0;
+                const interval = setInterval(() => {
+                    step += 1;
+                    if (step === 1) {
+                        if (bar) bar.style.width = '65%';
+                        if (statusText) statusText.innerText = '✨ LOADING MEDIA LIBRARY...';
+                    } else if (step === 2) {
+                        if (bar) bar.style.width = '90%';
+                        if (statusText) statusText.innerText = '💖 SOUND ENGINE ACTIVE!';
+                    } else if (step >= 3) {
+                        clearInterval(interval);
+                        if (bar) bar.style.width = '100%';
+                        if (statusText) statusText.innerText = '🌸 WELCOME!';
+                        
+                        setTimeout(() => {
+                            loginScreen.style.opacity = '0';
+                            setTimeout(() => {
+                                loginScreen.style.display = 'none';
+                            }, 500);
+                        }, 200);
+                    }
+                }, 450);
+            },
+
+            toggleDecorationsModal: () => {
+                const modal = document.getElementById('decorations-modal');
+                if (modal) modal.classList.toggle('hidden');
+            },
+
+            // 1. Boot & Background Image
+            setNeedyBgImage: async () => {
+                let url = null;
+                if (window.pywebview && pywebview.api && pywebview.api.select_image_file) {
+                    url = await pywebview.api.select_image_file();
+                } else {
+                    url = prompt("Please enter image URL or local file path:");
+                }
+                if (url) {
+                    url = url.trim();
+                    localStorage.setItem('needy_bg_image', url);
+                    if (window.pywebview && pywebview.api && pywebview.api.save_theme_setting) {
+                        pywebview.api.save_theme_setting('needy_bg_image', url).catch(() => {});
+                    }
+                    ui.applyNeedyBgImage(url);
+                }
+            },
+            clearNeedyBgImage: () => {
+                localStorage.removeItem('needy_bg_image');
+                if (window.pywebview && pywebview.api && pywebview.api.save_theme_setting) {
+                    pywebview.api.save_theme_setting('needy_bg_image', null).catch(() => {});
+                }
+                ui.applyNeedyBgImage(null);
+            },
+            applyNeedyBgImage: (url) => {
+                const pure = document.getElementById('pure-splash-screen');
+                const login = document.getElementById('login-screen');
+                const status = document.getElementById('decor-bg-status');
+                if (url) {
+                    const formatted = (url.startsWith('http') || url.startsWith('file:') || url.startsWith('data:')) ? url : ui.toFileUrl(url);
+                    if (pure) pure.style.background = `#0f071b url('${formatted}') center/cover no-repeat`;
+                    if (login) login.style.backgroundImage = `url('${formatted}')`;
+                    if (status) status.innerText = 'Custom Active';
+                } else {
+                    if (pure) pure.style.background = '#0f071b';
+                    if (login) login.style.backgroundImage = 'none';
+                    if (status) status.innerText = 'Default: None';
+                }
+            },
+
+            // 2. Character Avatar & GIF
+            setNeedyAvatarImage: async () => {
+                let url = null;
+                if (window.pywebview && pywebview.api && pywebview.api.select_image_file) {
+                    url = await pywebview.api.select_image_file();
+                } else {
+                    url = prompt("Please enter avatar image URL or local file path:");
+                }
+                if (url) {
+                    url = url.trim();
+                    localStorage.setItem('needy_avatar_image', url);
+                    if (window.pywebview && pywebview.api && pywebview.api.save_theme_setting) {
+                        pywebview.api.save_theme_setting('needy_avatar_image', url).catch(() => {});
+                    }
+                    ui.applyNeedyAvatarImage(url);
+                }
+            },
+            clearNeedyAvatarImage: () => {
+                localStorage.removeItem('needy_avatar_image');
+                if (window.pywebview && pywebview.api && pywebview.api.save_theme_setting) {
+                    pywebview.api.save_theme_setting('needy_avatar_image', null).catch(() => {});
+                }
+                ui.applyNeedyAvatarImage(null);
+            },
+            applyNeedyAvatarImage: (url) => {
+                const status = document.getElementById('decor-avatar-status');
+                const ameBox = document.getElementById('ame-avatar-box');
+                const ameGif = document.getElementById('ame-gif');
+                const loginIcon = document.getElementById('login-avatar-icon');
+                const loginImg = document.getElementById('login-avatar-img');
+
+                if (url) {
+                    const formatted = (url.startsWith('http') || url.startsWith('file:') || url.startsWith('data:')) ? url : ui.toFileUrl(url);
+                    if (ameGif) ameGif.src = formatted;
+                    if (loginImg) { loginImg.src = formatted; loginImg.classList.remove('hidden'); }
+                    if (loginIcon) loginIcon.classList.add('hidden');
+                    if (ameBox) ameBox.style.display = 'flex';
+                    if (status) status.innerText = 'Custom Active';
+                } else {
+                    if (loginImg) { loginImg.src = ''; loginImg.classList.add('hidden'); }
+                    if (loginIcon) loginIcon.classList.remove('hidden');
+                    if (ameBox) ameBox.style.display = 'none';
+                    if (status) status.innerText = 'Default: None';
+                }
+            },
+
+            // 3. Sticker Image
+            setNeedyStickerImage: async () => {
+                let url = null;
+                if (window.pywebview && pywebview.api && pywebview.api.select_image_file) {
+                    url = await pywebview.api.select_image_file();
+                } else {
+                    url = prompt("Please enter sticker image URL or local file path:");
+                }
+                if (url) {
+                    url = url.trim();
+                    localStorage.setItem('needy_sticker_image', url);
+                    if (window.pywebview && pywebview.api && pywebview.api.save_theme_setting) {
+                        pywebview.api.save_theme_setting('needy_sticker_image', url).catch(() => {});
+                    }
+                    ui.applyNeedyStickerImage(url);
+                }
+            },
+            clearNeedyStickerImage: () => {
+                localStorage.removeItem('needy_sticker_image');
+                if (window.pywebview && pywebview.api && pywebview.api.save_theme_setting) {
+                    pywebview.api.save_theme_setting('needy_sticker_image', null).catch(() => {});
+                }
+                ui.applyNeedyStickerImage(null);
+            },
+            applyNeedyStickerImage: (url) => {
+                const status = document.getElementById('decor-sticker-status');
+                const pienImg = document.getElementById('jine-pien-img');
+                if (url) {
+                    const formatted = (url.startsWith('http') || url.startsWith('file:') || url.startsWith('data:')) ? url : ui.toFileUrl(url);
+                    if (pienImg) {
+                        pienImg.src = formatted;
+                        pienImg.style.display = 'block';
+                    }
+                    if (status) status.innerText = 'Custom Active';
+                } else {
+                    if (pienImg) pienImg.style.display = 'none';
+                    if (status) status.innerText = 'Default: None';
+                }
+            },
+
+            init: async () => {
+                ui.initNoirMode();
+                ui.initMediaSession();
+                ui.initLoginSequence();
+                ui.initWindowSystem();
+                ui.initAdaptivePagination();
+                ui.initMarqueeSelection();
+                
+                // 加載自訂圖片與 GIF 狀態 (從 Python config.json 讀取永久存檔)
+                let savedBg = localStorage.getItem('needy_bg_image');
+                let savedAvatar = localStorage.getItem('needy_avatar_image');
+                let savedSticker = localStorage.getItem('needy_sticker_image');
+
+                if (window.pywebview && pywebview.api && pywebview.api.get_theme_settings) {
+                    try {
+                        const settings = await pywebview.api.get_theme_settings();
+                        if (settings) {
+                            if (settings.needy_bg_image !== undefined) savedBg = settings.needy_bg_image;
+                            if (settings.needy_avatar_image !== undefined) savedAvatar = settings.needy_avatar_image;
+                            if (settings.needy_sticker_image !== undefined) savedSticker = settings.needy_sticker_image;
+                        }
+                    } catch(e) {}
+                }
+
+                ui.applyNeedyBgImage(savedBg);
+                ui.applyNeedyAvatarImage(savedAvatar);
+                ui.applyNeedyStickerImage(savedSticker);
+
+                // 立即同步當前播放狀態
+                ui.syncState();
+                
+                try {
+                    await ui.loadFolders();
+                } catch(e) { console.error("loadFolders error:", e); }
+
+                try {
+                    if (window.pywebview && pywebview.api) {
+                        const bootState = await pywebview.api.get_boot_state();
+                        ui.updateBootState(bootState);
+                        const upsampleState = await pywebview.api.get_audio_upsample_state();
+                        ui.updateUpsampleState(upsampleState);
+                        const normState = await pywebview.api.get_audio_normalize_state();
+                        ui.updateNormalizeState(normState);
+                        await pywebview.api.start_mpv();
+                        await ui.syncState();
+                    }
+                } catch(e) { console.error("pywebview init error:", e); }
+
+                ui.setupKeyboardShortcuts();
+                setInterval(ui.syncState, 500);
+                
+                try {
+                    await ui.initWallpaper();
+                } catch(e) {}
+
+                try {
+                    await ui.initEqUI();
+                } catch(e) {}
+
+                // Execute startup Auto Layout
+                ui.arrangeWindows();
+
+                // Non-blocking background GIF preload
+                setTimeout(() => ui.preloadGifs(), 100);
+
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('.xp-context-menu')) ui.closeContextMenus();
+                });
+
+                window.addEventListener('resize', () => {
+                    ui.onWindowResizeAdaptive();
+                });
+            },
+
+            togglePipMode: async () => {
+                if (window.pywebview && pywebview.api && pywebview.api.open_pip_window) {
+                    await pywebview.api.open_pip_window();
+                    ui.toast("📌 Picture-in-Picture Mini Player Launched!");
+                }
+            },
+
+            toast: (msg) => {
+                const toast = document.getElementById('xp-toast');
+                toast.innerText = msg;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2600);
+            },
+
+            initWindowSystem: () => {
+                const windowIds = ['layer-folders', 'playlist-window', 'taskmanager-window', 'favorites-window', 'top10-window', 'video-window'];
+                windowIds.forEach(id => {
+                    ui.makeWindowDraggable(id);
+                    ui.makeWindowResizable(id);
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.addEventListener('mousedown', () => ui.bringToFront(id));
+                    }
+                });
+            },
+
+            bringToFront: (id) => {
+                const el = document.getElementById(id);
+                if (el) {
+                    ui.topZIndex += 1;
+                    el.style.zIndex = ui.topZIndex;
+                }
+            },
+
+            makeWindowDraggable: (id) => {
+                const win = document.getElementById(id);
+                if (!win) return;
+                const titlebar = win.querySelector('.xp-titlebar');
+                if (!titlebar) return;
+
+                win._dragX = win._dragX || 0;
+                win._dragY = win._dragY || 0;
+
+                let isDragging = false;
+                let startX, startY, startDragX, startDragY;
+
+                titlebar.addEventListener('mousedown', (e) => {
+                    if (e.target.closest('.xp-btn') || e.target.closest('.xp-btn-box')) return;
+                    if (win.classList.contains('is-maximized')) return;
+
+                    isDragging = true;
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    startDragX = win._dragX;
+                    startDragY = win._dragY;
+                    ui.bringToFront(id);
+
+                    let rAfPending = false;
+                    let lastEv = null;
+                    const onMouseMove = (ev) => {
+                        if (!isDragging) return;
+                        lastEv = ev;
+                        if (!rAfPending) {
+                            rAfPending = true;
+                            requestAnimationFrame(() => {
+                                rAfPending = false;
+                                if (!isDragging || !lastEv) return;
+                                const dx = lastEv.clientX - startX;
+                                const dy = lastEv.clientY - startY;
+                                win._dragX = startDragX + dx;
+                                win._dragY = startDragY + dy;
+                                win.style.transform = `translate(${win._dragX}px, ${win._dragY}px)`;
+                            });
+                        }
+                    };
+
+                    const onMouseUp = () => {
+                        isDragging = false;
+                        document.removeEventListener('mousemove', onMouseMove);
+                        document.removeEventListener('mouseup', onMouseUp);
+                    };
+
+                    document.addEventListener('mousemove', onMouseMove);
+                    document.addEventListener('mouseup', onMouseUp);
+                    e.preventDefault();
+                });
+            },
+
+            makeWindowResizable: (id) => {
+                const win = document.getElementById(id);
+                if (!win) return;
+                let resizer = win.querySelector('.xp-resizer');
+                if (!resizer) return;
+
+                let isResizing = false;
+                let startX, startY, origW, origH;
+
+                resizer.addEventListener('mousedown', (e) => {
+                    e.stopPropagation();
+                    isResizing = true;
+
+                    // Convert right-anchored positioning to explicit left positioning
+                    const rect = win.getBoundingClientRect();
+                    win.style.left = rect.left + 'px';
+                    win.style.right = 'auto';
+                    win.style.top = rect.top + 'px';
+                    win.style.transform = '';
+                    win._dragX = 0;
+                    win._dragY = 0;
+
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    origW = rect.width;
+                    origH = rect.height;
+                    ui.bringToFront(id);
+
+                    let rAfResizePending = false;
+                    let lastResizeEv = null;
+                    const onMouseMove = (ev) => {
+                        if (!isResizing) return;
+                        lastResizeEv = ev;
+                        if (!rAfResizePending) {
+                            rAfResizePending = true;
+                            requestAnimationFrame(() => {
+                                rAfResizePending = false;
+                                if (!isResizing || !lastResizeEv) return;
+                                const nw = Math.max(220, origW + (lastResizeEv.clientX - startX));
+                                const nh = Math.max(140, origH + (lastResizeEv.clientY - startY));
+                                win.style.width = nw + 'px';
+                                win.style.height = nh + 'px';
+                            });
+                        }
+                    };
+
+                    const onMouseUp = () => {
+                        isResizing = false;
+                        document.removeEventListener('mousemove', onMouseMove);
+                        document.removeEventListener('mouseup', onMouseUp);
+                    };
+
+                    document.addEventListener('mousemove', onMouseMove);
+                    document.addEventListener('mouseup', onMouseUp);
+                    e.preventDefault();
+                });
+            },
+
+            arrangeWindows: () => {
+                const allWins = ['favorites-window', 'top10-window', 'layer-folders', 'playlist-window', 'taskmanager-window', 'video-window'];
+                
+                const openWins = allWins.filter(id => {
+                    const el = document.getElementById(id);
+                    return el && !el.classList.contains('hidden') && !el.classList.contains('is-minimized') && el.style.display !== 'none';
+                });
+
+                if (openWins.length === 0) {
+                    ui.toast("No open windows to arrange!");
+                    return;
+                }
+
+                openWins.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el._dragX = 0;
+                        el._dragY = 0;
+                        el.style.transform = '';
+                        el.style.position = 'fixed';
+                    }
+                });
+
+                const isFavOpen = openWins.includes('favorites-window');
+                const isTop10Open = openWins.includes('top10-window');
+                const isExplorerOpen = openWins.includes('layer-folders');
+                const isPlaylistOpen = openWins.includes('playlist-window');
+                const isTeleOpen = openWins.includes('taskmanager-window');
+                const isVideoOpen = openWins.includes('video-window');
+
+                let leftColWidth = 0;
+                let leftColPos = 85;
+                if (isFavOpen || isTop10Open) {
+                    leftColWidth = 280;
+                    if (isFavOpen && isTop10Open) {
+                        const favEl = document.getElementById('favorites-window');
+                        favEl.style.left = `${leftColPos}px`;
+                        favEl.style.top = '12px';
+                        favEl.style.width = '280px';
+                        favEl.style.height = 'calc(50vh - 66px)';
+
+                        const top10El = document.getElementById('top10-window');
+                        top10El.style.left = `${leftColPos}px`;
+                        top10El.style.top = 'calc(50vh - 44px)';
+                        top10El.style.width = '280px';
+                        top10El.style.height = 'calc(50vh - 66px)';
+                    } else if (isFavOpen) {
+                        const favEl = document.getElementById('favorites-window');
+                        favEl.style.left = `${leftColPos}px`;
+                        favEl.style.top = '12px';
+                        favEl.style.width = '280px';
+                        favEl.style.height = 'calc(100vh - 120px)';
+                    } else if (isTop10Open) {
+                        const top10El = document.getElementById('top10-window');
+                        top10El.style.left = `${leftColPos}px`;
+                        top10El.style.top = '12px';
+                        top10El.style.width = '280px';
+                        top10El.style.height = 'calc(100vh - 120px)';
+                    }
+                }
+
+                let rightColWidth = 0;
+                let rightColPos = 16;
+                const rightWins = [isPlaylistOpen, isTeleOpen, isVideoOpen].filter(Boolean);
+
+                if (rightWins.length > 0) {
+                    rightColWidth = 330;
+                    const rightOpenList = [];
+                    if (isPlaylistOpen) rightOpenList.push('playlist-window');
+                    if (isTeleOpen) rightOpenList.push('taskmanager-window');
+                    if (isVideoOpen) rightOpenList.push('video-window');
+
+                    const count = rightOpenList.length;
+                    rightOpenList.forEach((id, idx) => {
+                        const el = document.getElementById(id);
+                        if (el) {
+                            el.style.right = `${rightColPos}px`;
+                            el.style.left = 'auto';
+                            el.style.width = '330px';
+
+                            if (count === 1) {
+                                el.style.top = '12px';
+                                el.style.height = 'calc(100vh - 120px)';
+                            } else if (count === 2) {
+                                if (idx === 0) {
+                                    el.style.top = '12px';
+                                    el.style.height = 'calc(50vh - 66px)';
+                                } else {
+                                    el.style.top = 'calc(50vh - 44px)';
+                                    el.style.height = 'calc(50vh - 66px)';
+                                }
+                            } else if (count === 3) {
+                                if (idx === 0) {
+                                    el.style.top = '12px';
+                                    el.style.height = 'calc(33vh - 44px)';
+                                } else if (idx === 1) {
+                                    el.style.top = 'calc(33vh - 20px)';
+                                    el.style.height = 'calc(33vh - 44px)';
+                                } else {
+                                    el.style.top = 'calc(66vh - 52px)';
+                                    el.style.height = 'calc(33vh - 44px)';
+                                }
+                            }
+                        }
+                    });
+                }
+
+                if (isExplorerOpen) {
+                    const expEl = document.getElementById('layer-folders');
+                    const expLeft = leftColWidth > 0 ? (leftColPos + leftColWidth + 12) : 85;
+                    const expRightGap = rightColWidth > 0 ? (rightColWidth + 28) : 16;
+                    
+                    expEl.style.position = 'fixed';
+                    expEl.style.left = `${expLeft}px`;
+                    expEl.style.top = '12px';
+                    expEl.style.width = `calc(100vw - ${expLeft + expRightGap}px)`;
+                    expEl.style.height = 'calc(100vh - 120px)';
+                }
+
+                ui.toast(`✨ Auto Layout arranged for ${openWins.length} open windows!`);
+            },
+
+            toggleWindow: (id) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                if (el.classList.contains('hidden') || el.classList.contains('is-minimized') || el.style.display === 'none') {
+                    el.classList.remove('hidden', 'is-minimized');
+                    el.style.display = 'flex';
+                    ui.bringToFront(id);
+                    if (id === 'favorites-window') ui.loadFavorites();
+                    if (id === 'top10-window') ui.loadTop10();
+                    ui.arrangeWindows();
+                } else {
+                    ui.closeWindow(id);
+                }
+            },
+
+            minimizeWindow: (id) => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.add('is-minimized');
+                    el.style.display = 'none';
+                    ui.arrangeWindows();
+                }
+            },
+
+            maximizeWindow: (id) => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.toggle('is-maximized');
+                    setTimeout(() => ui.onWindowResizeAdaptive(), 50);
+                }
+            },
+
+            closeWindow: (id) => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.add('hidden', 'is-minimized');
+                    el.style.display = 'none';
+                    ui.arrangeWindows();
+                }
+            },
+
+            handleTrackDragStart: (e, encodedPath) => {
+                e.stopPropagation();
+                const path = decodeURIComponent(encodedPath);
+                e.dataTransfer.setData('text/plain', path);
+                e.dataTransfer.effectAllowed = 'copy';
+            },
+
+            handleDragOver: (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'copy';
+                const target = e.currentTarget;
+                if (target) target.classList.add('drag-over');
+            },
+
+            handleDragLeave: (e) => {
+                const target = e.currentTarget;
+                if (target) target.classList.remove('drag-over');
+            },
+
+            handleDropFavorite: async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const target = e.currentTarget;
+                if (target) target.classList.remove('drag-over');
+
+                const path = e.dataTransfer.getData('text/plain');
+                if (path) {
+                    const res = await pywebview.api.toggle_favorite(path);
+                    if (res) {
+                        const filename = path.replace(/\\/g, '/').split('/').pop().replace(/\.[^/.]+$/, "");
+                        if (res.is_favorite) {
+                            ui.toast(`⭐ Added to Favorites: ${filename}`);
+                            ui.onAmeClick();
+                        } else {
+                            ui.toast(`☆ Removed from Favorites: ${filename}`);
+                        }
+                        ui.loadFavorites();
+                        ui.loadTop10();
+                        ui.updateActiveTrackFavoriteState(path, res.is_favorite);
+                    }
+                }
+            },
+
+            loadFavorites: async () => {
+                const list = document.getElementById('favorites-list');
+                if (!list) return;
+                list.innerHTML = `<div class="text-center py-8 text-[#ffb300] animate-pulse text-xs font-mono">LOADING_FAVORITES...</div>`;
+
+                const tracks = await pywebview.api.get_favorites();
+                if (!tracks || tracks.length === 0) {
+                    list.innerHTML = `<div class="text-center py-12 text-[#ff8f00] text-xs font-mono">/// NO_FAVORITES_YET<br><span class="text-[10px] text-[#b76e00]">Drag tracks here to add favorites!</span></div>`;
+                    return;
+                }
+
+                list.innerHTML = tracks.map((t, idx) => {
+                    const cleanPath = t.path.replace(/\\/g, '/');
+                    const isActive = (cleanPath === ui.currentTrackPath);
+                    const safePath = ui.encodePath(t.path);
+                    let trackName = t.filename.replace(/\.[^/.]+$/, ""); 
+                    const displayName = trackName.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                    const score = t.like_score ? t.like_score.toFixed(1) : "150.0";
+                    
+                    return `
+                    <div class="track-item ${isActive ? 'active' : ''}" 
+                         draggable="true" 
+                         ondragstart="ui.handleTrackDragStart(event, '${safePath}')"
+                         oncontextmenu="ui.showTrackContextMenu(event, '${safePath}')"
+                         onclick="ui.handleTrackClick('${safePath}')">
+                        <span class="text-xs font-mono text-[#ff8f00] font-bold">${String(idx + 1).padStart(2, '0')}</span>
+                        <div class="flex-1 min-w-0">
+                            <div class="track-title text-xs text-[#3b1166] truncate">${displayName}</div>
+                        </div>
+                        <span class="text-[9px] text-[#ff4081] font-mono font-bold">${score} ♥</span>
+                        <button onclick="event.stopPropagation(); ui.toggleFavorite('${safePath}')" class="text-[#ffb300] hover:scale-125 transition" title="Remove Favorite">
+                            <span class="material-icons-round text-sm">star</span>
+                        </button>
+                    </div>`;
+                }).join('');
+            },
+
+            loadTop10: async () => {
+                const list = document.getElementById('top10-list');
+                if (!list) return;
+                list.innerHTML = `<div class="text-center py-8 text-[#ff9100] animate-pulse text-xs font-mono">LOADING_TOP10...</div>`;
+
+                const tracks = await pywebview.api.get_top10();
+                if (!tracks || tracks.length === 0) {
+                    list.innerHTML = `<div class="text-center py-12 text-[#ff9100] text-xs font-mono">/// NO_RANKING_DATA</div>`;
+                    return;
+                }
+
+                list.innerHTML = tracks.map((t, idx) => {
+                    const cleanPath = t.path.replace(/\\/g, '/');
+                    const isActive = (cleanPath === ui.currentTrackPath);
+                    const safePath = ui.encodePath(t.path);
+                    let trackName = t.filename.replace(/\.[^/.]+$/, ""); 
+                    const displayName = trackName.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                    const score = t.like_score ? t.like_score.toFixed(1) : "0.0";
+                    const isFav = t.is_favorite === 1;
+
+                    let rankClass = "rank-other";
+                    let rankIcon = idx + 1;
+                    if (idx === 0) { rankClass = "rank-1"; rankIcon = "🥇"; }
+                    else if (idx === 1) { rankClass = "rank-2"; rankIcon = "🥈"; }
+                    else if (idx === 2) { rankClass = "rank-3"; rankIcon = "🥉"; }
+
+                    return `
+                    <div class="track-item ${isActive ? 'active' : ''}" 
+                         draggable="true" 
+                         ondragstart="ui.handleTrackDragStart(event, '${safePath}')"
+                         oncontextmenu="ui.showTrackContextMenu(event, '${safePath}')"
+                         onclick="ui.handleTrackClick('${safePath}')">
+                        <div class="rank-badge ${rankClass}">${rankIcon}</div>
+                        <div class="flex-1 min-w-0">
+                            <div class="track-title text-xs text-[#3b1166] truncate">${displayName}</div>
+                            <div class="text-[9px] text-[#7b1fa2] font-mono flex gap-2">
+                                <span>Plays: ${t.play_count || 0}</span>
+                                <span>Retention: ${t.duration ? Math.min(100, Math.round((t.listened_seconds||0)/t.duration*100)) : 0}%</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-[10px] text-[#ff4081] font-mono font-bold">${score} ♥</div>
+                        </div>
+                        <button onclick="event.stopPropagation(); ui.toggleFavorite('${safePath}')" class="text-[#ffb300] hover:scale-125 transition" title="Toggle Favorite">
+                            <span class="material-icons-round text-sm">${isFav ? 'star' : 'star_border'}</span>
+                        </button>
+                    </div>`;
+                }).join('');
+            },
+
+            favoritePaths: new Set(),
+
+            toggleFavorite: async (encodedPath) => {
+                const path = decodeURIComponent(encodedPath);
+                const res = await pywebview.api.toggle_favorite(path);
+                if (res) {
+                    const filename = path.replace(/\\/g, '/').split('/').pop().replace(/\.[^/.]+$/, "");
+                    if (res.is_favorite) {
+                        ui.toast(`⭐ Added to Favorites: ${filename}`);
+                        if (typeof ui.onAmeClick === 'function') ui.onAmeClick();
+                    } else {
+                        ui.toast(`☆ Removed from Favorites: ${filename}`);
+                    }
+                    if (typeof ui.loadFavorites === 'function') ui.loadFavorites();
+                    if (typeof ui.loadTop10 === 'function') ui.loadTop10();
+                    ui.updateActiveTrackFavoriteState(path, res.is_favorite);
+                }
+            },
+
+            toggleCurrentFavorite: () => {
+                if (ui.currentTrackPath) {
+                    ui.toggleFavorite(ui.encodePath(ui.currentTrackPath));
+                }
+            },
+
+            renderPlaylist: () => {
+                const list = document.getElementById('track-list');
+                if (!list) return;
+                if (!ui.playlist || ui.playlist.length === 0) {
+                    list.innerHTML = `<div class="text-center py-8 text-[#8258ff] text-xs font-mono">Select a folder on the left to load tracks...</div>`;
+                    return;
+                }
+
+                list.innerHTML = ui.playlist.map((t, idx) => {
+                    const cleanPath = (t.path || '').replace(/\\/g, '/');
+                    const isActive = (cleanPath === ui.currentTrackPath);
+                    const safePath = ui.encodePath(t.path || '');
+                    let trackName = (t.filename || cleanPath.split('/').pop()).replace(/\.[^/.]+$/, "");
+                    const displayName = trackName.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                    const isFav = t.is_favorite === 1 || ui.favoritePaths.has(cleanPath);
+
+                    return `
+                    <div class="track-item flex items-center gap-2 p-2 rounded hover:bg-[#ffdbf3]/40 cursor-pointer ${isActive ? 'active' : ''}" 
+                         data-path="${cleanPath}" 
+                         oncontextmenu="ui.showTrackContextMenu(event, '${safePath}')"
+                         onclick="ui.handleTrackClick('${safePath}')">
+                        <span class="text-xs font-mono text-[#8258ff] w-5 text-right">${String(idx + 1).padStart(2, '0')}</span>
+                        <div class="flex-1 min-w-0">
+                            <div class="track-title text-xs text-[#3b1166] truncate">${displayName}</div>
+                        </div>
+                        <button onclick="event.stopPropagation(); ui.toggleFavorite('${safePath}')" data-fav-path="${cleanPath}" class="${isFav ? 'text-[#ffb300]' : 'text-gray-400'} hover:scale-125 transition" title="Toggle Favorite">
+                            <span class="material-icons-round text-sm">${isFav ? 'star' : 'star_border'}</span>
+                        </button>
+                    </div>`;
+                }).join('');
+            },
+
+            playFavoritesList: async () => {
+                if (!window.pywebview || !pywebview.api || !pywebview.api.get_favorites) return;
+                try {
+                    const favs = await pywebview.api.get_favorites();
+                    if (!favs || favs.length === 0) {
+                        ui.toast("⚠️ No favorites saved yet!");
+                        return;
+                    }
+                    const tracks = favs.map(f => ({ path: f.path, filename: f.filename, duration: f.duration || 0, is_favorite: 1 }));
+                    ui.playlist = tracks;
+                    ui.currentTrackPath = tracks[0].path.replace(/\\/g, '/');
+                    if (typeof ui.renderPlaylist === 'function') ui.renderPlaylist();
+                    
+                    if (pywebview.api.play_playlist) {
+                        await pywebview.api.play_playlist(tracks, 0);
+                    } else {
+                        await pywebview.api.play_video(tracks[0].path);
+                    }
+                    ui.toast(`▶ Playing Favorites List (${favs.length} tracks)`);
+                } catch(e) { 
+                    console.error("playFavoritesList error:", e);
+                }
+            },
+
+            playTop10List: async () => {
+                if (!window.pywebview || !pywebview.api || !pywebview.api.get_top10) return;
+                try {
+                    const top10 = await pywebview.api.get_top10();
+                    if (!top10 || top10.length === 0) {
+                        ui.toast("⚠️ No Top 10 tracks found!");
+                        return;
+                    }
+                    const tracks = top10.map(t => ({ path: t.path, filename: t.filename, duration: t.duration || 0, is_favorite: t.is_favorite }));
+                    ui.playlist = tracks;
+                    ui.currentTrackPath = tracks[0].path.replace(/\\/g, '/');
+                    if (typeof ui.renderPlaylist === 'function') ui.renderPlaylist();
+                    
+                    if (pywebview.api.play_playlist) {
+                        await pywebview.api.play_playlist(tracks, 0);
+                    } else {
+                        await pywebview.api.play_video(tracks[0].path);
+                    }
+                    ui.toast(`▶ Playing Top 10 Rankings (${top10.length} tracks)`);
+                } catch(e) { 
+                    console.error("playTop10List error:", e);
+                }
+            },
+
+            updateActiveTrackFavoriteState: (path, isFav) => {
+                const normPath = path.replace(/\\/g, '/');
+                if (isFav) ui.favoritePaths.add(normPath);
+                else ui.favoritePaths.delete(normPath);
+
+                if (normPath === ui.currentTrackPath) {
+                    const icon = document.getElementById('icon-player-fav');
+                    if (icon) icon.innerText = isFav ? 'star' : 'star_border';
+                }
+
+                if (ui.playlist) {
+                    const track = ui.playlist.find(t => (t.path || '').replace(/\\/g, '/') === normPath);
+                    if (track) track.is_favorite = isFav ? 1 : 0;
+                }
+
+                document.querySelectorAll(`[data-fav-path="${CSS.escape(normPath)}"]`).forEach(el => {
+                    const icon = el.querySelector('.material-icons-round') || el;
+                    if (icon) icon.innerText = isFav ? 'star' : 'star_border';
+                    if (isFav) {
+                        el.classList.add('text-[#ffb300]');
+                        el.classList.remove('text-gray-400');
+                    } else {
+                        el.classList.remove('text-[#ffb300]');
+                        el.classList.add('text-gray-400');
+                    }
+                });
+
+                if (typeof ui.renderPlaylist === 'function') ui.renderPlaylist();
+            },
+
+            showTrackContextMenu: (e, encodedPath) => {
+                e.preventDefault();
+                e.stopPropagation();
+                ui.closeContextMenus();
+
+                ui.contextTrackPath = decodeURIComponent(encodedPath);
+                const menu = document.getElementById('context-menu-track');
+                menu.style.left = Math.min(e.clientX, window.innerWidth - 180) + 'px';
+                menu.style.top = Math.min(e.clientY, window.innerHeight - 150) + 'px';
+                menu.style.display = 'flex';
+            },
+
+            showFolderContextMenu: (e, encodedPath) => {
+                e.preventDefault();
+                e.stopPropagation();
+                ui.closeContextMenus();
+
+                const path = decodeURIComponent(encodedPath);
+                if (!ui.selectedFolderPaths.has(path)) {
+                    ui.selectedFolderPaths = new Set([path]);
+                }
+                ui.updateFolderCardSelectionUI();
+
+                ui.contextFolderPath = path;
+                ui.deleteTargetFolderPaths = Array.from(ui.selectedFolderPaths);
+
+                const count = ui.deleteTargetFolderPaths.length;
+                const deleteBtnItem = document.querySelector('#context-menu-folder .xp-menu-item[onclick*="promptDeleteFolder"]');
+                if (deleteBtnItem) {
+                    deleteBtnItem.innerHTML = `<span class="material-icons-round text-sm text-red-500">delete_forever</span> 🗑️ Delete Album${count > 1 ? `s (${count})` : ''}`;
+                }
+
+                const menu = document.getElementById('context-menu-folder');
+                menu.style.left = Math.min(e.clientX, window.innerWidth - 180) + 'px';
+                menu.style.top = Math.min(e.clientY, window.innerHeight - 120) + 'px';
+                menu.style.display = 'flex';
+            },
+
+            showDesktopContextMenu: (e) => {
+                if (e.target.closest('.xp-window') || e.target.closest('.player-bar') || e.target.closest('.desktop-icon')) return;
+                e.preventDefault();
+                ui.closeContextMenus();
+
+                const menu = document.getElementById('context-menu-desktop');
+                menu.style.left = Math.min(e.clientX, window.innerWidth - 180) + 'px';
+                menu.style.top = Math.min(e.clientY, window.innerHeight - 250) + 'px';
+                menu.style.display = 'flex';
+            },
+
+            closeContextMenus: () => {
+                document.getElementById('context-menu-track').style.display = 'none';
+                document.getElementById('context-menu-folder').style.display = 'none';
+                document.getElementById('context-menu-desktop').style.display = 'none';
+            },
+
+            onContextPlay: () => {
+                if (ui.contextTrackPath) {
+                    ui.handleTrackClick(ui.encodePath(ui.contextTrackPath));
+                }
+                ui.closeContextMenus();
+            },
+
+            onContextFavorite: () => {
+                if (ui.contextTrackPath) {
+                    ui.toggleFavorite(ui.encodePath(ui.contextTrackPath));
+                }
+                ui.closeContextMenus();
+            },
+
+            onContextInfo: async () => {
+                if (ui.contextTrackPath) {
+                    const info = await pywebview.api.get_track_info(ui.contextTrackPath);
+                    if (info) {
+                        const filename = info.filename.replace(/\.[^/.]+$/, "");
+                        const retention = info.duration ? Math.min(100, Math.round((info.listened_seconds / info.duration) * 100)) : 0;
+                        ui.toast(`📊 ${filename}\nFav: ${info.is_favorite ? 'Yes' : 'No'} | Retention: ${retention}% | Score: ${info.like_score} ♥`);
+                    }
+                }
+                ui.closeContextMenus();
+            },
+
+            onContextFolderOpen: () => {
+                if (ui.contextFolderPath) {
+                    const name = ui.contextFolderPath.split('/').pop();
+                    ui.openFolder(ui.contextFolderPath, name);
+                }
+                ui.closeContextMenus();
+            },
+
+            promptDeleteTrack: () => {
+                if (!ui.contextTrackPath) return;
+                ui.closeContextMenus();
+                const filename = ui.contextTrackPath.split('/').pop();
+
+                ui.deleteTargetType = 'track';
+                ui.deleteTargetPath = ui.contextTrackPath;
+
+                document.getElementById('delete-modal-title').innerText = '🗑️ CONFIRM DELETE TRACK';
+                document.getElementById('delete-modal-msg').innerText = `Are you sure you want to remove track: "${filename}"?`;
+                document.getElementById('chk-delete-disk').checked = false;
+                document.getElementById('delete-modal').classList.remove('hidden');
+            },
+
+            promptDeleteFolder: () => {
+                const targetPaths = (ui.deleteTargetFolderPaths && ui.deleteTargetFolderPaths.length > 0) 
+                                   ? ui.deleteTargetFolderPaths 
+                                   : (ui.contextFolderPath ? [ui.contextFolderPath] : []);
+                if (targetPaths.length === 0) return;
+                ui.closeContextMenus();
+
+                ui.deleteTargetType = 'folder';
+                ui.deleteTargetFolderPaths = targetPaths;
+
+                const count = targetPaths.length;
+                const title = count > 1 ? `🗑️ CONFIRM DELETE ${count} ALBUMS` : '🗑️ CONFIRM DELETE ALBUM';
+                const folderName = targetPaths[0].split('/').pop();
+                const msg = count > 1 
+                            ? `Are you sure you want to remove ${count} selected albums and all tracks inside?`
+                            : `Are you sure you want to remove album: "${folderName}" and all tracks inside?`;
+
+                document.getElementById('delete-modal-title').innerText = title;
+                document.getElementById('delete-modal-msg').innerText = msg;
+                document.getElementById('chk-delete-disk').checked = false;
+                document.getElementById('delete-modal').classList.remove('hidden');
+            },
+
+            closeDeleteModal: () => {
+                document.getElementById('delete-modal').classList.add('hidden');
+                ui.deleteTargetType = null;
+                ui.deleteTargetPath = null;
+            },
+
+            executeDelete: async () => {
+                if (!ui.deleteTargetPath || !ui.deleteTargetType) return;
+                const deleteDisk = document.getElementById('chk-delete-disk').checked;
+
+                if (ui.deleteTargetType === 'track') {
+                    const path = ui.deleteTargetPath;
+                    await pywebview.api.delete_track(path, deleteDisk);
+                    ui.toast(`🗑️ Track removed ${deleteDisk ? '(Real file deleted)' : '(Library only)'}`);
+                    
+                    if (ui.contextFolderPath) {
+                        ui.openFolder(ui.contextFolderPath, ui.contextFolderPath.split('/').pop());
+                    } else {
+                        ui.loadFolders();
+                    }
+                } else if (ui.deleteTargetType === 'folder') {
+                    const targetPaths = ui.deleteTargetFolderPaths || [ui.deleteTargetPath];
+                    for (const folderPath of targetPaths) {
+                        await pywebview.api.delete_folder(folderPath, deleteDisk);
+                    }
+                    ui.selectedFolderPaths.clear();
+                    ui.toast(`🗑️ ${targetPaths.length} Album(s) removed ${deleteDisk ? '(Real folders deleted)' : '(Library only)'}`);
+                    await ui.loadFolders();
+                }
+
+                ui.closeDeleteModal();
+                ui.loadFavorites();
+                ui.loadTop10();
+            },
+
+            promptDeleteFolder: () => {
+                const targetPaths = (ui.deleteTargetFolderPaths && ui.deleteTargetFolderPaths.length > 0) 
+                                   ? ui.deleteTargetFolderPaths 
+                                   : (ui.contextFolderPath ? [ui.contextFolderPath] : []);
+                if (targetPaths.length === 0) return;
+                ui.closeContextMenus();
+
+                ui.deleteTargetType = 'folder';
+                ui.deleteTargetFolderPaths = targetPaths;
+                ui.deleteTargetPath = targetPaths[0];
+
+                const count = targetPaths.length;
+                const title = count > 1 ? `🗑️ CONFIRM DELETE ${count} ALBUMS` : '🗑️ CONFIRM DELETE ALBUM';
+                const folderName = targetPaths[0].split('/').pop();
+                const msg = count > 1 
+                            ? `Are you sure you want to remove ${count} selected albums and all tracks inside?`
+                            : `Are you sure you want to remove album: "${folderName}" and all tracks inside?`;
+
+                document.getElementById('delete-modal-title').innerText = title;
+                document.getElementById('delete-modal-msg').innerText = msg;
+                document.getElementById('chk-delete-disk').checked = false;
+                document.getElementById('delete-modal').classList.remove('hidden');
+            },
+
+            closeDeleteModal: () => {
+                document.getElementById('delete-modal').classList.add('hidden');
+                ui.deleteTargetType = null;
+                ui.deleteTargetPath = null;
+                ui.deleteTargetFolderPaths = [];
+            },
+
+            executeDelete: async () => {
+                if (!ui.deleteTargetType) return;
+                const deleteDisk = document.getElementById('chk-delete-disk').checked;
+
+                if (ui.deleteTargetType === 'track') {
+                    const path = ui.deleteTargetPath;
+                    if (!path) return;
+                    await pywebview.api.delete_track(path, deleteDisk);
+                    ui.toast(`🗑️ Track removed ${deleteDisk ? '(Real file deleted)' : '(Library only)'}`);
+                    
+                    if (ui.contextFolderPath) {
+                        ui.openFolder(ui.contextFolderPath, ui.contextFolderPath.split('/').pop());
+                    } else {
+                        ui.loadFolders();
+                    }
+                } else if (ui.deleteTargetType === 'folder') {
+                    const targetPaths = (ui.deleteTargetFolderPaths && ui.deleteTargetFolderPaths.length > 0) 
+                                       ? ui.deleteTargetFolderPaths 
+                                       : (ui.deleteTargetPath ? [ui.deleteTargetPath] : []);
+                    if (targetPaths.length === 0) return;
+                    for (const folderPath of targetPaths) {
+                        await pywebview.api.delete_folder(folderPath, deleteDisk);
+                    }
+                    ui.selectedFolderPaths.clear();
+                    ui.toast(`🗑️ ${targetPaths.length} Album(s) removed ${deleteDisk ? '(Real folders deleted)' : '(Library only)'}`);
+                    await ui.loadFolders();
+                }
+
+                ui.closeDeleteModal();
+                ui.loadFavorites();
+                ui.loadTop10();
+            },
+
+            // 🎛️ Parametric EQ & Audio Filter Management
+            eqBands: [
+                { freq: '60Hz', label: 'Sub-Bass' },
+                { freq: '170Hz', label: 'Bass' },
+                { freq: '310Hz', label: 'Low-Mid' },
+                { freq: '600Hz', label: 'Mid' },
+                { freq: '1kHz', label: 'Mid-High' },
+                { freq: '3kHz', label: 'Presence' },
+                { freq: '6kHz', label: 'High' },
+                { freq: '12kHz', label: 'Treble' },
+                { freq: '14kHz', label: 'Air' },
+                { freq: '16kHz', label: 'Ultra High' }
+            ],
+            eqPresets: {
+                Flat: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                Rock: [4, 3, 2, 0, -1, 1, 3, 4, 4, 3],
+                Vocal: [-2, -1, 1, 3, 4, 3, 2, 1, 0, 0],
+                Bass: [6, 5, 4, 2, 0, -1, -2, -1, 0, 0],
+                Gaming: [3, 2, 0, -1, 1, 3, 4, 5, 4, 3],
+                Jazz: [3, 2, 1, 2, -1, -1, 0, 1, 2, 3],
+                Pop: [-1, 2, 4, 5, 3, 0, -1, 2, 3, 2],
+                Electronic: [5, 4, 2, 0, -2, 2, 3, 4, 5, 5]
+            },
+            currentEqGains: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            isEqEnabled: false,
+
+            toggleEqModal: () => {
+                const modal = document.getElementById('eq-modal');
+                if (modal) modal.classList.toggle('hidden');
+            },
+            closeEqModal: () => {
+                const modal = document.getElementById('eq-modal');
+                if (modal) modal.classList.add('hidden');
+            },
+            openEqModal: () => {
+                const modal = document.getElementById('eq-modal');
+                if (modal) modal.classList.remove('hidden');
+            },
+
+            initEqUI: async () => {
+                const container = document.getElementById('eq-bands-container');
+                if (!container) return;
+
+                container.innerHTML = ui.eqBands.map((b, idx) => `
+                    <div class="flex flex-col items-center gap-1 min-w-0">
+                        <span id="eq-db-${idx}" class="text-[10px] font-bold text-[#00e676]">0dB</span>
+                        <div class="h-28 flex items-center justify-center relative w-full overflow-hidden">
+                            <input type="range" id="eq-slider-${idx}" min="-12" max="12" step="0.5" value="0"
+                                class="w-24 h-1.5 bg-[#120822] accent-[#00e676] cursor-pointer rounded-lg -rotate-90 transform origin-center"
+                                oninput="ui.onEqSliderInput(${idx}, this.value)">
+                        </div>
+                        <span class="text-[10px] font-bold text-gray-200 mt-1">${b.freq}</span>
+                        <span class="text-[8px] text-gray-400 truncate w-full text-center">${b.label}</span>
+                    </div>
+                `).join('');
+
+                if (window.pywebview && pywebview.api && pywebview.api.get_eq_settings) {
+                    try {
+                        const st = await pywebview.api.get_eq_settings();
+                        if (st) {
+                            ui.isEqEnabled = !!st.enabled;
+                            if (st.gains && Array.isArray(st.gains)) {
+                                ui.currentEqGains = st.gains.map(v => parseFloat(v) || 0);
+                            }
+                            const master = document.getElementById('eq-master-switch');
+                            if (master) master.checked = ui.isEqEnabled;
+                            const select = document.getElementById('eq-preset-select');
+                            if (select && st.preset) select.value = st.preset;
+                            ui.syncEqSlidersUI();
+                        }
+                    } catch(e) {}
+                }
+            },
+
+            onEqSliderInput: (idx, val) => {
+                const numVal = parseFloat(val) || 0;
+                ui.currentEqGains[idx] = numVal;
+                const dbEl = document.getElementById(`eq-db-${idx}`);
+                if (dbEl) dbEl.innerText = (numVal > 0 ? '+' : '') + numVal + 'dB';
+                ui.updateEqCurve();
+
+                if (ui.isEqEnabled) {
+                    if (ui._eqDebounceTimer) clearTimeout(ui._eqDebounceTimer);
+                    ui._eqDebounceTimer = setTimeout(() => {
+                        if (window.pywebview && pywebview.api && pywebview.api.set_eq_settings) {
+                            pywebview.api.set_eq_settings(true, ui.currentEqGains).catch(() => {});
+                        }
+                    }, 40);
+                }
+            },
+
+            toggleEqMaster: (enabled) => {
+                ui.isEqEnabled = !!enabled;
+                if (window.pywebview && pywebview.api && pywebview.api.set_eq_settings) {
+                    pywebview.api.set_eq_settings(ui.isEqEnabled, ui.currentEqGains).catch(() => {});
+                }
+            },
+
+            applyEqPreset: (presetName) => {
+                const gains = ui.eqPresets[presetName] || ui.eqPresets['Flat'];
+                ui.currentEqGains = [...gains];
+                ui.syncEqSlidersUI();
+                if (window.pywebview && pywebview.api && pywebview.api.set_eq_settings) {
+                    pywebview.api.set_eq_settings(ui.isEqEnabled, ui.currentEqGains, presetName).catch(() => {});
+                }
+            },
+
+            resetEqGains: () => {
+                const select = document.getElementById('eq-preset-select');
+                if (select) select.value = 'Flat';
+                ui.applyEqPreset('Flat');
+            },
+
+            syncEqSlidersUI: () => {
+                ui.currentEqGains.forEach((val, idx) => {
+                    const slider = document.getElementById(`eq-slider-${idx}`);
+                    if (slider) slider.value = val;
+                    const dbEl = document.getElementById(`eq-db-${idx}`);
+                    if (dbEl) dbEl.innerText = (val > 0 ? '+' : '') + val + 'dB';
+                });
+                ui.updateEqCurve();
+            },
+
+            updateEqCurve: () => {
+                const pathEl = document.getElementById('eq-curve-path');
+                if (!pathEl) return;
+                const gains = ui.currentEqGains;
+                const width = 600;
+                const step = width / (gains.length - 1);
+                const points = gains.map((g, i) => {
+                    const x = i * step;
+                    const y = 30 - (g * 2.2);
+                    return { x, y };
+                });
+
+                let d = `M ${points[0].x} ${points[0].y}`;
+                for (let i = 0; i < points.length - 1; i++) {
+                    const p1 = points[i];
+                    const p2 = points[i + 1];
+                    const cx = (p1.x + p2.x) / 2;
+                    d += ` Q ${p1.x} ${p1.y}, ${cx} ${(p1.y + p2.y) / 2}`;
+                }
+                d += ` L ${points[points.length - 1].x} ${points[points.length - 1].y}`;
+                pathEl.setAttribute('d', d);
+            },
+
+            openWallpaperModal: () => {
+                ui.toggleDecorationsModal();
+            },
+
+            closeWallpaperModal: () => {
+                const modal = document.getElementById('decorations-modal');
+                if (modal) modal.classList.add('hidden');
+            },
+
+            selectCustomWallpaper: async () => {
+                let wpPath = null;
+                if (window.pywebview && pywebview.api && pywebview.api.select_wallpaper) {
+                    wpPath = await pywebview.api.select_wallpaper();
+                } else {
+                    wpPath = prompt("Please enter wallpaper image URL or local file path:");
+                }
+                if (wpPath) {
+                    wpPath = wpPath.trim();
+                    localStorage.setItem('needy_wallpaper_url', wpPath);
+                    localStorage.removeItem('needy_preset_wallpaper');
+                    if (window.pywebview && pywebview.api && pywebview.api.save_theme_setting) {
+                        pywebview.api.save_theme_setting('needy_wallpaper_url', wpPath).catch(() => {});
+                        pywebview.api.save_theme_setting('needy_preset_wallpaper', null).catch(() => {});
+                    }
+                    ui.applyWallpaper(wpPath);
+                }
+            },
+
+            setPresetWallpaper: async (preset) => {
+                localStorage.removeItem('needy_wallpaper_url');
+                localStorage.setItem('needy_preset_wallpaper', preset);
+                if (window.pywebview && pywebview.api) {
+                    if (pywebview.api.reset_wallpaper) await pywebview.api.reset_wallpaper().catch(() => {});
+                    if (pywebview.api.save_theme_setting) {
+                        pywebview.api.save_theme_setting('needy_wallpaper_url', null).catch(() => {});
+                        pywebview.api.save_theme_setting('needy_preset_wallpaper', preset).catch(() => {});
+                    }
+                }
+                ui.applyPresetStyle(preset);
+            },
+
+            resetWallpaper: async () => {
+                await ui.setPresetWallpaper('default');
+            },
+
+            applyPresetStyle: (preset) => {
+                const status = document.getElementById('decor-wallpaper-status');
+                if (preset === 'cyber') {
+                    document.body.style.backgroundImage = 'radial-gradient(circle, #2d1054 0%, #0d041a 100%)';
+                    if (status) status.innerText = 'Neon Night';
+                } else if (preset === 'angel') {
+                    document.body.style.backgroundImage = 'linear-gradient(135deg, #ff94eb 0%, #7540ff 100%)';
+                    if (status) status.innerText = 'Ame Dream';
+                } else if (preset === 'dark') {
+                    document.body.style.backgroundImage = 'linear-gradient(135deg, #181028 0%, #080312 100%)';
+                    if (status) status.innerText = 'Cyber Dark';
+                } else {
+                    document.body.style.backgroundImage = '';
+                    document.body.style.backgroundColor = '#edd9ff';
+                    if (status) status.innerText = 'Lattice (Default)';
+                }
+            },
+
+            applyWallpaper: (path) => {
+                const status = document.getElementById('decor-wallpaper-status');
+                if (!path) {
+                    ui.applyPresetStyle('default');
+                    return;
+                }
+                const url = (path.startsWith('http') || path.startsWith('file:') || path.startsWith('data:')) ? path : ui.toFileUrl(path);
+                document.body.style.backgroundImage = `url('${url}')`;
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundPosition = 'center';
+                if (status) status.innerText = 'Custom Active';
+            },
+
+            initWallpaper: async () => {
+                let savedWp = localStorage.getItem('needy_wallpaper_url');
+                let savedPreset = localStorage.getItem('needy_preset_wallpaper');
+
+                if (window.pywebview && pywebview.api && pywebview.api.get_theme_settings) {
+                    try {
+                        const settings = await pywebview.api.get_theme_settings();
+                        if (settings) {
+                            if (settings.needy_wallpaper_url !== undefined) savedWp = settings.needy_wallpaper_url;
+                            if (settings.needy_preset_wallpaper !== undefined) savedPreset = settings.needy_preset_wallpaper;
+                        }
+                    } catch(e) {}
+                }
+
+                if (!savedWp && window.pywebview && pywebview.api && pywebview.api.get_wallpaper) {
+                    try { savedWp = await pywebview.api.get_wallpaper(); } catch(e) {}
+                }
+
+                if (savedWp) {
+                    ui.applyWallpaper(savedWp);
+                } else if (savedPreset) {
+                    ui.applyPresetStyle(savedPreset);
+                } else {
+                    ui.applyPresetStyle('default');
+                }
+            },
+
+            handleResize: () => {
+                const grid = document.getElementById('folder-grid');
+                if (grid) grid.classList.remove('list-view');
+            },
+
+            onAmeClick: () => {
+                const speech = document.getElementById('ame-speech');
+                ui.setGif('ame-gif', 'choten-chan-review.gif');
+                const randomQuote = ui.quotes[Math.floor(Math.random() * ui.quotes.length)];
+                speech.innerText = randomQuote;
+                
+                setTimeout(() => {
+                    const isPlaying = document.getElementById('player-bar').classList.contains('is-playing');
+                    ui.setGif('ame-gif', isPlaying ? 'choten-chan-jumping.gif' : 'choten-chan-idle.gif');
+                }, 3000);
+            },
+
+            setupKeyboardShortcuts: () => {
+                window.addEventListener('keydown', (e) => {
+                    if (e.target.tagName === 'INPUT') return;
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                        pywebview.api.control('play_pause');
+                    } else if (e.code === 'ArrowLeft') {
+                        pywebview.api.control('seek', Math.max(0, (document.getElementById('seek-bar').value - 5)));
+                    } else if (e.code === 'ArrowRight') {
+                        pywebview.api.control('seek', Math.min(document.getElementById('seek-bar').max, (parseFloat(document.getElementById('seek-bar').value) + 5)));
+                    } else if (e.code === 'Escape') {
+                        ui.closeThemeMenu();
+                        ui.closeFullArt();
+                        ui.closeWallpaperModal();
+                        ui.closeDeleteModal();
+                        ui.closeContextMenus();
+                    }
+                });
+            },
+
+            openFullArt: (url, title) => {
+                if (!url) return;
+                const img = document.getElementById('modal-art-img');
+                const titleEl = document.getElementById('modal-art-title');
+                const modal = document.getElementById('artwork-modal');
+                if (img) img.src = url;
+                if (titleEl) titleEl.innerText = `🖼️ ${title || 'FULL ARTWORK'}`;
+                if (modal) modal.classList.remove('hidden');
+            },
+
+            openFullArtFromPlayer: () => {
+                const pCover = document.getElementById('cover-art');
+                const vCover = document.getElementById('video-screen-cover');
+                let url = ui.currentCoverUrl;
+                if (!url && pCover && pCover.src && !pCover.src.endsWith('needy_theme.html')) {
+                    url = pCover.src;
+                }
+                if (!url && vCover && vCover.src && !vCover.src.endsWith('needy_theme.html')) {
+                    url = vCover.src;
+                }
+
+                if (url) {
+                    const titleEl = document.getElementById('player-title');
+                    const title = titleEl ? titleEl.innerText : 'FULL ARTWORK';
+                    ui.openFullArt(url, title);
+                } else {
+                    ui.toast("⚠️ No album cover image available for current track!");
+                }
+            },
+
+            closeFullArt: () => {
+                const modal = document.getElementById('artwork-modal');
+                if (modal) modal.classList.add('hidden');
+            },
+
+            toggleThemeMenu: () => {
+                const menu = document.getElementById('theme-menu');
+                if (menu.classList.contains('hidden')) {
+                    menu.classList.remove('hidden');
+                    menu.classList.add('flex');
+                    setTimeout(() => document.addEventListener('click', ui.closeThemeMenuOutside), 0);
+                } else {
+                    ui.closeThemeMenu();
+                }
+            },
+            
+            closeThemeMenu: () => {
+                const menu = document.getElementById('theme-menu');
+                menu.classList.add('hidden');
+                menu.classList.remove('flex');
+                document.removeEventListener('click', ui.closeThemeMenuOutside);
+            },
+            
+            closeThemeMenuOutside: (e) => {
+                const menu = document.getElementById('theme-menu');
+                if (!menu.contains(e.target)) ui.closeThemeMenu();
+            },
+
+            updateBootState: (enabled) => {
+                const icon = document.getElementById('icon-boot');
+                if (enabled) {
+                    icon.innerText = 'music_note';
+                    icon.classList.add('text-[#ff4081]');
+                } else {
+                    icon.innerText = 'music_off';
+                    icon.classList.remove('text-[#ff4081]');
+                }
+            },
+
+            updateUpsampleState: (enabled) => {
+                const btn = document.getElementById('btn-upsample');
+                const teleDecoder = document.getElementById('tele-decoder');
+                if (enabled) {
+                    if (btn) {
+                        btn.innerText = '💎 Hi-Res 192k';
+                        btn.className = "px-2.5 py-1 text-[10px] font-bold rounded border border-[#ff4081] bg-[#ffdbf3] text-[#d81b60] shadow-xs transition cursor-pointer";
+                    }
+                    if (teleDecoder) teleDecoder.innerText = '192kHz // 32-bit Float';
+                } else {
+                    if (btn) {
+                        btn.innerText = '🎧 RAW Bit-Exact';
+                        btn.className = "px-2.5 py-1 text-[10px] font-bold rounded border border-gray-400 bg-white text-gray-600 shadow-xs transition cursor-pointer";
+                    }
+                    if (teleDecoder) teleDecoder.innerText = 'RAW // Bit-Exact';
+                }
+            },
+
+            updateNormalizeState: (enabled) => {
+                const btn = document.getElementById('btn-normalize');
+                if (!btn) return;
+                if (enabled) {
+                    btn.innerText = '⚖️ EBU R128 ON';
+                    btn.className = "px-2.5 py-1 text-[10px] font-bold rounded border border-[#ff4081] bg-[#ffdbf3] text-[#d81b60] shadow-xs transition cursor-pointer";
+                } else {
+                    btn.innerText = '⚖️ EBU R128 OFF';
+                    btn.className = "px-2.5 py-1 text-[10px] font-bold rounded border border-gray-400 bg-white text-gray-600 shadow-xs transition cursor-pointer";
+                }
+            },
+
+            updateTrackStats: (playCount, likeScore) => {
+                const pcEl = document.getElementById('tele-playcount');
+                if (pcEl) pcEl.innerText = `${playCount || 0} Plays`;
+                
+                const likeEl = document.getElementById('tele-likes');
+                if (likeEl) likeEl.innerText = `${(likeScore || 0).toFixed(1)} ♥`;
+                
+                const barEl = document.getElementById('tele-like-bar');
+                if (barEl) {
+                    const pct = Math.min(100, Math.max(5, (likeScore || 0) / 3.0));
+                    barEl.style.width = `${pct}%`;
+                }
+            },
+
+            syncState: async () => {
+                try {
+                    if (!window.pywebview || !pywebview.api || !pywebview.api.get_playback_status) return;
+                    const st = await pywebview.api.get_playback_status();
+                    if (!st) return;
+
+                    if (st.title && st.title !== "AWAITING_MEDIA") {
+                        ui.updateTitle(st.title);
+                    }
+                    if (st.duration > 0) {
+                        ui.updateDuration(st.duration);
+                    }
+                    if (st.position >= 0) {
+                        ui.updateProgress(st.position);
+                    }
+                    if (st.cover_url) {
+                        ui.updateCover(st.cover_url);
+                    }
+                    ui.updatePlayState(!st.is_playing);
+                    if (st.is_muted !== undefined) ui.updateMuteState(st.is_muted);
+                    if (st.play_mode) ui.updatePlayMode(st.play_mode);
+                    if (st.is_upsample !== undefined) ui.updateUpsampleState(st.is_upsample);
+                    if (st.is_normalize !== undefined) ui.updateNormalizeState(st.is_normalize);
+                    if (st.is_boot_mode !== undefined) ui.updateBootState(st.is_boot_mode);
+                    if (st.current_path) ui.highlightTrack(st.current_path);
+                    if (st.play_count !== undefined) ui.updateTrackStats(st.play_count, st.like_score);
+                } catch(e) {
+                    console.error("syncState error:", e);
+                }
+            },
+
+            encodePath: (str) => encodeURIComponent(str).replace(/'/g, "%27"),
+
+            changeItemsPerPage: (val) => {
+                ui.itemsPerPage = (val === 'all') ? 9999 : parseInt(val, 10);
+                ui.currentPage = 1;
+                ui.renderFolders(ui.filteredFolders);
+            },
+
+            prevPage: () => {
+                if (ui.currentPage > 1) {
+                    ui.currentPage--;
+                    ui.renderFolders(ui.filteredFolders);
+                }
+            },
+
+            nextPage: () => {
+                const totalPages = Math.ceil(ui.filteredFolders.length / ui.itemsPerPage);
+                if (ui.currentPage < totalPages) {
+                    ui.currentPage++;
+                    ui.renderFolders(ui.filteredFolders);
+                }
+            },
+
+            loadFolders: async () => {
+                if (window.pywebview && pywebview.api && pywebview.api.get_library_folders) {
+                    ui.allFolders = await pywebview.api.get_library_folders();
+                } else {
+                    ui.allFolders = [];
+                }
+                ui.renderFolders(ui.allFolders);
+            },
+
+            renderFolders: (folders) => {
+                ui.filteredFolders = folders || [];
+                const grid = document.getElementById('folder-grid');
+                if (!ui.filteredFolders || ui.filteredFolders.length === 0) {
+                    grid.innerHTML = `<div class="col-span-full text-center py-12 text-[#8258ff] font-mono text-xs">/// NO_FOLDERS_FOUND<br><span class="text-[10px] text-[#6b33a8]">Click "+ SCAN" or "Scan Drive" icon to load media folders!</span></div>`;
+                    document.getElementById('page-indicator').innerText = 'PAGE 0 / 0';
+                    return;
+                }
+
+                const totalPages = Math.ceil(ui.filteredFolders.length / ui.itemsPerPage);
+                if (ui.currentPage > totalPages) ui.currentPage = totalPages || 1;
+                if (ui.currentPage < 1) ui.currentPage = 1;
+
+                const startIdx = (ui.currentPage - 1) * ui.itemsPerPage;
+                const endIdx = (ui.itemsPerPage === 9999) ? ui.filteredFolders.length : startIdx + ui.itemsPerPage;
+                const visibleFolders = ui.filteredFolders.slice(startIdx, endIdx);
+
+                document.getElementById('page-indicator').innerText = `PAGE ${ui.currentPage} / ${totalPages}`;
+                document.getElementById('btn-prev-page').disabled = (ui.currentPage <= 1);
+                document.getElementById('btn-next-page').disabled = (ui.currentPage >= totalPages);
+
+                grid.innerHTML = visibleFolders.map((f, i) => {
+                    const globalIdx = startIdx + i;
+                    const safePath = ui.encodePath(f.path);
+                    const safeNameAttr = f.name.replace(/"/g, "&quot;");
+                    const displayName = f.name.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                    const folderBadge = `DIR_${String(globalIdx + 1).padStart(2, '0')}`;
+                    const coverUrl = f.cover ? ui.toFileUrl(f.cover) : '';
+
+                    return `
+                    <div class="folder-card group" 
+                         data-path="${safePath}" 
+                         data-name="${safeNameAttr}" 
+                         onclick="ui.onFolderClick(this, event)" 
+                         oncontextmenu="ui.showFolderContextMenu(event, '${safePath}')"
+                         title="Click: Load tracks | Double-click: Play album | Right-click: Options">
+                        <div class="folder-badge">${folderBadge}</div>
+                        ${coverUrl ? `<button class="btn-fullart" onclick="event.stopPropagation(); ui.openFullArt('${coverUrl}', '${safeNameAttr}')">🔎 Full Cover</button>` : ''}
+                        <div class="folder-cover-wrapper">
+                            ${f.cover 
+                                ? `<img src="" data-src="${f.cover}" alt="Cover" class="lazy-img opacity-0">` 
+                                : `<div class="absolute inset-0 flex flex-col items-center justify-center text-[#8258ff] bg-gradient-to-tr from-[#f5e6ff] to-[#e1bee7]">
+                                     <span class="material-icons-round text-4xl">folder</span>
+                                     <span class="text-[10px] font-mono mt-1 text-[#6b33a8]">ALBUM</span>
+                                   </div>`
+                            }
+                        </div>
+                        <div class="p-3 bg-white flex items-center gap-2 border-t border-[#e2cbf7]">
+                            <span class="material-icons-round text-base text-[#ff4081] flex-shrink-0">library_music</span>
+                            <h3 class="font-bold text-[#3b1166] text-xs truncate flex-1" title="${safeNameAttr}">${displayName}</h3>
+                        </div>
+                    </div>`;
+                }).join('');
+                ui.lazyLoadImages();
+            },
+
+            onSearchInput: (query) => {
+                if (ui.searchDebounceTimer) clearTimeout(ui.searchDebounceTimer);
+                ui.searchDebounceTimer = setTimeout(async () => {
+                    if (window.pywebview && pywebview.api && pywebview.api.search_library) {
+                        const results = await pywebview.api.search_library(query);
+                        ui.currentPage = 1;
+                        ui.renderFolders(results);
+                    }
+                }, 150);
+            },
+
+                        selectedFolderPaths: new Set(),
+            lastSelectedFolderIdx: -1,
+            deleteTargetFolderPaths: [],
+            isMarqueeDragging: false,
+            marqueeStartX: 0,
+            marqueeStartY: 0,
+
+            updateFolderCardSelectionUI: () => {
+                document.querySelectorAll('.folder-card').forEach(card => {
+                    const path = decodeURIComponent(card.dataset.path);
+                    if (ui.selectedFolderPaths.has(path)) {
+                        card.classList.add('is-selected');
+                    } else {
+                        card.classList.remove('is-selected');
+                    }
+                });
+            },
+
+            onFolderClick: (el, event) => {
+                const path = decodeURIComponent(el.dataset.path);
+                const currentIdx = ui.filteredFolders.findIndex(f => f.path === path);
+
+                if (event && (event.ctrlKey || event.metaKey)) {
+                    // Ctrl + Click: Toggle individual selection
+                    if (ui.selectedFolderPaths.has(path)) {
+                        ui.selectedFolderPaths.delete(path);
+                    } else {
+                        ui.selectedFolderPaths.add(path);
+                    }
+                    ui.lastSelectedFolderIdx = currentIdx;
+                } else if (event && event.shiftKey && ui.lastSelectedFolderIdx !== -1 && currentIdx !== -1) {
+                    // Shift + Click: Range selection
+                    const start = Math.min(ui.lastSelectedFolderIdx, currentIdx);
+                    const end = Math.max(ui.lastSelectedFolderIdx, currentIdx);
+                    for (let i = start; i <= end; i++) {
+                        if (ui.filteredFolders[i]) {
+                            ui.selectedFolderPaths.add(ui.filteredFolders[i].path);
+                        }
+                    }
+                } else {
+                    // Normal single click
+                    ui.selectedFolderPaths = new Set([path]);
+                    ui.lastSelectedFolderIdx = currentIdx;
+                }
+
+                ui.updateFolderCardSelectionUI();
+
+                // Folder single/double click handling
+                if (ui.folderClickTimer) {
+                    clearTimeout(ui.folderClickTimer);
+                    ui.folderClickTimer = null;
+                    ui.handleFolderDoubleClick(el);
+                } else {
+                    ui.folderClickTimer = setTimeout(() => {
+                        ui.folderClickTimer = null;
+                        ui.handleFolderSingleClick(el);
+                    }, 180);
+                }
+            },
+
+            initMarqueeSelection: () => {
+                const grid = document.getElementById('folder-grid');
+                const marquee = document.getElementById('selection-marquee');
+                if (!grid || !marquee) return;
+
+                grid.addEventListener('mousedown', (e) => {
+                    if (e.button !== 0) return; // Only left click
+                    if (e.target.closest('.btn-fullart')) return;
+
+                    const card = e.target.closest('.folder-card');
+                    if (!card && !e.ctrlKey && !e.shiftKey) {
+                        ui.selectedFolderPaths.clear();
+                        ui.updateFolderCardSelectionUI();
+                    }
+
+                    if (!card) {
+                        ui.isMarqueeDragging = true;
+                        ui.marqueeStartX = e.clientX;
+                        ui.marqueeStartY = e.clientY;
+                        ui.initialMarqueeSelected = new Set(e.ctrlKey ? ui.selectedFolderPaths : []);
+                        marquee.style.left = e.clientX + 'px';
+                        marquee.style.top = e.clientY + 'px';
+                        marquee.style.width = '0px';
+                        marquee.style.height = '0px';
+                        marquee.style.display = 'block';
+                    }
+                });
+
+                window.addEventListener('mousemove', (e) => {
+                    if (!ui.isMarqueeDragging) return;
+
+                    const currentX = e.clientX;
+                    const currentY = e.clientY;
+                    const left = Math.min(ui.marqueeStartX, currentX);
+                    const top = Math.min(ui.marqueeStartY, currentY);
+                    const width = Math.abs(currentX - ui.marqueeStartX);
+                    const height = Math.abs(currentY - ui.marqueeStartY);
+
+                    marquee.style.left = left + 'px';
+                    marquee.style.top = top + 'px';
+                    marquee.style.width = width + 'px';
+                    marquee.style.height = height + 'px';
+
+                    const mRect = { left, top, right: left + width, bottom: top + height };
+                    const currentMarqueeSet = new Set();
+
+                    document.querySelectorAll('.folder-card').forEach(card => {
+                        const cRect = card.getBoundingClientRect();
+                        const intersects = !(mRect.right < cRect.left || 
+                                             mRect.left > cRect.right || 
+                                             mRect.bottom < cRect.top || 
+                                             mRect.top > cRect.bottom);
+                        const path = decodeURIComponent(card.dataset.path);
+                        if (intersects) {
+                            currentMarqueeSet.add(path);
+                        }
+                    });
+
+                    if (e.ctrlKey) {
+                        ui.selectedFolderPaths = new Set([...ui.initialMarqueeSelected, ...currentMarqueeSet]);
+                    } else {
+                        ui.selectedFolderPaths = currentMarqueeSet;
+                    }
+                    ui.updateFolderCardSelectionUI();
+                });
+
+                window.addEventListener('mouseup', () => {
+                    if (ui.isMarqueeDragging) {
+                        ui.isMarqueeDragging = false;
+                        marquee.style.display = 'none';
+                    }
+                });
+            },
+
+            onFolderClick: (el) => {
+                if (ui.folderClickTimer) {
+                    clearTimeout(ui.folderClickTimer);
+                    ui.folderClickTimer = null;
+                    ui.handleFolderDoubleClick(el);
+                } else {
+                    ui.folderClickTimer = setTimeout(() => {
+                        ui.folderClickTimer = null;
+                        ui.handleFolderSingleClick(el);
+                    }, 180);
+                }
+            },
+
+            handleFolderSingleClick: (el) => {
+                if (ui.isProcessing) return;
+                const path = decodeURIComponent(el.dataset.path);
+                const name = el.dataset.name;
+                ui.openFolder(path, name);
+            },
+
+            handleFolderDoubleClick: async (el) => {
+                if (ui.isProcessing) return;
+                const path = decodeURIComponent(el.dataset.path);
+                const name = el.dataset.name;
+                
+                const playlistWin = document.getElementById('playlist-window');
+                if (playlistWin) {
+                    playlistWin.classList.remove('hidden', 'is-minimized');
+                    playlistWin.style.display = 'flex';
+                }
+
+                const tracks = await ui.openFolder(path, name);
+                
+                if (tracks && tracks.length > 0) {
+                    const firstTrackPath = tracks[0].path;
+                    ui.handleTrackClick(ui.encodePath(firstTrackPath));
+                }
+            },
+
+            openFolder: async (path, name) => {
+                ui.contextFolderPath = path;
+                document.getElementById('panel-title').innerText = `📋 ${name}`;
+                document.getElementById('tele-artist').innerText = name;
+
+                const list = document.getElementById('track-list');
+                if (list) list.innerHTML = `<div class="text-center py-8 text-[#8258ff] animate-pulse text-xs font-mono">LOADING_PLAYLIST...</div>`;
+                
+                let tracks = [];
+                try {
+                    if (window.pywebview && pywebview.api && pywebview.api.get_folder_tracks) {
+                        tracks = await pywebview.api.get_folder_tracks(path);
+                    } else if (window.pywebview && pywebview.api && pywebview.api.get_videos_in_folder) {
+                        tracks = await pywebview.api.get_videos_in_folder(path);
+                    }
+                } catch(e) { console.error("openFolder error:", e); }
+
+                ui.playlist = tracks || [];
+                if (typeof ui.renderPlaylist === 'function') ui.renderPlaylist();
+                return ui.playlist;
+            },
+
+            handleTrackClick: async (encodedPath) => {
+                if (ui.isProcessing) return;
+                const path = decodeURIComponent(encodedPath);
+                ui.isProcessing = true;
+                ui.highlightTrack(path);
+                
+                try {
+                    if (ui.playlist && ui.playlist.length > 0 && window.pywebview && pywebview.api && pywebview.api.play_playlist) {
+                        const normPath = path.replace(/\\/g, '/');
+                        const idx = ui.playlist.findIndex(t => (t.path || '').replace(/\\/g, '/') === normPath);
+                        if (idx !== -1) {
+                            await pywebview.api.play_playlist(ui.playlist, idx);
+                        } else {
+                            await pywebview.api.play_video(path);
+                        }
+                    } else {
+                        await pywebview.api.play_video(path);
+                    }
+
+                    const info = await pywebview.api.get_track_info(path);
+                    if (info) {
+                        ui.updateActiveTrackFavoriteState(path, info.is_favorite === 1);
+                        ui.updateTelemetryLikeInfo(info);
+                    }
+                } catch (e) {
+                    console.error("Play error:", e);
+                } finally {
+                    setTimeout(() => { ui.isProcessing = false; }, 150);
+                }
+            },
+
+            updateTelemetryLikeInfo: (info) => {
+                if (!info) return;
+                const likesEl = document.getElementById('tele-likes');
+                const barEl = document.getElementById('tele-like-bar');
+                const score = info.like_score ? info.like_score.toFixed(1) : "0.0";
+                if (likesEl) likesEl.innerText = `${score} ♥`;
+                if (barEl) {
+                    const pct = Math.min(100, Math.max(10, Math.round((info.like_score / 300) * 100)));
+                    barEl.style.width = `${pct}%`;
+                }
+            },
+
+            highlightTrack: async (path) => {
+                const cleanPath = path.replace(/\\/g, '/');
+                if (ui.lastHighlightedPath === cleanPath) return;
+                ui.lastHighlightedPath = cleanPath;
+                ui.currentTrackPath = cleanPath;
+
+                // 清除所有條目的 active 與 殘留的高亮 class
+                document.querySelectorAll('.track-item').forEach(el => {
+                    el.classList.remove('active', 'bg-[#ffdbf3]', 'font-bold');
+                });
+
+                let newActive = null;
+                try {
+                    newActive = document.querySelector(`.track-item[data-path="${CSS.escape(cleanPath)}"]`);
+                } catch(e) {}
+
+                // 如果 Playlist 視窗內找不到當前曲目（代表已跨專輯切歌或自動銜接下一專輯）
+                if (!newActive && window.pywebview && pywebview.api) {
+                    try {
+                        const parts = cleanPath.split('/');
+                        if (parts.length > 1) {
+                            parts.pop();
+                            const parentFolderPath = parts.join('/');
+                            const folderName = parts.pop() || 'PLAYLIST TRACKS';
+                            
+                            let newTracks = [];
+                            if (pywebview.api.get_videos_in_folder) {
+                                newTracks = await pywebview.api.get_videos_in_folder(parentFolderPath);
+                            } else if (pywebview.api.get_folder_tracks) {
+                                newTracks = await pywebview.api.get_folder_tracks(parentFolderPath);
+                            }
+
+                            if (newTracks && newTracks.length > 0) {
+                                ui.playlist = newTracks;
+                                const pTitle = document.getElementById('panel-title');
+                                if (pTitle) pTitle.innerText = `📋 ${folderName}`;
+                                const artistEl = document.getElementById('tele-artist');
+                                if (artistEl) artistEl.innerText = folderName;
+                                ui.renderPlaylist();
+                                newActive = document.querySelector(`.track-item[data-path="${CSS.escape(cleanPath)}"]`);
+                            }
+                        }
+                    } catch(e) { console.error("Auto load album error:", e); }
+                }
+
+                if (newActive) {
+                    newActive.classList.add('active');
+                    newActive.scrollIntoView({behavior: "smooth", block: "nearest"});
+                }
+
+                // Switch Video Player View vs Audio Cover View
+                const ext = cleanPath.split('.').pop().toLowerCase();
+                const videoExts = ['mp4', 'mkv', 'webm', 'avi', 'mov'];
+                const isVideo = videoExts.includes(ext);
+
+                const audioView = document.getElementById('video-screen-audio-view');
+                const videoView = document.getElementById('video-screen-video-view');
+                const modeTag = document.getElementById('video-screen-mode-tag');
+
+                const vPlayer = document.getElementById('video-screen-player');
+                const vFallback = document.getElementById('video-screen-video-fallback');
+
+                if (isVideo) {
+                    if (audioView) audioView.classList.add('hidden');
+                    if (videoView) videoView.classList.remove('hidden');
+                    if (modeTag) modeTag.innerText = 'Mode: 🎬 Video Track';
+
+                    if (vPlayer) {
+                        const url = ui.formatMediaUrl(cleanPath);
+                        if (vPlayer.src !== url) {
+                            vPlayer.src = url;
+                            vPlayer.muted = true;
+                            vPlayer.load();
+                        }
+                        vPlayer.play().then(() => {
+                            if (vFallback) vFallback.classList.add('hidden');
+                        }).catch(e => {
+                            console.log("HTML5 Video fallback:", e);
+                            if (vFallback) vFallback.classList.remove('hidden');
+                        });
+                    }
+                } else {
+                    if (audioView) audioView.classList.remove('hidden');
+                    if (videoView) videoView.classList.add('hidden');
+                    if (modeTag) modeTag.innerText = 'Mode: 🎵 Cover Art';
+                    if (vPlayer) {
+                        vPlayer.pause();
+                        vPlayer.src = '';
+                    }
+                }
+            },
+
+            scanFolder: async () => { 
+                if (ui.isProcessing) return;
+                ui.isProcessing = true;
+                await pywebview.api.scan_folder(); 
+                await ui.loadFolders();
+                ui.isProcessing = false;
+            },
+
+            toFileUrl: (path) => {
+                if (!path) return '';
+                if (path.startsWith('file://')) return path;
+                return 'file:///' + path.replace(/\\/g, '/');
+            },
+
+            lazyLoadImages: () => {
+                const imgs = document.querySelectorAll('.lazy-img');
+                for (const img of imgs) {
+                    const src = img.dataset.src;
+                    if (src) {
+                        img.src = ui.toFileUrl(src);
+                        img.onload = () => img.classList.remove('opacity-0');
+                    }
+                }
+            },
+
+                        formatMediaUrl: (path) => {
+                if (!path) return '';
+                let p = path.replace(/\\/g, '/');
+                if (p.startsWith('file:///')) {
+                    p = p.substring(8);
+                } else if (p.startsWith('file://')) {
+                    p = p.substring(7);
+                }
+                let drive = '';
+                if (p.length >= 2 && p[1] === ':') {
+                    drive = p.substring(0, 2);
+                    p = p.substring(2);
+                }
+                const parts = p.split('/').filter(Boolean);
+                const encodedRest = parts.map(part => encodeURIComponent(part)).join('/');
+                return 'file:///' + (drive ? drive + '/' : '') + encodedRest;
+            },
+
+            initMediaSession: () => {},
+            updateMediaSession: (title, artist, coverUrl) => {},
+            updateMediaSessionState: (isPaused) => {},
+
+            updateTitle: (t) => { 
+                if (!t || ui.currentTrackTitle === t) return;
+                ui.currentTrackTitle = t;
+
+                document.getElementById('player-title').innerText = t; 
+                document.getElementById('tele-track').innerText = t;
+                const vTitle = document.getElementById('video-screen-title');
+                if (vTitle) vTitle.innerText = t;
+                const vFile = document.getElementById('video-screen-file-name');
+                if (vFile) vFile.innerText = t;
+
+                ui.updateMediaSession(t, 'MPlay', ui.currentCoverUrl);
+            },
+            
+            updateProgress: (s) => {
+                if (ui.isDragging) return;
+                const bar = document.getElementById('seek-bar');
+                bar.value = s;
+                document.getElementById('time-current').innerText = ui.formatTime(s);
+            },
+            
+            updateDuration: (d) => {
+                document.getElementById('seek-bar').max = d || 100;
+                document.getElementById('time-total').innerText = ui.formatTime(d);
+            },
+            
+            updateCover: (url) => {
+                const img = document.getElementById('cover-art');
+                const fallback = document.getElementById('cover-fallback');
+                const vImg = document.getElementById('video-screen-cover');
+                const vFallback = document.getElementById('video-screen-fallback');
+
+                ui.currentCoverUrl = url;
+                const title = document.getElementById('player-title').innerText || 'MPlay Track';
+                ui.updateMediaSession(title, 'MPlay', url);
+
+                if (url) {
+                    img.src = url;
+                    img.classList.remove('opacity-0');
+                    if (fallback) fallback.classList.add('opacity-0');
+
+                    if (vImg) {
+                        vImg.src = url;
+                        vImg.classList.remove('opacity-0');
+                    }
+                    if (vFallback) vFallback.classList.add('opacity-0');
+                } else {
+                    img.classList.add('opacity-0');
+                    if (fallback) fallback.classList.remove('opacity-0');
+
+                    if (vImg) vImg.classList.add('opacity-0');
+                    if (vFallback) vFallback.classList.remove('opacity-0');
+                }
+            },
+            
+            updatePlayState: (p) => {
+                document.getElementById('icon-play').innerText = !p ? 'pause' : 'play_arrow';
+                const playerBar = document.getElementById('player-bar');
+                
+                if (!p) {
+                    playerBar.classList.add('is-playing');
+                    ui.setGif('ame-gif', 'choten-chan-jumping.gif');
+                } else {
+                    playerBar.classList.remove('is-playing');
+                    ui.setGif('ame-gif', 'choten-chan-idle.gif');
+                }
+
+                // Sync video player
+                const vPlayer = document.getElementById('video-screen-player');
+                if (vPlayer && vPlayer.src) {
+                    if (p) { vPlayer.pause(); } else { vPlayer.play().catch(() => {}); }
+                }
+
+                // Sync Windows SMTC via MediaSession API
+                ui.updateMediaSessionState(p);
+            },
+            
+            updatePlayMode: (mode) => {
+                const icon = document.getElementById('icon-mode');
+                if (!icon) return;
+                if (mode === 'loop') {
+                    icon.innerText = 'repeat';
+                    icon.title = "Mode: Repeat All (列表循環)";
+                } else if (mode === 'shuffle') {
+                    icon.innerText = 'shuffle';
+                    icon.title = "Mode: Shuffle (隨機播放)";
+                } else if (mode === 'one') {
+                    icon.innerText = 'repeat_one';
+                    icon.title = "Mode: Repeat One (單曲循環)";
+                } else if (mode === 'album_continue') {
+                    icon.innerText = 'library_music';
+                    icon.title = "Mode: Album Continue (播完自動銜接下一專輯)";
+                }
+            },
+
+            updateMuteState: (muted) => {
+                const icon = document.getElementById('icon-volume');
+                if (muted) {
+                    icon.innerText = 'volume_off';
+                    icon.classList.add('text-red-500');
+                } else {
+                    icon.innerText = 'volume_up';
+                    icon.classList.remove('text-red-500');
+                }
+            },
+
+            formatTime: (s) => {
+                if (!s || isNaN(s)) return "00:00";
+                return `${Math.floor(s/60).toString().padStart(2,'0')}:${Math.floor(s%60).toString().padStart(2,'0')}`;
+            },
+
+            seek: (v) => { pywebview.api.control('seek', v); ui.isDragging = false; },
+            closeApp: () => pywebview.api.close_app()
+        };
+
+        window.addEventListener('pywebviewready', ui.init);
+    </script>
+</body>
+</html>
