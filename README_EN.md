@@ -9,9 +9,8 @@ Language: **English** | [繁體中文](./README.md)
 
 ---
 
-<img width="1172" height="752" alt="image" src="https://github.com/user-attachments/assets/edb53488-7334-4a09-974d-f847c998ca6b" />
-<img width="1172" height="752" alt="image" src="https://github.com/user-attachments/assets/857865c7-ce0d-4b9a-958b-bbe9236bc0db" />
-<img width="1155" height="738" alt="image" src="https://github.com/user-attachments/assets/f242c00e-2a68-483c-880c-5f97122b3bc1" />
+<img width="1162" height="745" alt="player" src="https://github.com/user-attachments/assets/00e0c89f-1ba5-4d2e-b9eb-c10fe181e778" />
+
 
 ## 🌟 Key Features
 
@@ -29,7 +28,7 @@ Language: **English** | [繁體中文](./README.md)
 * 🖼️ **Full Artwork Viewer**: High-resolution cover art viewer modal accessible by clicking album art anywhere.
 * 📌 **Windows PiP Mini Player**: Always-on-top Picture-in-Picture floating mini widget with full playback controls and stickers.
 * 🏆 **TOP 10 Ranking & Favorites**: Automated track retention tracking with `▶ PLAY ALL` queue loading.
-* 🎨 **Multiple Preset Themes**: Built-in themes including *Needy Girl Overdose*, *Cyberpunk*, *Cyber Mech HUD*, *Glassmorphism*, *Modern Dark*, and *Clean Light*, with full support for custom HTML/CSS/JS themes.
+* 🎨 **Multiple Preset Themes**: Built-in themes including *Cyber Mech HUD*, *Glassmorphism*, *Modern Dark*, and *Clean Light*, with full support for custom HTML/CSS/JS themes.
 
 ---
 
