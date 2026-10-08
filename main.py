@@ -23,6 +23,7 @@ SIZE_T = c_size_t
 
 import webview
 from database import Database
+import audio_bridge
 
 # --- 原生 libmpv-2.dll 動態搜尋與加載 ---
 bin_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "bin"))
@@ -188,7 +189,7 @@ class ConfigManager:
             "startup_args": "--geometry=50%x50%",
             "theme": "dark",
             "boot_music": True,
-            "theme_file": "needy_theme.html"
+            "theme_file": "STRATA.html"
         }
         self.data = self.default_config.copy()
         self.load_config()
@@ -351,8 +352,10 @@ class MPVSatellite:
             print(f"[libmpv-2.dll Launch Error] {e}")
             return False
 
-    def update_audio_filters(self, eq_enabled=None, gains=None, normalize_enabled=None):
-        """統一音訊濾波器鏈 (非阻塞平滑防抖動, 10-Band FFmpeg Parametric EQ + EBU R128 Loudnorm)"""
+    def update_audio_filters(self, eq_enabled=None, gains=None, normalize_enabled=None, 
+                             resampler_engine=None, sample_rate=None, sample_format=None,
+                             player_active=None):
+        """統一音訊濾波器鏈 (非阻塞平滑防抖動, 10-Band FFmpeg Parametric EQ + EBU R128 Loudnorm + SOXR Resampler)"""
         if not self.player: return
         if eq_enabled is not None:
             self.eq_enabled = eq_enabled
@@ -360,6 +363,14 @@ class MPVSatellite:
             self.eq_gains = [float(g) for g in gains]
         if normalize_enabled is not None:
             self.normalize_enabled = normalize_enabled
+        if resampler_engine is not None:
+            self.resampler_engine = resampler_engine
+        if sample_rate is not None:
+            self.sample_rate = int(sample_rate)
+        if sample_format is not None:
+            self.sample_format = sample_format
+        if player_active is not None:
+            self.bridge_player_active = bool(player_active)
 
         if hasattr(self, '_af_timer') and self._af_timer:
             try: self._af_timer.cancel()
@@ -380,10 +391,52 @@ class MPVSatellite:
             if getattr(self, 'normalize_enabled', False):
                 filters.append("loudnorm=I=-16:TP=-1.5:LRA=11")
 
+            bridge_active = getattr(self, 'bridge_player_active', False)
+            target_rate = 0
+            target_fmt = None
+
+            if bridge_active:
+                engine = getattr(self, 'resampler_engine', 'none')
+                rate = getattr(self, 'sample_rate', 192000)
+                fmt = getattr(self, 'sample_format', 'float')
+
+                resampler_str = ""
+                if engine == "soxr_vhq":
+                    osr_param = f":osr={rate}" if rate > 0 else ""
+                    resampler_str = f"aresample=resampler=soxr:precision=28:cutoff=0.99{osr_param}"
+                elif engine == "soxr_hq":
+                    osr_param = f":osr={rate}" if rate > 0 else ""
+                    resampler_str = f"aresample=resampler=soxr:precision=20:cutoff=0.95{osr_param}"
+                elif engine == "swr_poly":
+                    osr_param = f":osr={rate}" if rate > 0 else ""
+                    resampler_str = f"aresample=resampler=swr:filter_type=kaiser{osr_param}"
+                elif engine == "sinc_native":
+                    if rate > 0:
+                        resampler_str = f"aresample={rate}:resampler=swr:filter_size=64"
+
+                if resampler_str:
+                    filters.append(resampler_str)
+                filters.append("alimiter=limit=0.98:attack=5:release=50:asc=1")
+
+                target_rate = rate
+                target_fmt = fmt
+
             af_string = ",".join(filters)
             with self.write_lock:
                 try:
                     self.player.af = af_string
+                    if target_rate > 0:
+                        self.player.audio_samplerate = target_rate
+                    elif config.get('audio_upsample', False):
+                        self.player.audio_samplerate = 192000
+                    else:
+                        self.player.audio_samplerate = 0
+
+                    if target_fmt:
+                        mpv_fmt = audio_bridge._map_mpv_audio_format(target_fmt)
+                        if mpv_fmt and mpv_fmt != "float":
+                            try: self.player.audio_format = mpv_fmt
+                            except: pass
                 except Exception as e:
                     print(f"[libmpv Audio Filter Error] {e}")
 
@@ -518,6 +571,22 @@ class API:
         
         # 啟動超級粉碎機 (掃描所有子程序)
         threading.Thread(target=self._startup_memory_crusher, daemon=True).start()
+
+        # 綁定 MPVSatellite 至 LiveAudioBridge，支援本機播放器專用發燒濾鏡與重採樣模式
+        audio_bridge.live_audio_bridge.set_player_instance(self._mpv)
+        saved_bridge_mode = config.get("audio_bridge_mode", "player")
+        audio_bridge.live_audio_bridge.mode = saved_bridge_mode
+        saved_multi = config.get("audio_bridge_multi_output", False)
+        audio_bridge.live_audio_bridge.multi_output_enabled = bool(saved_multi)
+        saved_devs = config.get("audio_bridge_output_devices", None)
+        if saved_devs and isinstance(saved_devs, list):
+            audio_bridge.live_audio_bridge.output_devices = saved_devs
+        saved_stream_ip = config.get("audio_bridge_stream_ip", "127.88.99.1")
+        if saved_stream_ip:
+            audio_bridge.live_audio_bridge.stream_host = str(saved_stream_ip).strip()
+        saved_stream_port = config.get("audio_bridge_stream_port", 0)
+        if saved_stream_port:
+            audio_bridge.live_audio_bridge.stream_port = int(saved_stream_port)
     # 【新增】切換視窗顯示/隱藏的 API
     def toggle_mpv_window(self):
         proc = getattr(self._mpv, 'process', None)
@@ -551,6 +620,7 @@ class API:
             window.events.closed += _on_closing
         except Exception:
             pass
+        threading.Timer(0.8, self.setup_frameless_window).start()
 
     def _startup_memory_crusher(self):
         """背景持續記憶體粉碎機：定期壓縮記憶體工作集，保持極致輕量"""
@@ -692,7 +762,15 @@ class API:
     # 【新增】選擇與取得自訂桌布 API
     def select_wallpaper(self):
         """開啟檔案選擇器讓使用者挑選本機圖片當作桌布"""
-        return self.select_image_file()
+        path = self.select_image_file()
+        if path:
+            config.save_config({"custom_wallpaper": path})
+        return path
+
+    def set_wallpaper(self, path):
+        """設定自訂桌布路徑"""
+        config.save_config({"custom_wallpaper": path})
+        return True
 
     def get_wallpaper(self):
         """取得目前設定的自訂桌布路徑"""
@@ -733,6 +811,131 @@ class API:
         """取得響度均衡設定狀態"""
         return config.get("audio_normalize")
 
+    # ========================================================
+    # 🎛️ Live Audio Router & Resampler (系統音訊串接與重採樣濾鏡 API)
+    # ========================================================
+    def get_audio_bridge_devices(self):
+        """取得音訊串接所需的輸入端點、輸出設備清單及當前 Windows 預設端點"""
+        try:
+            default_render = audio_bridge.get_default_render_endpoint()
+            inputs = audio_bridge.get_all_input_endpoints(default_render)
+            outputs = audio_bridge.get_all_playback_devices(getattr(self._mpv, 'player', None))
+            safe_output = audio_bridge.find_safe_physical_output(outputs)
+            return {
+                "inputs": inputs,
+                "outputs": outputs,
+                "default_render": default_render,
+                "safe_physical_output": safe_output
+            }
+        except Exception as e:
+            print(f"[API Error] get_audio_bridge_devices: {e}")
+            return {"inputs": [], "outputs": [], "default_render": None, "safe_physical_output": None}
+
+    def get_audio_bridge_status(self):
+        """取得目前 Live Audio Bridge 狀態"""
+        try:
+            return audio_bridge.live_audio_bridge.get_status()
+        except Exception as e:
+            return {"active": False, "error": str(e)}
+
+    def set_audio_bridge_mode(self, mode):
+        """切換音訊橋接模式: 'player' (本機播放器專用) 或 'system' (系統全域串接)"""
+        try:
+            res = audio_bridge.live_audio_bridge.set_mode(mode)
+            if res.get("success"):
+                config.save_config({"audio_bridge_mode": mode})
+            return res
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def toggle_audio_bridge(self, config_dict=None):
+        """開關 Live Audio Bridge (本機濾鏡切換 或 系統串接抽插)"""
+        try:
+            return audio_bridge.live_audio_bridge.toggle(config_dict)
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def start_audio_bridge(self, config_dict=None):
+        """啟動或更新 Live Audio Bridge 配置"""
+        try:
+            return audio_bridge.live_audio_bridge.start(config_dict)
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def stop_audio_bridge(self):
+        """停止 Live Audio Bridge 並還原實體喇叭"""
+        try:
+            return audio_bridge.live_audio_bridge.stop()
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def set_audio_bridge_volume(self, vol):
+        """即時設定串接音量"""
+        try:
+            return audio_bridge.live_audio_bridge.set_volume(vol)
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def set_audio_bridge_resampler(self, engine, rate, fmt="float"):
+        """即時更新重採樣演算法與採樣率"""
+        try:
+            return audio_bridge.live_audio_bridge.set_resampler(engine, rate, fmt)
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def get_device_volume(self, device_id):
+        """讀取指定輸入或輸出端點的硬體主音量 (0-100) 與靜音狀態"""
+        try:
+            vol_data = audio_bridge.get_endpoint_volume(device_id)
+            if vol_data:
+                return {"success": True, **vol_data}
+            return {"success": False, "error": "Unable to read endpoint volume"}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def set_device_volume(self, device_id, volume):
+        """控制指定輸入或輸出端點的硬體主音量 (0-100)"""
+        try:
+            ok = audio_bridge.set_endpoint_volume(device_id, volume)
+            return {"success": ok}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def set_device_mute(self, device_id, mute):
+        """控制指定輸入或輸出端點的硬體靜音狀態 (True/False)"""
+        try:
+            ok = audio_bridge.set_endpoint_mute(device_id, mute)
+            return {"success": ok}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def set_audio_bridge_multi_output(self, enabled, device_ids):
+        """切換多喇叭並接輸出模式與勾選之端點清單 (差分式動態安全熱插拔)"""
+        try:
+            config.save_config({
+                "audio_bridge_multi_output": bool(enabled),
+                "audio_bridge_output_devices": device_ids if isinstance(device_ids, list) else []
+            })
+            res = audio_bridge.live_audio_bridge.sync_output_devices(
+                target_outputs=device_ids,
+                multi_enabled=enabled
+            )
+            return res
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def check_audio_bridge_loop(self, input_name, output_id, will_auto_route=True, multi_output=False, output_ids=None):
+        """即時檢查前端選取之輸入與輸出組合是否會造成巡迴反饋 (支援單一輸出與多端點並接)"""
+        try:
+            default_render = audio_bridge.get_default_render_endpoint()
+            if multi_output and output_ids:
+                is_loop, reason = audio_bridge.check_multiple_outputs_loop(input_name, output_ids, default_render, will_auto_route)
+            else:
+                is_loop, reason = audio_bridge.is_feedback_loop(input_name, output_id, "", default_render, will_auto_route)
+            return {"is_loop": is_loop, "reason": reason}
+        except Exception as e:
+            return {"is_loop": False, "reason": str(e)}
+
     # 【修復】開機自動播放邏輯 (過濾子資料夾)
     def _boot_autoplay(self):
         if not config.get("boot_music"):
@@ -764,7 +967,8 @@ class API:
         self.playlist = [{'path': f, 'filename': os.path.basename(f)} for f in self.boot_files]
         self._mpv.send(["loadfile", target])
         self._mpv.send(["set_property", "pause", False])
-        self._mpv.send(["set_property", "volume", 60])
+        boot_vol = config.get("boot_volume", 100)
+        self._mpv.send(["set_property", "volume", int(boot_vol)])
         
         name_only = os.path.splitext(os.path.basename(target))[0]
         safe_title = json.dumps(f"🌸 [Boot BGM] {name_only}")
@@ -867,6 +1071,11 @@ class API:
                             self.safe_evaluate_js(f"ui.updateCover('{cover_url}')")
                         else:
                             self.safe_evaluate_js("ui.updateCover(null)")
+                        
+                        # 【關鍵修復】同步當前播放歌曲路徑與前端歌單即時高亮跟隨
+                        self._target_path = target['path']
+                        safe_path = target['path'].replace('\\', '/').replace("'", "\\'")
+                        self.safe_evaluate_js(f"ui.highlightTrack('{safe_path}')")
             except Exception as e:
                 print(f"playlist-pos observer error: {e}")
         
@@ -875,21 +1084,23 @@ class API:
             except: pass
             
     def control(self, action, value=None):
-        if action == "play_pause": self._mpv.send(["cycle", "pause"])
-        
+        if action in ["play_pause", "toggle_pause"]: 
+            self._mpv.send(["cycle", "pause"])
+        elif action == "fullscreen":
+            self._mpv.send(["cycle", "fullscreen"])
+        elif action in ["volume", "set_volume"]: 
+            # 拖動音量條時，順便解除靜音
+            self._mpv.send(["set_property", "mute", False])
+            self._mpv.send(["set_property", "volume", int(value)])
         elif action == "prev":
             if self.is_boot_mode: self._play_random_boot_file()
             elif self.playlist:
                 # 【修改】上一首邏輯
                 if self.play_mode == 'one':
-                    # 單曲循環時，上一首通常是重播，或者您也可以讓它切到上一首
                     next_index = self.current_index
                 elif self.play_mode == 'shuffle':
-                    # 隨機模式的上一首：簡單實作為隨機 (或者您希望依序倒退?)
-                    # 這裡採用隨機
                     next_index = random.randint(0, len(self.playlist) - 1)
                 else:
-                    # 列表循環 (Loop)
                     next_index = (self.current_index - 1) % len(self.playlist)
                 
                 self.play_video(self.playlist[next_index]['path'])
@@ -938,10 +1149,6 @@ class API:
                 self.play_video(self.playlist[next_index]['path'])
 
         elif action == "seek": self._mpv.send(["seek", float(value), "absolute"])
-        elif action == "volume": 
-            # 拖動音量條時，順便解除靜音
-            self._mpv.send(["set_property", "mute", False])
-            self._mpv.send(["set_property", "volume", int(value)])
 
     # --- API Methods ---
     def get_config(self): return config.data
@@ -986,6 +1193,14 @@ class API:
 
     # 主題 -> DWM 標題列色盤
     THEME_STYLES = {
+        "STRATA.html": {
+            "bg": "#090e0c", "text": "#ffffff", "border": "#000000",
+            "title": "◈ STRATA // PLANETARY MONOLITH OS"
+        },
+        "DEV.html": {
+            "bg": "#2d0b4d", "text": "#ff80df", "border": "#800080",
+            "title": "🛠️ MPlay // DEV EXPERIMENTAL OS"
+        },
         "needy_theme.html": {
             "bg": "#3b1166", "text": "#ffdbf3", "border": "#6b33a8",
             "title": "✨ MPlay // INTERNET ANGEL OS v2.5"
@@ -1101,6 +1316,82 @@ class API:
 
         except Exception as e:
             print(f"[DWM Titlebar Error] {e}")
+
+    def drag_window(self):
+        """處理前端無邊框自訂頂部導航條的視窗拖拽移動 (支援 Windows 原生流暢移動)"""
+        try:
+            hwnd = self._find_main_hwnd()
+            if hwnd:
+                user32.ReleaseCapture()
+                user32.SendMessageW(hwnd, 0x0112, 0xF012, 0)
+        except Exception as e:
+            print(f"[Window Drag Error] {e}")
+
+    def minimize_window(self):
+        """視窗最小化"""
+        try:
+            if self._window:
+                self._window.minimize()
+            else:
+                hwnd = self._find_main_hwnd()
+                if hwnd:
+                    user32.ShowWindow(hwnd, 6) # SW_MINIMIZE
+        except Exception as e:
+            print(f"[Window Minimize Error] {e}")
+
+    def toggle_maximize_window(self):
+        """視窗最大化 / 還原切換"""
+        try:
+            hwnd = self._find_main_hwnd()
+            if hwnd:
+                if user32.IsZoomed(hwnd):
+                    if self._window:
+                        self._window.restore()
+                    else:
+                        user32.ShowWindow(hwnd, 9) # SW_RESTORE
+                    return False
+                else:
+                    if self._window:
+                        self._window.maximize()
+                    else:
+                        user32.ShowWindow(hwnd, 3) # SW_MAXIMIZE
+                    return True
+            elif self._window:
+                if getattr(self, '_is_maximized', False):
+                    self._window.restore()
+                    self._is_maximized = False
+                else:
+                    self._window.maximize()
+                    self._is_maximized = True
+                return self._is_maximized
+        except Exception as e:
+            print(f"[Window Maximize Error] {e}")
+            return False
+
+    def is_window_maximized(self):
+        """檢查視窗當前是否為最大化狀態"""
+        try:
+            hwnd = self._find_main_hwnd()
+            if hwnd:
+                return bool(user32.IsZoomed(hwnd))
+            return getattr(self, '_is_maximized', False)
+        except Exception:
+            return False
+
+    def setup_frameless_window(self):
+        """為無邊框視窗附加 Windows 原生邊框拖拉調整大小與 Aero Snap 支援"""
+        try:
+            hwnd = self._find_main_hwnd()
+            if hwnd:
+                GWL_STYLE = -16
+                WS_THICKFRAME = 0x00040000
+                WS_MINIMIZEBOX = 0x00020000
+                WS_MAXIMIZEBOX = 0x00010000
+                style = user32.GetWindowLongW(hwnd, GWL_STYLE)
+                user32.SetWindowLongW(hwnd, GWL_STYLE, style | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX)
+                user32.SetWindowPos(hwnd, None, 0, 0, 0, 0, 0x0001 | 0x0002 | 0x0004 | 0x0020)
+        except Exception as e:
+            print(f"[Frameless Setup Error] {e}")
 
     def start_mpv(self): 
         result = self._mpv.launch()
@@ -1310,6 +1601,9 @@ class API:
     def close_app(self):
         print("[System] 正在關閉系統...")
         self.is_closing = True
+        try:
+            audio_bridge.live_audio_bridge.stop()
+        except: pass
         win = getattr(self, '_window', None)
         self._window = None
         
@@ -1394,17 +1688,21 @@ class API:
 
         try:
             import webview
-            pip_html = os.path.abspath(os.path.join("ui", "pip_player.html")).replace('\\\\', '/')
+            current_theme = config.get("theme_file", "STRATA.html") or "STRATA.html"
+            is_strata = "STRATA" in current_theme
+            pip_filename = "strata_pip.html" if is_strata else "pip_player.html"
+            pip_html = os.path.abspath(os.path.join("ui", pip_filename)).replace('\\', '/')
             if not pip_html.startswith('file://'):
                 pip_url = 'file:///' + pip_html
             else:
                 pip_url = pip_html
 
             self._pip_window = webview.create_window(
-                "📌 MPlay Mini PiP",
+                "◈ STRATA // MINI PIP" if is_strata else "📌 MPlay Mini PiP",
                 url=pip_url,
-                width=450,
-                height=135,
+                width=470 if is_strata else 450,
+                height=138 if is_strata else 135,
+                frameless=is_strata,
                 on_top=True,
                 resizable=False,
                 easy_drag=True,
@@ -1422,6 +1720,82 @@ class API:
             except: pass
             self._pip_window = None
         return True
+
+    def get_system_telemetry(self):
+        """讀取本機即時硬體狀態 (Battery, RAM, CPU, NET) 與本地時間"""
+        import ctypes
+        from datetime import datetime
+        now_str = datetime.now().strftime("%H:%M:%S")
+
+        # 1. 讀取 RAM 負載 %
+        ram_pct = 50
+        try:
+            class MEMORYSTATUSEX(ctypes.Structure):
+                _fields_ = [
+                    ('dwLength', ctypes.c_ulong),
+                    ('dwMemoryLoad', ctypes.c_ulong),
+                    ('ullTotalPhys', ctypes.c_ulonglong),
+                    ('ullAvailPhys', ctypes.c_ulonglong),
+                    ('ullTotalPageFile', ctypes.c_ulonglong),
+                    ('ullAvailPageFile', ctypes.c_ulonglong),
+                    ('ullTotalVirtual', ctypes.c_ulonglong),
+                    ('ullAvailVirtual', ctypes.c_ulonglong),
+                    ('sullAvailExtendedVirtual', ctypes.c_ulonglong),
+                ]
+            stat = MEMORYSTATUSEX()
+            stat.dwLength = ctypes.sizeof(MEMORYSTATUSEX)
+            if ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(stat)):
+                ram_pct = int(stat.dwMemoryLoad)
+        except: pass
+
+        # 2. 讀取電池 % (若為桌機/AC電源則顯示 100)
+        bat_pct = 100
+        is_ac = True
+        try:
+            class SYSTEM_POWER_STATUS(ctypes.Structure):
+                _fields_ = [
+                    ('ACLineStatus', ctypes.c_byte),
+                    ('BatteryFlag', ctypes.c_byte),
+                    ('BatteryLifePercent', ctypes.c_byte),
+                    ('SystemStatusFlag', ctypes.c_byte),
+                    ('BatteryLifeTime', ctypes.c_ulong),
+                    ('BatteryFullLifeTime', ctypes.c_ulong),
+                ]
+            sps = SYSTEM_POWER_STATUS()
+            if ctypes.windll.kernel32.GetSystemPowerStatus(ctypes.byref(sps)):
+                is_ac = (sps.ACLineStatus == 1)
+                b_life = sps.BatteryLifePercent
+                if b_life not in [-1, 255]:
+                    bat_pct = int(b_life)
+                else:
+                    bat_pct = 100
+        except: pass
+
+        # 3. 讀取 CPU 負載 %
+        cpu_pct = 12
+        try:
+            class FILETIME(ctypes.Structure):
+                _fields_ = [('dwLowDateTime', ctypes.c_uint32), ('dwHighDateTime', ctypes.c_uint32)]
+            def to_int(ft): return (ft.dwHighDateTime << 32) + ft.dwLowDateTime
+            i1, k1, u1 = FILETIME(), FILETIME(), FILETIME()
+            ctypes.windll.kernel32.GetSystemTimes(ctypes.byref(i1), ctypes.byref(k1), ctypes.byref(u1))
+            time.sleep(0.03)
+            i2, k2, u2 = FILETIME(), FILETIME(), FILETIME()
+            ctypes.windll.kernel32.GetSystemTimes(ctypes.byref(i2), ctypes.byref(k2), ctypes.byref(u2))
+            idle = to_int(i2) - to_int(i1)
+            tot = (to_int(k2) - to_int(k1)) + (to_int(u2) - to_int(u1))
+            if tot > 0:
+                cpu_pct = max(0, min(100, int(((tot - idle) / tot) * 100)))
+        except: pass
+
+        return {
+            "battery": bat_pct,
+            "is_ac": is_ac,
+            "ram": ram_pct,
+            "cpu": cpu_pct,
+            "net": "ONLINE",
+            "time": now_str
+        }
 
     def toggle_pip_mode(self):
         """融合 Windows 桌面 (Picture-in-Picture 置頂 Mini Player 接口)"""
@@ -1457,6 +1831,19 @@ class API:
 
             if hasattr(self, '_mpv') and self._mpv and hasattr(self._mpv, 'player') and self._mpv.player:
                 player = self._mpv.player
+                try:
+                    mpv_path = player.path
+                    if mpv_path and mpv_path != path:
+                        path = mpv_path
+                        self._target_path = mpv_path
+                        if os.path.exists(path):
+                            title = os.path.splitext(os.path.basename(path))[0]
+                            info = self._db.get_track_info(path) if hasattr(self, '_db') and self._db else None
+                            if info and info.get('cover_path'):
+                                cpath = info['cover_path']
+                                cover_url = 'file:///' + cpath.replace('\\', '/') if not cpath.startswith('file://') else cpath
+                except: pass
+                
                 try:
                     p_pos = player.time_pos
                     if p_pos is not None: pos = float(p_pos)
@@ -1574,7 +1961,7 @@ if __name__ == "__main__":
 
     window = webview.create_window(
         title='MPlay // INTERNET ANGEL OS', url=html_url, js_api=api,
-        width=1200, height=800, background_color='#190b30', frameless=False
+        width=1200, height=800, background_color='#190b30', frameless=True, easy_drag=False
     )
     api.set_window(window)
     

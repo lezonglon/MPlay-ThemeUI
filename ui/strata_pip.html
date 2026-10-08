@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>◈ STRATA // MINI PIP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <style>
+        :root {
+            --bg-void: #090e0c;
+            --citrine-gold: #ffaa00;
+            --citrine-bright: #ffc433;
+            --citrine-glow: rgba(255, 170, 0, 0.45);
+            --hairline-amber: rgba(255, 170, 0, 0.35);
+            --tech-white: #f5f8f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            font-family: 'JetBrains Mono', 'Plus Jakarta Sans', monospace;
+        }
+
+        body {
+            background: rgba(9, 14, 12, 0.96);
+            backdrop-filter: blur(28px) saturate(190%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-top: 1.5px solid rgba(255, 255, 255, 0.45);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9), 0 0 25px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 6px 10px 8px 10px;
+            color: var(--tech-white);
+            border-radius: 8px;
+        }
+
+        /* 視窗頂部拖曳區 */
+        .pywebview-drag-region {
+            -webkit-app-region: drag;
+        }
+        .no-drag, button, input {
+            -webkit-app-region: no-drag;
+        }
+
+        /* 鈦金屬實體夾具扣件 (Titanium Clamps) */
+        .clamp-bracket {
+            position: absolute;
+            width: 14px;
+            height: 5px;
+            background: linear-gradient(180deg, #e2ebe6 0%, #2f3c34 100%);
+            border: 0.5px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.8);
+            border-radius: 1px;
+            pointer-events: none;
+            z-index: 30;
+        }
+        .clamp-tl { top: -2.5px; left: 16px; }
+        .clamp-tr { top: -2.5px; right: 16px; }
+
+        /* 封裝水晶厚玻璃卡匣 */
+        .cover-lucite-slab {
+            width: 66px;
+            height: 66px;
+            border-radius: 4px;
+            position: relative;
+            background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.02) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-top: 1.5px solid rgba(255, 255, 255, 0.45);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.3);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        /* 自定義時間進度推桿 (Precision Seekbar) */
+        input[type=range].seek-bar {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            height: 14px;
+            cursor: pointer;
+            width: 100%;
+        }
+        input[type=range].seek-bar::-webkit-slider-runnable-track {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 2px;
+        }
+        input[type=range].seek-bar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 10px;
+            height: 12px;
+            background: var(--citrine-bright);
+            border: 1px solid #ffffff;
+            box-shadow: 0 0 8px var(--citrine-glow);
+            border-radius: 1px;
+            margin-top: -4.5px;
+            transition: transform 0.1s ease;
+        }
+        input[type=range].seek-bar:hover::-webkit-slider-thumb {
+            transform: scale(1.15);
+        }
+
+        /* 迷你音量滑桿 */
+        input[type=range].vol-bar {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            height: 10px;
+            cursor: pointer;
+            width: 48px;
+        }
+        input[type=range].vol-bar::-webkit-slider-runnable-track {
+            height: 3px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 1.5px;
+        }
+        input[type=range].vol-bar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 7px;
+            height: 9px;
+            background: #ffffff;
+            border-radius: 1px;
+            margin-top: -3px;
+        }
+
+        /* 微型控制按鍵通用樣式 */
+        .pip-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #d1d5db;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .pip-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+            color: #ffffff;
+        }
+        .pip-btn-active {
+            background: var(--citrine-bright);
+            border-color: #ffffff;
+            color: #000000;
+            box-shadow: 0 0 12px var(--citrine-glow);
+        }
+        .pip-btn-active:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        /* 動態音波長條 */
+        @keyframes eq1 { 0%, 100% { height: 2px; } 50% { height: 10px; } }
+        @keyframes eq2 { 0%, 100% { height: 10px; } 50% { height: 3px; } }
+        @keyframes eq3 { 0%, 100% { height: 5px; } 50% { height: 9px; } }
+        .mini-eq-bar {
+            width: 2px;
+            background: var(--citrine-bright);
+            box-shadow: 0 0 4px var(--citrine-glow);
+            border-radius: 1px;
+        }
+        .bar-a { animation: eq1 0.7s infinite ease-in-out; }
+        .bar-b { animation: eq2 0.5s infinite ease-in-out 0.15s; }
+        .bar-c { animation: eq3 0.8s infinite ease-in-out 0.3s; }
+    </style>
+</head>
+<body onmousedown="if (event.target.closest('button, input, select, a, .no-drag') === null && window.pywebview && pywebview.api && pywebview.api.drag_window) pywebview.api.drag_window();">
+    <!-- 頂部裝飾夾具 -->
+    <div class="clamp-bracket clamp-tl"></div>
+    <div class="clamp-bracket clamp-tr"></div>
+
+    <!-- 頂部拖曳抬頭條 (HUD Bar) -->
+    <div class="pywebview-drag-region flex items-center justify-between pb-1 border-b border-white/10 select-none cursor-move">
+        <div class="flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-[var(--citrine-bright)] shadow-[0_0_6px_var(--citrine-glow)]"></span>
+            <span class="text-[9px] font-extrabold tracking-widest text-white/90">◈ STRATA // MINI PIP</span>
+            <span class="text-[7.5px] px-1 py-0.2 rounded bg-white/10 text-white/70 font-mono">FRAMELESS</span>
+        </div>
+
+        <div class="flex items-center gap-2 no-drag">
+            <!-- 動態播放等化器指示燈 -->
+            <div id="pip-live-indicator" class="flex items-end gap-[1.5px] h-2.5 px-1 opacity-0 transition-opacity">
+                <span class="mini-eq-bar bar-a"></span>
+                <span class="mini-eq-bar bar-b"></span>
+                <span class="mini-eq-bar bar-c"></span>
+            </div>
+
+            <!-- 關閉按鈕 -->
+            <button onclick="pip.close()" class="w-4 h-4 rounded flex items-center justify-center text-white/60 hover:text-white hover:bg-red-600/80 transition text-[10px]" title="Close PiP">
+                ✕
+            </button>
+        </div>
+    </div>
+
+    <!-- 主控艙核心區塊 (66px Lucite Slab + Controls) -->
+    <div class="flex items-center gap-2.5 flex-1 pt-1.5">
+        <!-- 專輯水晶厚玻璃卡匣 -->
+        <div class="cover-lucite-slab">
+            <img id="pip-cover" src="" alt="Album Art" class="w-full h-full object-cover opacity-0 transition-opacity duration-300">
+            <div id="pip-fallback" class="absolute inset-0 flex flex-col items-center justify-center bg-[#0d1612] text-white/40">
+                <span class="material-icons-round text-2xl text-[var(--citrine-bright)]">album</span>
+                <span class="text-[7px] font-mono tracking-tighter text-white/50">STRATA</span>
+            </div>
+        </div>
+
+        <!-- 右側控制與音軌資訊 -->
+        <div class="flex-1 min-w-0 flex flex-col justify-between h-[66px]">
+            <!-- 第 1 列：曲目標題 + 時間戳 -->
+            <div class="flex items-center justify-between gap-2 min-w-0">
+                <div id="pip-title" class="text-[11px] font-bold text-white truncate max-w-[240px] drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]" title="Track Title">
+                    AWAITING_STRATA_STREAM
+                </div>
+                <div id="pip-time" class="text-[9.5px] font-mono text-[var(--citrine-bright)] shrink-0 font-bold">
+                    00:00 / 00:00
+                </div>
+            </div>
+
+            <!-- 第 2 列：高精度進度條 -->
+            <div class="w-full py-0.5">
+                <input type="range" id="pip-seek" min="0" max="100" value="0" step="0.5" class="seek-bar no-drag"
+                       oninput="pip.isDragging = true; pip.onSeekInput(this.value);"
+                       onchange="pip.onSeekChange(this.value);"
+                       onmouseup="pip.isDragging = false;"
+                       ontouchend="pip.isDragging = false;">
+            </div>
+
+            <!-- 第 3 列：主播放控制按鈕群 -->
+            <div class="flex items-center justify-between pt-0.5">
+                <!-- 播放模式 + 切歌群 -->
+                <div class="flex items-center gap-1.5 no-drag">
+                    <button onclick="pip.togglePlayMode()" class="pip-btn w-5 h-5 rounded text-[10px]" title="Cycle Play Mode">
+                        <span id="pip-icon-mode" class="material-icons-round text-xs">repeat</span>
+                    </button>
+                    <button onclick="pip.control('prev')" class="pip-btn w-5 h-5 rounded text-[10px]" title="Previous">
+                        <span class="material-icons-round text-xs">skip_previous</span>
+                    </button>
+                    <!-- 核心播放/暫停圓形按鍵 -->
+                    <button onclick="pip.control('play_pause')" id="pip-btn-play" class="pip-btn pip-btn-active w-6 h-6 rounded-full" title="Play / Pause">
+                        <span id="pip-icon-play" class="material-icons-round text-sm">play_arrow</span>
+                    </button>
+                    <button onclick="pip.control('next')" class="pip-btn w-5 h-5 rounded text-[10px]" title="Next">
+                        <span class="material-icons-round text-xs">skip_next</span>
+                    </button>
+                    <!-- 收藏星星按鈕 -->
+                    <button onclick="pip.toggleFavorite()" id="pip-btn-fav" class="pip-btn w-5 h-5 rounded text-[10px] text-white/50" title="Toggle Favorite">
+                        <span id="pip-icon-fav" class="material-icons-round text-xs">star_border</span>
+                    </button>
+                </div>
+
+                <!-- 右側：音量微調推桿與靜音 -->
+                <div class="flex items-center gap-1 no-drag">
+                    <button onclick="pip.toggleMute()" class="text-white/60 hover:text-white transition flex items-center" title="Mute/Unmute">
+                        <span id="pip-icon-vol" class="material-icons-round text-xs">volume_up</span>
+                    </button>
+                    <input type="range" id="pip-vol" min="0" max="100" value="80" class="vol-bar no-drag"
+                           oninput="pip.setVolume(this.value)" title="Volume">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const PALETTES = {
+            amber: {
+                gold: '#ffaa00', bright: '#ffc433', glow: 'rgba(255, 170, 0, 0.45)', hairline: 'rgba(255, 170, 0, 0.35)'
+            },
+            celadon: {
+                gold: '#2ef8a0', bright: '#67ffb9', glow: 'rgba(46, 248, 160, 0.45)', hairline: 'rgba(46, 248, 160, 0.35)'
+            },
+            glacial: {
+                gold: '#00e5ff', bright: '#5df2ff', glow: 'rgba(0, 229, 255, 0.45)', hairline: 'rgba(0, 229, 255, 0.35)'
+            },
+            plasma: {
+                gold: '#b845ff', bright: '#d480ff', glow: 'rgba(184, 69, 255, 0.45)', hairline: 'rgba(184, 69, 255, 0.35)'
+            },
+            crimson: {
+                gold: '#ff334b', bright: '#ff6b7d', glow: 'rgba(255, 51, 75, 0.45)', hairline: 'rgba(255, 51, 75, 0.35)'
+            },
+            white: {
+                gold: '#ffffff', bright: '#e2f1ea', glow: 'rgba(255, 255, 255, 0.45)', hairline: 'rgba(255, 255, 255, 0.35)'
+            }
+        };
+
+        const pip = {
+            isDragging: false,
+            currentPath: '',
+            currentDuration: 0,
+            isPlaying: false,
+
+            init: async () => {
+                // 套用已儲存的色彩主題
+                if (window.pywebview && pywebview.api && pywebview.api.get_theme_setting) {
+                    try {
+                        const savedPalette = await pywebview.api.get_theme_setting('strata_palette', 'amber');
+                        pip.applyPalette(savedPalette);
+                    } catch(e) {}
+                }
+
+                setInterval(pip.syncState, 250);
+            },
+
+            applyPalette: (key) => {
+                const pal = PALETTES[key] || PALETTES.amber;
+                document.documentElement.style.setProperty('--citrine-gold', pal.gold);
+                document.documentElement.style.setProperty('--citrine-bright', pal.bright);
+                document.documentElement.style.setProperty('--citrine-glow', pal.glow);
+                document.documentElement.style.setProperty('--hairline-amber', pal.hairline);
+            },
+
+            syncState: async () => {
+                if (window.pywebview && pywebview.api && pywebview.api.get_playback_status) {
+                    try {
+                        const st = await pywebview.api.get_playback_status();
+                        if (st) {
+                            pip.currentPath = st.current_path || '';
+                            pip.isPlaying = !!st.is_playing;
+                            pip.currentDuration = st.duration || 0;
+
+                            // 更新標題
+                            const titleEl = document.getElementById('pip-title');
+                            if (titleEl) {
+                                const cleanTitle = (st.title || 'AWAITING_STRATA_STREAM').replace(/\.[^/.]+$/, "");
+                                if (titleEl.innerText !== cleanTitle) {
+                                    titleEl.innerText = cleanTitle;
+                                    titleEl.title = cleanTitle;
+                                }
+                            }
+
+                            // 播放/暫停按鈕
+                            const iconPlay = document.getElementById('pip-icon-play');
+                            const liveEq = document.getElementById('pip-live-indicator');
+                            if (iconPlay) {
+                                iconPlay.innerText = pip.isPlaying ? 'pause' : 'play_arrow';
+                            }
+                            if (liveEq) {
+                                liveEq.style.opacity = pip.isPlaying ? '1' : '0';
+                            }
+
+                            // 模式圖標
+                            if (st.play_mode) pip.updatePlayMode(st.play_mode);
+
+                            // 進度條與時間顯示
+                            const seek = document.getElementById('pip-seek');
+                            const pos = st.position || 0;
+                            const dur = st.duration || 0;
+
+                            if (!pip.isDragging && seek) {
+                                seek.max = dur > 0 ? dur : 100;
+                                seek.value = pos;
+                            }
+
+                            const timeEl = document.getElementById('pip-time');
+                            if (timeEl) {
+                                timeEl.innerText = `${pip.fmtTime(pos)} / ${pip.fmtTime(dur)}`;
+                            }
+
+                            // 封面同步
+                            const coverImg = document.getElementById('pip-cover');
+                            const fallback = document.getElementById('pip-fallback');
+                            if (st.cover_url && coverImg && fallback) {
+                                if (coverImg.src !== st.cover_url) {
+                                    coverImg.src = st.cover_url;
+                                }
+                                coverImg.classList.remove('opacity-0');
+                                fallback.classList.add('opacity-0');
+                            } else if (coverImg && fallback) {
+                                coverImg.classList.add('opacity-0');
+                                fallback.classList.remove('opacity-0');
+                            }
+
+                            // 星星收藏狀態同步
+                            const favIcon = document.getElementById('pip-icon-fav');
+                            const favBtn = document.getElementById('pip-btn-fav');
+                            const isFav = (st.like_score && st.like_score > 0);
+                            if (favIcon && favBtn) {
+                                if (isFav) {
+                                    favIcon.innerText = 'star';
+                                    favBtn.className = 'pip-btn w-5 h-5 rounded text-[10px] text-[var(--citrine-bright)]';
+                                } else {
+                                    favIcon.innerText = 'star_border';
+                                    favBtn.className = 'pip-btn w-5 h-5 rounded text-[10px] text-white/40';
+                                }
+                            }
+                        }
+                    } catch(e) {}
+                }
+            },
+
+            updatePlayMode: (mode) => {
+                const icon = document.getElementById('pip-icon-mode');
+                if (!icon) return;
+                if (mode === 'loop') icon.innerText = 'repeat';
+                else if (mode === 'shuffle') icon.innerText = 'shuffle';
+                else if (mode === 'one') icon.innerText = 'repeat_one';
+                else if (mode === 'album_continue') icon.innerText = 'library_music';
+            },
+
+            togglePlayMode: async () => {
+                if (window.pywebview && pywebview.api && pywebview.api.toggle_play_mode) {
+                    const newMode = await pywebview.api.toggle_play_mode();
+                    pip.updatePlayMode(newMode);
+                }
+            },
+
+            toggleFavorite: async () => {
+                if (!pip.currentPath) return;
+                if (window.pywebview && pywebview.api && pywebview.api.toggle_favorite) {
+                    const res = await pywebview.api.toggle_favorite(pip.currentPath);
+                    const isFav = typeof res === 'object' ? (res.is_favorite === 1 || res.is_favorite === true) : Boolean(res);
+                    const favIcon = document.getElementById('pip-icon-fav');
+                    const favBtn = document.getElementById('pip-btn-fav');
+                    if (favIcon && favBtn) {
+                        favIcon.innerText = isFav ? 'star' : 'star_border';
+                        favBtn.className = isFav 
+                            ? 'pip-btn w-5 h-5 rounded text-[10px] text-[var(--citrine-bright)]' 
+                            : 'pip-btn w-5 h-5 rounded text-[10px] text-white/40';
+                    }
+                }
+            },
+
+            control: (action) => {
+                if (window.pywebview && pywebview.api) {
+                    if (action === 'play_pause') {
+                        pip.isPlaying = !pip.isPlaying;
+                        const iconPlay = document.getElementById('pip-icon-play');
+                        if (iconPlay) iconPlay.innerText = pip.isPlaying ? 'pause' : 'play_arrow';
+                    }
+                    pywebview.api.control(action);
+                }
+            },
+
+            onSeekInput: (val) => {
+                const timeEl = document.getElementById('pip-time');
+                if (timeEl) {
+                    timeEl.innerText = `${pip.fmtTime(val)} / ${pip.fmtTime(pip.currentDuration)}`;
+                }
+            },
+
+            onSeekChange: (val) => {
+                pip.isDragging = false;
+                if (window.pywebview && pywebview.api) {
+                    pywebview.api.control('seek', val);
+                }
+            },
+
+            setVolume: (val) => {
+                if (window.pywebview && pywebview.api) {
+                    pywebview.api.control('volume', val);
+                }
+            },
+
+            toggleMute: () => {
+                const volSlider = document.getElementById('pip-vol');
+                if (volSlider) {
+                    const cur = parseInt(volSlider.value, 10);
+                    const target = cur > 0 ? 0 : 80;
+                    volSlider.value = target;
+                    pip.setVolume(target);
+                }
+            },
+
+            fmtTime: (s) => {
+                if (!s || isNaN(s)) return "00:00";
+                const sec = Math.floor(s);
+                const m = Math.floor(sec / 60);
+                const rem = sec % 60;
+                return `${String(m).padStart(2, '0')}:${String(rem).padStart(2, '0')}`;
+            },
+
+            close: () => {
+                if (window.pywebview && pywebview.api && pywebview.api.close_pip_window) {
+                    pywebview.api.close_pip_window();
+                }
+            }
+        };
+
+        window.addEventListener('pywebviewready', pip.init);
+    </script>
+</body>
+</html>

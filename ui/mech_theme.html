@@ -291,25 +291,14 @@
             position: sticky;
             top: 0;
             z-index: 10;
-            padding: 24px 32px 40px; /* 增加底部 padding 讓漸層更自然 */
-            /* 修改背景：使用漸層淡出，而不是硬切的模糊 */
+            padding: 16px 32px;
             background: linear-gradient(180deg, 
                 var(--mech-bg-dark) 0%, 
-                rgba(10,10,12, 0.95) 40%, 
-                rgba(10,10,12, 0.6) 70%, 
-                transparent 100%);
-            /* 使用 mask 讓模糊邊緣柔和消失 */
-            backdrop-filter: blur(8px);
-            -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
-            mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+                rgba(10,10,12, 0.95) 70%, 
+                rgba(10,10,12, 0.85) 100%);
+            border-bottom: 1px solid var(--mech-border);
+            backdrop-filter: blur(12px);
             transition: all var(--anim-speed-slow) ease;
-            margin-bottom: -20px; /* 補償 padding 造成的空間 */
-            pointer-events: none; /* 讓 header 背景不阻擋點擊 */
-        }
-
-        /* 讓 header 內的內容可以被點擊 */
-        header > * {
-            pointer-events: auto;
         }
 
         .logo-container {
@@ -1515,6 +1504,14 @@
         .font-mono { font-family: 'Share Tech Mono', monospace; }
         .text-glow { text-shadow: 0 0 10px rgba(var(--mech-primary-rgb), 0.5); }
         .text-primary { color: var(--mech-primary); }
+
+        /* Frameless window drag styles */
+        .pywebview-drag-region {
+            -webkit-app-region: drag;
+        }
+        .no-drag, button, input, select, a {
+            -webkit-app-region: no-drag;
+        }
     </style>
 </head>
 <body data-theme="amber">
@@ -1538,9 +1535,11 @@
     <div id="stage-perspective">
         <!-- 文件夾層 -->
         <div id="layer-folders">
-            <header class="hud-content">
-                <div class="flex justify-between items-center">
-                    <div class="logo-container">
+            <header class="hud-content pywebview-drag-region select-none cursor-default"
+                    onmousedown="if (event.button === 0 && !event.target.closest('button, input, select, a, .no-drag')) { ui.dragWindow(); }"
+                    ondblclick="if (!event.target.closest('button, input, select, a, .no-drag')) { ui.toggleMaximize(); }">
+                <div class="flex justify-between items-center w-full">
+                    <div class="logo-container cursor-move">
                         <div class="logo-icon">
                             <div class="logo-hex"></div>
                             <span class="material-icons-round">graphic_eq</span>
@@ -1550,26 +1549,36 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-3">
-                        <div class="relative w-48 sm:w-64 hide-mobile">
+                        <div class="relative w-48 sm:w-64 hide-mobile no-drag">
                             <span class="material-icons-round absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs">search</span>
                             <input id="search-input" type="text" placeholder="/// SEARCH_MEDIA" oninput="ui.filterFolders(this.value)"
                                    class="w-full bg-black/60 border border-[var(--mech-border)] rounded pl-9 pr-3 py-1.5 text-xs text-[var(--mech-primary)] font-mono focus:outline-none focus:border-[var(--mech-primary)] focus:shadow-[var(--mech-glow)] transition">
                         </div>
 
-                        <button onclick="ui.scanFolder()" class="btn-mech">
+                        <button onclick="ui.scanFolder()" class="btn-mech no-drag">
                             <span class="material-icons-round text-sm">sync</span>
                             <span class="hide-mobile">SCAN_DRIVE</span>
                         </button>
-                        <button onclick="ui.toggleEqModal()" class="btn-mech flex items-center gap-1 text-emerald-400 border-emerald-500/50 hover:border-emerald-400">
+                        <button onclick="ui.toggleEqModal()" class="btn-mech flex items-center gap-1 text-emerald-400 border-emerald-500/50 hover:border-emerald-400 no-drag">
                             <span class="material-icons-round text-sm">equalizer</span>
                             <span class="hide-mobile">AUDIO_EQ</span>
                         </button>
-                        <button onclick="ui.toggleSettings()" class="btn-mech btn-icon">
+                        <button onclick="ui.toggleSettings()" class="btn-mech btn-icon no-drag">
                             <span class="material-icons-round text-sm">settings</span>
                         </button>
-                        <button onclick="ui.closeApp()" class="btn-mech btn-icon btn-danger">
-                            <span class="material-icons-round text-sm">power_settings_new</span>
-                        </button>
+
+                        <!-- Fused Mech HUD Window Controls -->
+                        <div class="flex items-center gap-1 pl-2 border-l border-[var(--mech-border)] no-drag">
+                            <button onclick="ui.minimizeWindow()" class="btn-mech btn-icon" title="SYS_MINIMIZE">
+                                <span class="material-icons-round text-sm">remove</span>
+                            </button>
+                            <button id="btn-maximize" onclick="ui.toggleMaximize()" class="btn-mech btn-icon" title="SYS_MAXIMIZE">
+                                <span class="material-icons-round text-sm icon-max-symbol">crop_square</span>
+                            </button>
+                            <button onclick="ui.closeApp()" class="btn-mech btn-icon btn-danger" title="SYS_SHUTDOWN">
+                                <span class="material-icons-round text-sm">close</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -1580,11 +1589,13 @@
 
         <!-- 曲目列表面板 -->
         <div id="layer-tracks">
-            <div class="tracks-header">
-                <button onclick="ui.closeFolder()" class="btn-back">
+            <div class="tracks-header pywebview-drag-region select-none cursor-default"
+                 onmousedown="if (event.button === 0 && !event.target.closest('button, input, select, a, .no-drag')) { ui.dragWindow(); }"
+                 ondblclick="if (!event.target.closest('button, input, select, a, .no-drag')) { ui.toggleMaximize(); }">
+                <button onclick="ui.closeFolder()" class="btn-back no-drag">
                     <span class="material-icons-round">arrow_back</span>
                 </button>
-                <div class="tracks-title-area">
+                <div class="tracks-title-area flex-1">
                     <h2 id="panel-title" class="tracks-title">LOADING...</h2>
                     <p class="tracks-subtitle">/// ACCESS_GRANTED /// READY</p>
                 </div>
@@ -1659,8 +1670,8 @@
     </div>
 
     <!-- 🎛️ Cyber Mech Parametric EQ Custom Modal -->
-    <div id="eq-modal" class="hidden fixed inset-0 z-[999999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4" onclick="ui.closeEqModal()">
-        <div class="w-[620px] bg-[#0c1017] border-2 border-emerald-500/60 p-6 shadow-[0_0_40px_rgba(16,185,129,0.25)] flex flex-col gap-4 font-mono text-emerald-400" onclick="event.stopPropagation()">
+    <div id="eq-modal" class="hidden fixed inset-0 z-[999999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 select-none overflow-hidden" onclick="ui.closeEqModal()" onwheel="event.stopPropagation()">
+        <div class="w-[620px] bg-[#0c1017] border-2 border-emerald-500/60 p-6 shadow-[0_0_40px_rgba(16,185,129,0.25)] flex flex-col gap-4 font-mono text-emerald-400" onclick="event.stopPropagation()" onwheel="event.stopPropagation()">
             <div class="flex justify-between items-center border-b border-emerald-500/30 pb-3">
                 <div class="flex items-center gap-2">
                     <span class="material-icons-round text-emerald-400 text-xl">equalizer</span>
@@ -1719,12 +1730,14 @@
     <!-- 主題快速切換選單 (置於 body 根目錄，防 clip-path 裁切) -->
     <div class="theme-menu" id="theme-menu">
         <div class="theme-menu-header">/// SELECT_THEME</div>
+        <button onclick="pywebview.api.change_theme('STRATA.html')" class="theme-menu-item text-amber-400 font-bold">🧊 STRATA 3D</button>
         <button onclick="pywebview.api.change_theme('needy_theme.html')" class="theme-menu-item">✨ Internet Angel</button>
         <button onclick="pywebview.api.change_theme('cyberpunk.html')" class="theme-menu-item">⚡ Cyberpunk</button>
         <button onclick="pywebview.api.change_theme('mech_theme.html')" class="theme-menu-item active">🤖 Cyber Mech</button>
         <button onclick="pywebview.api.change_theme('index.html')" class="theme-menu-item">🎵 Default Dark</button>
         <button onclick="pywebview.api.change_theme('light.html')" class="theme-menu-item">🌸 Light Ambient</button>
         <button onclick="pywebview.api.change_theme('image_theme.html')" class="theme-menu-item">🖼️ Immersive Glass</button>
+        <button onclick="pywebview.api.change_theme('DEV.html')" class="theme-menu-item font-mono text-yellow-400">🛠️ DEV Mode</button>
     </div>
 
     <!-- 設置面板 -->
@@ -1853,6 +1866,7 @@
             isProcessing: false,
             isDragging: false,
             currentTrackPath: null,
+            lastHighlightedPath: null,
             particles: null,
             settingsOpen: false,
             themeMenuOpen: false,
@@ -1919,15 +1933,22 @@
 
             toggleEqModal: () => {
                 const modal = document.getElementById('eq-modal');
-                if (modal) modal.classList.toggle('hidden');
+                if (modal) {
+                    if (modal.classList.contains('hidden')) ui.openEqModal();
+                    else ui.closeEqModal();
+                }
             },
             closeEqModal: () => {
                 const modal = document.getElementById('eq-modal');
                 if (modal) modal.classList.add('hidden');
+                const layer = document.getElementById('layer-folders');
+                if (layer) layer.style.overflowY = 'auto';
             },
             openEqModal: () => {
                 const modal = document.getElementById('eq-modal');
                 if (modal) modal.classList.remove('hidden');
+                const layer = document.getElementById('layer-folders');
+                if (layer) layer.style.overflowY = 'hidden';
             },
 
             initEqUI: async () => {
@@ -2062,6 +2083,11 @@
                     if (st.is_normalize !== undefined) ui.updateNormalizeState(st.is_normalize);
                     if (st.is_boot_mode !== undefined) ui.updateBootState(st.is_boot_mode);
                     if (st.current_path) ui.highlightTrack(st.current_path);
+
+                    if (pywebview.api.is_window_maximized) {
+                        const isMax = await pywebview.api.is_window_maximized();
+                        ui.updateMaximizeIcon(isMax);
+                    }
                 } catch(e) {
                     console.error("syncState error:", e);
                 }
@@ -2254,6 +2280,9 @@
                             <div class="track-status">READY</div>
                         </div>
                     `).join('');
+                    if (ui.currentTrackPath) {
+                        ui.highlightTrack(ui.currentTrackPath, true);
+                    }
                 } catch (error) {
                     list.innerHTML = `<div class="empty-state" style="color: #ef4444;">/// READ_ERROR</div>`;
                 }
@@ -2262,7 +2291,7 @@
             // 曲目點擊處理
             handleTrackClick: async (encodedPath, el) => {
                 const path = decodeURIComponent(encodedPath);
-                ui.highlightTrack(path);
+                ui.highlightTrack(path, true);
                 
                 try {
                     await pywebview.api.play_video(path);
@@ -2271,11 +2300,18 @@
                 }
             },
 
-            // 高亮當前曲目
-            highlightTrack: (path) => {
+            // 高亮當前曲目 (避免 500ms 定時器劫持滑鼠滾輪)
+            highlightTrack: (path, forceScroll = false) => {
                 if (!path) return;
                 const cleanPath = path.replace(/\\/g, '/');
                 ui.currentTrackPath = cleanPath;
+
+                const trackLayer = document.getElementById('layer-tracks');
+                if (!trackLayer || !trackLayer.classList.contains('active')) return;
+
+                const trackChanged = (ui.lastHighlightedPath !== cleanPath);
+                if (!trackChanged && !forceScroll) return;
+                ui.lastHighlightedPath = cleanPath;
                 
                 document.querySelectorAll('.track-item').forEach(item => {
                     const rawDataPath = item.dataset.path || '';
@@ -2285,7 +2321,7 @@
                     
                     const isActive = (itemPath === cleanPath);
                     item.classList.toggle('active', isActive);
-                    if (isActive && document.getElementById('layer-tracks').classList.contains('active')) {
+                    if (isActive && (trackChanged || forceScroll)) {
                         try { item.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch(e) {}
                     }
                 });
@@ -2295,6 +2331,32 @@
             closeFolder: () => {
                 document.getElementById('layer-folders').classList.remove('depth-mode');
                 document.getElementById('layer-tracks').classList.remove('active');
+                ui.lastHighlightedPath = null;
+            },
+
+            dragWindow: () => {
+                if (window.pywebview && pywebview.api && pywebview.api.drag_window) {
+                    pywebview.api.drag_window();
+                }
+            },
+
+            minimizeWindow: () => {
+                if (window.pywebview && pywebview.api && pywebview.api.minimize_window) {
+                    pywebview.api.minimize_window();
+                }
+            },
+
+            toggleMaximize: async () => {
+                if (window.pywebview && pywebview.api && pywebview.api.toggle_maximize_window) {
+                    const isMax = await pywebview.api.toggle_maximize_window();
+                    ui.updateMaximizeIcon(isMax);
+                }
+            },
+
+            updateMaximizeIcon: (isMax) => {
+                document.querySelectorAll('.icon-max-symbol').forEach(el => {
+                    el.innerText = isMax ? 'filter_none' : 'crop_square';
+                });
             },
 
             // 掃描文件夾

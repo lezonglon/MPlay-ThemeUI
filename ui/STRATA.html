@@ -1,0 +1,2940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPlay // STRATA (AEROSPACE & 3D GLASS MONOLITH OS)</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,500;0,600;0,700;1,600&family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        :root {
+            /* 1. 極簡岩板與深淵黑曜底色 (Obsidian & Mineral Slate) */
+            --bg-void: #050807;
+            --bg-stone: #090e0c;
+            --bg-panel: rgba(12, 19, 15, 0.82);
+            --bg-card: rgba(18, 28, 22, 0.88);
+
+            /* 2. 科技純白 (Ceramic Polar Tech White) */
+            --tech-white: #f5f8f6;
+            --tech-white-dim: #9cb1a5;
+            --tech-white-glow: rgba(245, 248, 246, 0.45);
+
+            /* 3. 厚水晶玻璃物理光澤 (Refractive Lucite / Optical Crystal Glass) */
+            --glass-bevel: rgba(255, 255, 255, 0.42);
+            --glass-specular: rgba(255, 255, 255, 0.2);
+            --glass-subsurface: rgba(140, 200, 180, 0.06);
+            --glass-shadow: rgba(0, 0, 0, 0.85);
+
+            /* 4. 黃水晶格與琥珀金輝 (Citrine Amber & Thrust Gold) */
+            --citrine-gold: #ffaa00;
+            --citrine-bright: #ffc44d;
+            --citrine-glow: rgba(255, 170, 0, 0.4);
+
+            /* 5. 航太極地天際藍 (Glacial Sky Blue & Flight Telemetry) */
+            --aero-blue: #4fa8ff;
+            --aero-blue-bright: #8ac2ff;
+            --aero-blue-glow: rgba(79, 168, 255, 0.35);
+
+            /* 6. 點綴青瓷綠 (Restrained Celadon Spot - 僅精準點綴航向/在線狀態) */
+            --spot-celadon: #52a87a;
+            --spot-celadon-glow: rgba(82, 168, 122, 0.45);
+
+            /* 7. 工業極細線條 (Precision Hairlines) */
+            --hairline-light: rgba(255, 255, 255, 0.16);
+            --hairline-dim: rgba(255, 255, 255, 0.08);
+            --hairline-amber: rgba(255, 170, 0, 0.45);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-void);
+            color: var(--tech-white);
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .tech { font-family: 'Chakra Petch', sans-serif; }
+
+        /* ========================================================================= */
+        /* 🌌 宏觀雙界天際線、氣態行星環與飛船遙測底層 (Macro Atmosphere Backdrop)     */
+        /* ========================================================================= */
+        #macro-backdrop {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+            background: linear-gradient(180deg, #0d161a 0%, #081013 32%, #050807 68%, #030504 100%);
+        }
+
+        /* 雙界雷射水平線 (Dividing Horizon Laser) */
+        .horizon-laser {
+            position: absolute;
+            left: 0; right: 0; top: 46%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 15%, #ffffff 50%, rgba(255,255,255,0.1) 85%, transparent 100%);
+            box-shadow: 0 0 16px rgba(255, 255, 255, 0.7), 0 0 35px var(--aero-blue-glow);
+        }
+
+        /* 等高線地形底紋 (Contour Lines) */
+        .contour-lines {
+            background-image: 
+                radial-gradient(circle at 85% 15%, rgba(79, 168, 255, 0.06) 0%, transparent 45%),
+                radial-gradient(circle at 15% 85%, rgba(255, 170, 0, 0.04) 0%, transparent 45%),
+                repeating-radial-gradient(circle at 75% 42%, transparent 0, transparent 28px, rgba(255,255,255,0.015) 29px, transparent 30px);
+        }
+
+        /* 宏觀向量飛船 WB-027 水印 (Pure Vector Blueprint SVG - 0 Bytes Disk Asset) */
+        .vessel-vector-backdrop {
+            position: absolute;
+            right: -60px;
+            top: 4%;
+            width: 760px;
+            height: 480px;
+            opacity: 0.14;
+            transform: rotate(-5deg);
+            pointer-events: none;
+            mix-blend-mode: screen;
+        }
+
+        /* 45° 鋒利斜切邊 (Precision Chamfer Cut) */
+        .chamfer-cut {
+            clip-path: polygon(0 12px, 12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px));
+        }
+        .chamfer-cut-sm {
+            clip-path: polygon(0 7px, 7px 0, calc(100% - 7px) 0, 100% 7px, 100% calc(100% - 7px), calc(100% - 7px) 100%, 7px 100%, 0 calc(100% - 7px));
+        }
+
+        /* 液態玻璃底條 (Refractive Liquid Glass Base) */
+        .liquid-glass {
+            background: var(--bg-panel);
+            backdrop-filter: blur(28px) saturate(180%);
+            border: 1px solid var(--hairline-light);
+            border-top: 1px solid rgba(255, 255, 255, 0.35);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+        /* 陶瓷科技白名牌 (Ceramic Tech White Pill) */
+        .ceramic-white-card {
+            background: linear-gradient(135deg, #ffffff 0%, #e2ece6 100%);
+            color: #080d0a;
+            border: 1px solid #ffffff;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45), 0 0 16px var(--tech-white-glow);
+        }
+
+        /* ========================================================================= */
+        /* 🧊 虛擬立體化透明玻璃面板 (3D Holographic Glass Slab & Accordion Engine)   */
+        /* ========================================================================= */
+        .perspective-stage {
+            perspective: 1500px;
+            perspective-origin: 50% 50%;
+            transform-style: preserve-3d;
+        }
+
+        .perspective-grid {
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* 外層包裝器（用於容納卡扣與反射） */
+        .slab-wrapper {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), z-index 0.2s ease;
+            cursor: pointer;
+            min-height: 290px;
+            transform-origin: center center;
+        }
+        .slab-wrapper:hover {
+            z-index: 55 !important;
+            isolation: isolate;
+        }
+        .slab-wrapper.is-active {
+            z-index: 60 !important;
+            isolation: isolate;
+        }
+
+        /* ========================================================================= */
+        /* 🧊 沉重光學厚水晶玻璃面板 (The Heavy Optical Lucite Monolith)              */
+        /* 具備通透折射清澈感，乾淨映襯自訂背景，同時保有 24mm 物理厚度與折射不消失  */
+        /* ========================================================================= */
+        .crystal-glass-slab {
+            position: relative;
+            background: linear-gradient(150deg, rgba(255, 255, 255, 0.10) 0%, rgba(24, 38, 30, 0.30) 35%, rgba(10, 18, 14, 0.48) 100%);
+            backdrop-filter: blur(14px) saturate(145%) contrast(105%);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-top: 1px solid rgba(255, 255, 255, 0.42);
+            border-left: 1px solid rgba(255, 255, 255, 0.24);
+            border-right: 1px solid rgba(0, 0, 0, 0.45);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.70);
+            box-shadow: 
+                0 20px 42px rgba(0, 0, 0, 0.75),
+                0 8px 16px rgba(0, 0, 0, 0.58),
+                inset 0 1px 0 rgba(255, 255, 255, 0.28),
+                inset 0 0 16px rgba(0, 0, 0, 0.22);
+            transition: border-color 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        /* 🧊 玻璃厚度實體透光虛影 (Glass Thickness Optical Ghost Silhouette - 輕透陰影不遮擋壁紙) */
+        .glass-thickness-ghost {
+            position: absolute;
+            inset: 0;
+            background: rgba(4, 10, 7, 0.32);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transform: translate3d(7px, 12px, -18px);
+            filter: blur(5px);
+            box-shadow: 
+                0 18px 36px rgba(0, 0, 0, 0.65),
+                0 6px 14px rgba(0, 0, 0, 0.55);
+            pointer-events: none;
+            z-index: 1;
+            transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.35s ease, filter 0.35s ease;
+        }
+        .slab-wrapper:hover .glass-thickness-ghost {
+            transform: translate3d(10px, 16px, -24px);
+            filter: blur(6px);
+            box-shadow: 
+                0 24px 48px rgba(0, 0, 0, 0.75),
+                0 8px 18px rgba(0, 0, 0, 0.65);
+        }
+        .slab-wrapper.is-active .glass-thickness-ghost {
+            transform: translate3d(12px, 18px, -28px);
+            filter: blur(7px);
+            box-shadow: 
+                0 28px 56px rgba(0, 0, 0, 0.80),
+                0 10px 22px rgba(0, 0, 0, 0.70);
+        }
+
+        /* 沉降式厚玻璃卡匣槽 (Deep Recessed Bevel Frame - 半透卡匣底) */
+        .glass-inner-recess {
+            background: rgba(6, 10, 8, 0.45) !important;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.65), 0 2px 6px rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 1. 最上層實體原圖 (Base Artwork - 上層清晰可見，不設模糊) */
+        .glass-base-artwork {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            image-rendering: -webkit-optimize-contrast;
+            transition: transform 0.25s ease;
+        }
+
+        /* 2. 微弱內層透光虛像 (Internal Specular Ghost - 0.08 低不透明度微弱折射，避免 3D 眩暈) */
+        .glass-ghost-layer {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.08;
+            mix-blend-mode: screen;
+            filter: blur(0.6px) brightness(1.08);
+            pointer-events: none;
+            transition: transform 0.16s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.25s ease;
+            z-index: 12;
+        }
+        .slab-wrapper:hover .glass-ghost-layer {
+            opacity: 0.13;
+        }
+        .slab-wrapper.is-active .glass-ghost-layer {
+            opacity: 0.16;
+        }
+
+        /* 3. 柔和內嵌晶體倒影斜切高光 (Internal Prism Chamfer Reflection) */
+        .glass-internal-bevel {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 40%, rgba(255,255,255,0.02) 80%, transparent 100%);
+            z-index: 14;
+        }
+
+        /* 4. 表層動態鏡面高光條 (Surface Specular Sheen Glare - 柔和冷光掠過) */
+        .glass-specular-sheen {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(120deg, transparent 32%, rgba(255, 255, 255, 0.09) 50%, transparent 68%);
+            opacity: 0.42;
+            mix-blend-mode: screen;
+            transition: opacity 0.3s ease;
+            z-index: 25;
+        }
+        .slab-wrapper:hover .glass-specular-sheen {
+            opacity: 0.68;
+        }
+
+        /* 5. 厚玻璃下緣折射台 (Subtle Refraction Bottom Shelf) */
+        .glass-bottom-facet {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.02) 100%);
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        /* 手風琴 3D 折疊排布 (Accordion Horizon Mode) */
+        .view-accordion .slab-wrapper {
+            transform: rotateY(-6deg) rotateX(1deg) translateZ(0);
+        }
+        .view-accordion .slab-wrapper:hover {
+            transform: rotateY(0deg) rotateX(0deg) translateZ(36px) scale(1.02);
+            z-index: 55 !important;
+        }
+        .view-accordion .slab-wrapper:hover .crystal-glass-slab {
+            border-color: rgba(255, 170, 0, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.22);
+            box-shadow: 
+                0 36px 72px rgba(0, 0, 0, 0.98),
+                0 0 25px rgba(255, 170, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+        .view-accordion .slab-wrapper.is-active {
+            transform: rotateY(0deg) rotateX(0deg) translateZ(42px) scale(1.025);
+            z-index: 60 !important;
+        }
+        .view-accordion .slab-wrapper.is-active .crystal-glass-slab {
+            border-color: var(--citrine-gold);
+            border-top: 1.5px solid var(--citrine-bright);
+            box-shadow: 
+                0 40px 80px rgba(0, 0, 0, 0.99),
+                0 0 32px var(--citrine-glow),
+                inset 0 1px 0 rgba(255, 255, 255, 0.22);
+        }
+
+        /* 垂直全像堆疊模式 (Isometric Slab Stack Mode - 修正視角擴散與下層裁切) */
+        .view-stack .perspective-grid {
+            transform: none !important;
+        }
+        .view-stack .slab-wrapper {
+            transform: perspective(1100px) rotateX(14deg) rotateZ(-2deg) translateZ(8px);
+            transform-origin: center center;
+        }
+        .view-stack .slab-wrapper:hover {
+            transform: perspective(1100px) rotateX(2deg) rotateZ(0deg) translateZ(40px) scale(1.025);
+            z-index: 55 !important;
+        }
+        .view-stack .slab-wrapper:hover .crystal-glass-slab {
+            border-color: rgba(255, 170, 0, 0.35);
+            border-top: 1px solid rgba(255, 255, 255, 0.55);
+            box-shadow: 
+                0 32px 64px rgba(0, 0, 0, 0.88),
+                0 0 22px rgba(255, 170, 0, 0.20),
+                inset 0 1px 0 rgba(255, 255, 255, 0.35);
+        }
+        .view-stack .slab-wrapper.is-active {
+            transform: perspective(1100px) rotateX(0deg) rotateZ(0deg) translateZ(48px) scale(1.03);
+            z-index: 60 !important;
+        }
+        .view-stack .slab-wrapper.is-active .crystal-glass-slab {
+            border-color: var(--citrine-gold);
+            border-top: 1.5px solid var(--citrine-bright);
+            box-shadow: 
+                0 38px 76px rgba(0, 0, 0, 0.95),
+                0 0 30px var(--citrine-glow),
+                inset 0 1px 0 rgba(255, 255, 255, 0.40);
+        }
+
+        /* 純淨平視網格 (Flat Grid Mode) */
+        .view-grid .slab-wrapper {
+            transform: none !important;
+        }
+        .view-grid .slab-wrapper:hover {
+            transform: translateY(-5px) scale(1.015) !important;
+            z-index: 55 !important;
+        }
+        .view-grid .slab-wrapper.is-active {
+            transform: translateY(-6px) scale(1.02) !important;
+            z-index: 60 !important;
+        }
+
+        /* 鈦金屬實體夾具扣件 (Titanium Precision Glass Clamps - 柔和深色鈦金屬，與灰黑背景融合) */
+        .clamp-bracket {
+            position: absolute;
+            width: 16px;
+            height: 6px;
+            background: linear-gradient(180deg, #324338 0%, #1a251e 100%);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.75);
+            z-index: 25;
+            border-radius: 1px;
+            pointer-events: none;
+        }
+        .clamp-bracket::after {
+            content: '';
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #080d0a;
+            border-radius: 50%;
+            top: 1px;
+            left: 5.5px;
+            box-shadow: inset 0 0.5px 0 rgba(255,255,255,0.25);
+        }
+        .clamp-tl { top: -3px; left: 22px; }
+        .clamp-tr { top: -3px; right: 22px; }
+        .clamp-bl { bottom: -3px; left: 22px; }
+        .clamp-br { bottom: -3px; right: 22px; }
+
+        /* 貫穿光柱 (Zenith Laser Beam) */
+        #zenith-beam {
+            position: absolute;
+            top: 0;
+            bottom: 60px;
+            width: 2px;
+            background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.1) 15%, #ffffff 50%, rgba(255,255,255,0.1) 85%, transparent 100%);
+            box-shadow: 0 0 16px rgba(255, 255, 255, 0.9), 0 0 32px var(--aero-blue-glow);
+            z-index: 4;
+            pointer-events: none;
+            transition: left 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+            opacity: 0.9;
+        }
+
+        /* 玻璃面板倒影架 (Glass Reflection Shelf) */
+        .glass-reflection-shelf {
+            position: absolute;
+            bottom: -16px;
+            left: 8%;
+            right: 8%;
+            height: 14px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, transparent 100%);
+            filter: blur(3px);
+            opacity: 0.4;
+            pointer-events: none;
+            border-radius: 2px;
+        }
+
+        /* 航太飛船推進儀表 HUD (WB-027 Avionics Telemetry HUD) */
+        .hud-arc-gauge {
+            width: 22px;
+            height: 22px;
+            transform: rotate(-90deg);
+            flex-shrink: 0;
+        }
+        .hud-arc-bg {
+            stroke: rgba(255, 255, 255, 0.12);
+            stroke-width: 3.5;
+            fill: none;
+        }
+        .hud-arc-val {
+            stroke: var(--citrine-bright);
+            stroke-width: 3.5;
+            fill: none;
+            stroke-dasharray: 100;
+            stroke-dashoffset: 0;
+            filter: drop-shadow(0 0 4px var(--citrine-glow));
+            transition: stroke-dashoffset 0.6s ease;
+        }
+
+        .flight-vector-box {
+            background: rgba(12, 18, 14, 0.95);
+            border: 1px solid var(--hairline-light);
+            border-left: 2px solid var(--citrine-gold);
+            backdrop-filter: blur(16px);
+            height: 34px;
+            min-height: 34px;
+            max-height: 34px;
+            box-sizing: border-box;
+        }
+
+        /* 按鈕系統 */
+        .btn-strata {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            border-radius: 2px;
+        }
+        .btn-strata-dark {
+            background: rgba(20, 30, 24, 0.85);
+            border: 1px solid var(--hairline-light);
+            color: var(--tech-white);
+        }
+        .btn-strata-dark:hover {
+            background: rgba(255, 255, 255, 0.14);
+            border-color: #ffffff;
+            color: #ffffff;
+            box-shadow: 0 0 14px var(--tech-white-glow);
+        }
+        .btn-strata-active {
+            background: var(--citrine-gold) !important;
+            color: #060907 !important;
+            border-color: var(--citrine-bright) !important;
+            box-shadow: 0 0 16px var(--citrine-glow) !important;
+        }
+
+        /* 視窗拖拽 */
+        .pywebview-drag-region { -webkit-app-region: drag; }
+        .no-drag, button, input, select, a, .slab-wrapper, .modal-interactive { -webkit-app-region: no-drag; }
+
+        /* 歌單列表動態等化器音波與播放高亮特效 */
+        .track-row-playing {
+            border-color: var(--citrine-bright) !important;
+            background: linear-gradient(90deg, rgba(255, 170, 0, 0.22) 0%, rgba(255, 170, 0, 0.06) 100%) !important;
+            box-shadow: 0 0 18px var(--citrine-glow), inset 0 0 12px var(--citrine-glow) !important;
+            position: relative;
+            overflow: hidden;
+        }
+        .track-row-playing::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+            animation: trackScanline 2.2s infinite linear;
+            pointer-events: none;
+        }
+        @keyframes trackScanline {
+            0% { left: -100%; }
+            100% { left: 200%; }
+        }
+        @keyframes eqBounce1 { 0%, 100% { height: 3px; } 50% { height: 14px; } }
+        @keyframes eqBounce2 { 0%, 100% { height: 14px; } 50% { height: 4px; } }
+        @keyframes eqBounce3 { 0%, 100% { height: 6px; } 50% { height: 13px; } }
+        @keyframes eqBounce4 { 0%, 100% { height: 12px; } 50% { height: 5px; } }
+        .playing-equalizer-bars {
+            display: inline-flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 14px;
+            width: 15px;
+            flex-shrink: 0;
+        }
+        .playing-equalizer-bars .bar {
+            width: 2.2px;
+            background: var(--citrine-bright);
+            border-radius: 1px;
+            box-shadow: 0 0 6px var(--citrine-bright);
+        }
+        .playing-equalizer-bars .bar-1 { animation: eqBounce1 0.75s ease-in-out infinite; }
+        .playing-equalizer-bars .bar-2 { animation: eqBounce2 0.6s ease-in-out infinite 0.12s; }
+        .playing-equalizer-bars .bar-3 { animation: eqBounce3 0.85s ease-in-out infinite 0.25s; }
+        .playing-equalizer-bars .bar-4 { animation: eqBounce4 0.7s ease-in-out infinite 0.1s; }
+
+        /* 徹底隱藏與杜絕水平捲軸 (No Horizontal Scrollbar) */
+        #stage-container {
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
+        }
+        #stage-container::-webkit-scrollbar {
+            width: 5px;
+            height: 0px !important;
+        }
+        #stage-container::-webkit-scrollbar-horizontal {
+            display: none !important;
+            height: 0px !important;
+        }
+        #stage-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        #stage-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 3px;
+        }
+        #stage-container::-webkit-scrollbar-thumb:hover {
+            background: var(--citrine-bright);
+        }
+
+        /* 全域自訂捲軸與絕對禁止橫向捲軸 */
+        html, body, main, #stage-container {
+            overflow-x: hidden !important;
+        }
+        ::-webkit-scrollbar { width: 5px; height: 0px !important; }
+        ::-webkit-scrollbar:horizontal { display: none !important; height: 0px !important; width: 0px !important; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.18); border-radius: 2px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--citrine-gold); }
+
+        /* 顏色選單、桌布選單與主題選單高對比度實心黑曜玻璃樣式 (Fix Dropdown Clarity) */
+        #palette-dropdown, #wallpaper-dropdown, #theme-dropdown {
+            background-color: #080d0a !important;
+            background: #080d0a !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            border-top: 1.5px solid rgba(255, 255, 255, 0.6) !important;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.98), 0 0 30px rgba(0, 0, 0, 0.95) !important;
+            z-index: 9999 !important;
+        }
+
+        /* 播放進度條推桿 (Precision Deck Seek Slider with Chroma Gradient) */
+        input[type=range].deck-seek-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            height: 18px;
+            cursor: pointer;
+            width: 100%;
+            margin: 0;
+            display: block;
+        }
+        input[type=range].deck-seek-slider:focus {
+            outline: none;
+        }
+        input[type=range].deck-seek-slider::-webkit-slider-runnable-track {
+            height: 6px;
+            background: transparent;
+            border: none;
+        }
+        input[type=range].deck-seek-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 15px;
+            background: var(--tech-white);
+            border: 1.5px solid var(--citrine-bright);
+            box-shadow: 0 0 10px var(--citrine-glow), 0 2px 4px rgba(0,0,0,0.8);
+            border-radius: 2px;
+            margin-top: -4.5px;
+            transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+        }
+        input[type=range].deck-seek-slider:hover::-webkit-slider-thumb,
+        input[type=range].deck-seek-slider:active::-webkit-slider-thumb {
+            transform: scale(1.25);
+            background: var(--citrine-bright);
+            box-shadow: 0 0 16px var(--citrine-bright);
+        }
+    </style>
+</head>
+<body class="flex flex-col contour-lines">
+
+    <!-- ========================================================================= -->
+    <!-- 🌌 背景層：雙界地平線、巨大氣態天球、向量 WB-027 巡航機線框與貫穿光柱       -->
+    <!-- ========================================================================= -->
+    <div id="macro-backdrop">
+        <!-- 自訂背景圖片層 (支援通透玻璃折射) -->
+        <div id="custom-wallpaper-bg" class="absolute inset-0 bg-cover bg-center transition-all duration-700 opacity-0 pointer-events-none"></div>
+        <!-- 自訂壁紙微幅暗角與對比優化層 (確保文字與玻璃層次鮮明) -->
+        <div id="custom-wallpaper-overlay" class="absolute inset-0 bg-black/40 pointer-events-none transition-all duration-500 opacity-0"></div>
+
+        <!-- 巨大氣態行星環軌 -->
+        <svg class="absolute -top-72 left-1/2 -translate-x-1/2 w-[1500px] h-[1500px] opacity-20" viewBox="0 0 800 800" fill="none">
+            <circle cx="400" cy="400" r="390" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-dasharray="14 10"/>
+            <ellipse cx="400" cy="400" rx="450" ry="130" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+            <ellipse cx="400" cy="400" rx="490" ry="150" stroke="rgba(79,168,255,0.22)" stroke-width="1" stroke-dasharray="8 6"/>
+            <path d="M 70 370 Q 240 320 400 380 T 730 350" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+        </svg>
+
+        <!-- 純向量科技飛船 WB-027 巡航水印藍圖 (0 Bytes Asset Blueprint) -->
+        <svg class="vessel-vector-backdrop" viewBox="0 0 600 360" fill="none">
+            <!-- 飛船主機身與前掠/後掠翼複合翼線框 -->
+            <path d="M 300 30 L 320 110 L 460 210 L 480 230 L 360 230 L 330 320 L 300 300 L 270 320 L 240 230 L 120 230 L 140 210 L 280 110 Z" 
+                  stroke="rgba(255,255,255,0.4)" stroke-width="1.5" fill="rgba(79,168,255,0.03)"/>
+            <!-- 翼面結構骨架線 -->
+            <line x1="300" y1="30" x2="300" y2="300" stroke="rgba(255,255,255,0.5)" stroke-width="1" stroke-dasharray="4 4"/>
+            <line x1="280" y1="110" x2="320" y2="110" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+            <line x1="240" y1="230" x2="360" y2="230" stroke="rgba(255,170,0,0.5)" stroke-width="1.5"/>
+            <!-- 雙發動機矢量噴口 -->
+            <rect x="282" y="305" width="12" height="18" fill="rgba(255,170,0,0.3)" stroke="rgba(255,170,0,0.8)"/>
+            <rect x="306" y="305" width="12" height="18" fill="rgba(255,170,0,0.3)" stroke="rgba(255,170,0,0.8)"/>
+            <!-- 航跡矢量標尺與雷達同心環 -->
+            <circle cx="300" cy="180" r="140" stroke="rgba(255,255,255,0.12)" stroke-width="1" stroke-dasharray="6 6"/>
+            <circle cx="300" cy="180" r="80" stroke="rgba(79,168,255,0.2)" stroke-width="1"/>
+            <path d="M 120 180 L 480 180" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            <path d="M 300 40 L 300 320" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            <text x="370" y="220" fill="rgba(255,255,255,0.4)" font-family="monospace" font-size="9">WB-027 VECTOR</text>
+        </svg>
+
+        <!-- 雙極地平線雷射光軌 -->
+        <div class="horizon-laser"></div>
+
+        <!-- 貫穿玻璃層的中央光柱 -->
+        <div id="zenith-beam"></div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 🏛️ 頂部系統導航列：音訊串接矩陣、EQ、3D 視角、飛船 HUD、視窗控制項            -->
+    <!-- ========================================================================= -->
+    <header onmousedown="if (event.target.closest('button, input, select, a, .no-drag') === null && window.pywebview && pywebview.api && pywebview.api.drag_window) pywebview.api.drag_window();"
+            class="pywebview-drag-region relative z-[200] h-12 bg-[#060b08]/96 backdrop-blur-md border-b border-[var(--hairline-light)] px-5 flex items-center justify-between select-none">
+        
+        <!-- 左側：STRATA 品牌標記、音訊串接矩陣按鈕與狀態 -->
+        <div class="flex items-center gap-2.5 no-drag shrink-0">
+            <div class="ceramic-white-card chamfer-cut-sm px-2.5 py-1 flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0" onclick="ui.scanNewFolder()" title="Scan Media Folder into Library">
+                <span class="w-2 h-2 bg-[var(--citrine-gold)] rounded-xs shadow-[0_0_8px_var(--citrine-gold)] shrink-0"></span>
+                <span class="font-extrabold text-xs tracking-wider tech">STRATA</span>
+                <span class="text-[9px] font-mono font-bold bg-[#080d0a] text-white px-1.5 py-0.2 rounded-xs">+ SCAN</span>
+            </div>
+
+            <div class="h-3 w-[1px] bg-white/20 shrink-0"></div>
+
+            <!-- 音訊串接狀態快捷按鈕 (Audio Bridge & Multi-Speaker Matrix Pill) -->
+            <button onclick="ui.openBridgeModal()" id="btn-top-bridge" class="btn-strata btn-strata-dark text-[10px] py-1 px-2 chamfer-cut-sm flex items-center gap-1.5 whitespace-nowrap shrink-0" title="Configure Audio Bridge & Matrix (音訊串接矩陣與空間音訊)">
+                <span class="w-1.5 h-1.5 bg-[var(--spot-celadon)] rounded-full shadow-[0_0_6px_var(--spot-celadon)] shrink-0" id="bridge-indicator"></span>
+                <span class="font-mono font-bold tracking-tight" id="bridge-status-txt">MATRIX</span>
+            </button>
+
+            <!-- 10-Band EQ & DSP 按鈕 -->
+            <button onclick="ui.openEqModal()" id="btn-top-eq" class="btn-strata btn-strata-dark text-[10px] py-1 px-2 chamfer-cut-sm flex items-center gap-1 whitespace-nowrap shrink-0" title="10-Band Equalizer & Hi-Res DSP">
+                <span class="material-icons-round text-xs text-[var(--citrine-gold)] shrink-0">equalizer</span>
+                <span class="font-mono font-bold tracking-tight">EQ</span>
+            </button>
+        </div>
+
+        <!-- 中間：3D 視角切換器 (Holographic Glass Mode Switcher) -->
+        <div class="hidden md:flex items-center gap-1 bg-[#0e1612] p-0.5 rounded border border-white/10 no-drag text-[10px] font-mono shrink-0">
+            <button onclick="ui.setViewMode('accordion')" id="view-mode-accordion" class="btn-strata btn-strata-active chamfer-cut-sm flex items-center gap-1.5 whitespace-nowrap shrink-0 py-1 px-2.5" title="Folded 3D Accordion Glass Plates (手風琴 3D 懸浮)">
+                <span class="material-icons-round text-xs shrink-0">view_carousel</span>
+                <span class="tracking-tight">ACCORDION</span>
+            </button>
+            <button onclick="ui.setViewMode('stack')" id="view-mode-stack" class="btn-strata btn-strata-dark chamfer-cut-sm flex items-center gap-1.5 whitespace-nowrap shrink-0 py-1 px-2.5" title="Stacked Vertical Holographic Glass Slabs (立體厚水晶堆疊)">
+                <span class="material-icons-round text-xs shrink-0">layers</span>
+                <span class="tracking-tight">STACK</span>
+            </button>
+            <button onclick="ui.setViewMode('grid')" id="view-mode-grid" class="btn-strata btn-strata-dark chamfer-cut-sm flex items-center gap-1.5 whitespace-nowrap shrink-0 py-1 px-2.5" title="Flat Precision Macro Grid (平面正交矩陣)">
+                <span class="material-icons-round text-xs shrink-0">grid_view</span>
+                <span class="tracking-tight">GRID</span>
+            </button>
+        </div>
+
+        <!-- 右側：主題色切換 + 壁紙切換 + 系統遙測 HUD + DEV 主題矩陣選單 + 視窗控制按鈕 -->
+        <div class="flex items-center gap-2 no-drag shrink-0">
+            <!-- 主題色彩調色盤切換器 (Accent Palette Switcher) -->
+            <div class="relative no-drag shrink-0">
+                <button onclick="ui.togglePalettePicker()" id="btn-palette-picker" class="btn-strata btn-strata-dark text-[10px] py-1 px-2 chamfer-cut-sm flex items-center gap-1 whitespace-nowrap shrink-0" title="Switch Theme Accent Hue (6 Styles)">
+                    <span class="w-2 h-2 rounded-full border border-white/60 shadow-[0_0_8px_var(--citrine-bright)] bg-[var(--citrine-bright)] transition-colors shrink-0" id="palette-current-dot"></span>
+                    <span class="font-mono text-[10px]">COLOR</span>
+                    <span class="text-[8px] text-white/50">▼</span>
+                </button>
+                <!-- 懸浮調色盤選單：純黑黑曜石實心背景，杜絕透光與重疊 -->
+                <div id="palette-dropdown" style="background: #080d0a !important; background-color: #080d0a !important; z-index: 9999 !important;" class="hidden absolute top-full right-0 mt-2 p-2.5 bg-[#080d0a] border border-white/30 rounded shadow-[0_20px_50px_rgba(0,0,0,0.98)] min-w-[185px] space-y-1.5 modal-interactive">
+                    <div class="text-[8.5px] font-mono text-gray-300 font-bold px-2 py-1 border-b border-white/20 uppercase tracking-wider flex items-center justify-between">
+                        <span>SELECT ACCENT COLOR</span>
+                        <span class="text-[8px] text-[var(--citrine-bright)] font-mono">STYLE</span>
+                    </div>
+                    <button onclick="ui.setPalette('amber')" id="pal-btn-amber" class="w-full text-left px-2 py-1.5 rounded text-[10.5px] font-mono flex items-center justify-between hover:bg-white/10 transition text-amber-400">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#ffaa00] shadow-[0_0_8px_#ffaa00]"></span>
+                            <span class="font-bold">AMBER GOLD</span>
+                        </div>
+                        <span class="pal-check text-[11px] text-amber-400 font-bold hidden">✓</span>
+                    </button>
+                    <button onclick="ui.setPalette('celadon')" id="pal-btn-celadon" class="w-full text-left px-2 py-1.5 rounded text-[10.5px] font-mono flex items-center justify-between hover:bg-white/10 transition text-emerald-400">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#2ef8a0] shadow-[0_0_8px_#2ef8a0]"></span>
+                            <span class="font-bold">CELADON JADE</span>
+                        </div>
+                        <span class="pal-check text-[11px] text-emerald-400 font-bold hidden">✓</span>
+                    </button>
+                    <button onclick="ui.setPalette('glacial')" id="pal-btn-glacial" class="w-full text-left px-2 py-1.5 rounded text-[10.5px] font-mono flex items-center justify-between hover:bg-white/10 transition text-cyan-400">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]"></span>
+                            <span class="font-bold">GLACIAL CYAN</span>
+                        </div>
+                        <span class="pal-check text-[11px] text-cyan-400 font-bold hidden">✓</span>
+                    </button>
+                    <button onclick="ui.setPalette('plasma')" id="pal-btn-plasma" class="w-full text-left px-2 py-1.5 rounded text-[10.5px] font-mono flex items-center justify-between hover:bg-white/10 transition text-purple-400">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#b845ff] shadow-[0_0_8px_#b845ff]"></span>
+                            <span class="font-bold">PLASMA VIOLET</span>
+                        </div>
+                        <span class="pal-check text-[11px] text-purple-400 font-bold hidden">✓</span>
+                    </button>
+                    <button onclick="ui.setPalette('crimson')" id="pal-btn-crimson" class="w-full text-left px-2 py-1.5 rounded text-[10.5px] font-mono flex items-center justify-between hover:bg-white/10 transition text-rose-400">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#ff334b] shadow-[0_0_8px_#ff334b]"></span>
+                            <span class="font-bold">SOLAR CRIMSON</span>
+                        </div>
+                        <span class="pal-check text-[11px] text-rose-400 font-bold hidden">✓</span>
+                    </button>
+                    <button onclick="ui.setPalette('white')" id="pal-btn-white" class="w-full text-left px-2 py-1.5 rounded text-[10.5px] font-mono flex items-center justify-between hover:bg-white/10 transition text-white">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#ffffff] shadow-[0_0_8px_#ffffff]"></span>
+                            <span class="font-bold">CHROMA WHITE</span>
+                        </div>
+                        <span class="pal-check text-[11px] text-white font-bold hidden">✓</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 背景桌布切換器 (Wallpaper Switcher) -->
+            <div class="relative no-drag shrink-0">
+                <button onclick="ui.toggleWallpaperDropdown()" id="btn-wallpaper-picker" class="btn-strata btn-strata-dark text-[10px] py-1 px-2 chamfer-cut-sm flex items-center gap-1 whitespace-nowrap shrink-0" title="Change Background Image (自訂背景圖片)">
+                    <span class="material-icons-round text-xs text-[var(--citrine-gold)] shrink-0">wallpaper</span>
+                    <span class="font-mono text-[10px] hidden sm:inline">WALL</span>
+                    <span class="text-[8px] text-white/50">▼</span>
+                </button>
+                <!-- 懸浮桌布選單 -->
+                <div id="wallpaper-dropdown" style="background: #080d0a !important; background-color: #080d0a !important; z-index: 9999 !important;" class="hidden absolute top-full right-0 mt-2 p-2.5 bg-[#080d0a] border border-white/30 rounded shadow-[0_20px_50px_rgba(0,0,0,0.98)] min-w-[210px] space-y-2 modal-interactive">
+                    <div class="text-[8.5px] font-mono text-gray-300 font-bold px-2 py-1 border-b border-white/20 uppercase tracking-wider flex items-center justify-between">
+                        <span>BACKGROUND IMAGE</span>
+                        <span id="wallpaper-status-pill" class="text-[8px] text-gray-400 font-mono">DEFAULT</span>
+                    </div>
+                    
+                    <button onclick="ui.selectCustomWallpaper()" class="w-full text-left px-2.5 py-1.5 rounded text-[10.5px] font-mono flex items-center gap-2 hover:bg-white/10 transition text-white font-bold bg-[#121c16] border border-white/10">
+                        <span class="material-icons-round text-sm text-[var(--citrine-gold)]">add_photo_alternate</span>
+                        <span>SELECT IMAGE...</span>
+                    </button>
+
+                    <button onclick="ui.resetWallpaper()" class="w-full text-left px-2.5 py-1.5 rounded text-[10.5px] font-mono flex items-center gap-2 hover:bg-white/10 transition text-gray-400 hover:text-white">
+                        <span class="material-icons-round text-sm text-red-400">restart_alt</span>
+                        <span>RESET DEFAULT</span>
+                    </button>
+
+                    <div class="pt-1.5 border-t border-white/10 space-y-1">
+                        <div class="flex justify-between items-center text-[9px] font-mono text-gray-400">
+                            <span>WALLPAPER DIM (暗度):</span>
+                            <span id="wallpaper-dim-disp" class="text-[var(--citrine-bright)] font-bold">40%</span>
+                        </div>
+                        <input type="range" id="wallpaper-dim-slider" min="0" max="80" value="40" step="5" class="w-full accent-[var(--citrine-gold)] cursor-pointer h-1" oninput="ui.onWallpaperDimInput(this.value)">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 系統即時遙測儀表與本地電腦時間 HUD (Interactive Telemetry & Local Clock - 固定 34px 高度零抖動) -->
+            <div class="flight-vector-box chamfer-cut-sm px-2.5 py-0.5 flex items-center gap-2 cursor-pointer hover:border-white/40 transition group h-[34px] min-h-[34px] max-h-[34px] shrink-0 whitespace-nowrap overflow-hidden select-none" 
+                 onclick="ui.cycleTelemetryMode()" title="System Telemetry: Click to Cycle BAT / RAM / CPU / NET">
+                <svg class="hud-arc-gauge w-5 h-5 shrink-0" viewBox="0 0 36 36">
+                    <path class="hud-arc-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    <path id="hud-thrust-val" class="hud-arc-val" stroke="var(--citrine-bright)" stroke-dasharray="100, 100" stroke-dashoffset="0" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                </svg>
+                <div class="text-[9px] font-mono leading-none flex flex-col justify-center whitespace-nowrap">
+                    <div class="text-[var(--citrine-bright)] font-bold flex items-center gap-1 leading-none whitespace-nowrap">
+                        <span id="hud-telemetry-label" class="whitespace-nowrap">BAT 100%</span>
+                        <span id="hud-ac-bolt" class="text-amber-400 text-[10px] hidden leading-none select-none">⚡</span>
+                        <span class="text-[7.5px] text-white/40 group-hover:text-white transition leading-none">↻</span>
+                    </div>
+                    <div class="text-white/80 font-bold mt-0.5 leading-none" id="flight-clock">00:00:00</div>
+                </div>
+            </div>
+
+            <!-- 主題與 DEV 切換選單 (Theme & DEV Selector Dropdown) -->
+            <div class="relative no-drag shrink-0">
+                <button onclick="ui.toggleThemeDropdown()" id="btn-theme-picker" class="btn-strata btn-strata-dark text-[10px] py-1 px-2 chamfer-cut-sm flex items-center gap-1 whitespace-nowrap shrink-0 group" title="Switch UI Theme / DEV OS (切換介面主題與開發者矩陣)">
+                    <span class="material-icons-round text-xs text-[var(--citrine-gold)] group-hover:rotate-180 transition-transform duration-300 shrink-0">swap_horiz</span>
+                    <span class="font-mono font-bold text-[10px]">DEV</span>
+                    <span class="text-[8px] text-white/50">▼</span>
+                </button>
+                <!-- 懸浮主題切換選單：純黑黑曜石實心背景，杜絕透光與重疊 -->
+                <div id="theme-dropdown" style="background: #080d0a !important; background-color: #080d0a !important; z-index: 9999 !important;" class="hidden absolute top-full right-0 mt-2 p-2 bg-[#080d0a] border border-white/30 rounded shadow-[0_20px_50px_rgba(0,0,0,0.98)] min-w-[210px] space-y-1 modal-interactive">
+                    <div class="text-[8.5px] font-mono text-gray-300 font-bold px-2 py-1 border-b border-white/20 uppercase tracking-wider flex items-center justify-between">
+                        <span>SWITCH UI THEME</span>
+                        <span class="text-[8px] text-[var(--citrine-bright)] font-mono">MATRIX</span>
+                    </div>
+                    
+                    <!-- 🛠️ DEV Mode 專屬直達 (置頂醒目金黃色卡匣) -->
+                    <button onclick="ui.switchTheme('DEV.html')" class="w-full text-left px-2 py-1.5 rounded text-[10.5px] font-mono flex items-center justify-between hover:bg-amber-400/20 transition text-amber-300 bg-amber-500/10 border border-amber-500/30">
+                        <div class="flex items-center gap-2">
+                            <span class="material-icons-round text-xs text-amber-400">terminal</span>
+                            <span class="font-bold">🛠️ DEV Mode</span>
+                        </div>
+                        <span class="text-[8px] font-mono px-1 py-0.2 rounded bg-amber-400/20 text-amber-300 font-bold">CORE</span>
+                    </button>
+
+                    <div class="h-[1px] bg-white/10 my-1"></div>
+
+                    <!-- 🧊 STRATA 3D (目前使用中主題) -->
+                    <button onclick="ui.switchTheme('STRATA.html')" class="w-full text-left px-2 py-1.5 rounded text-[10.5px] font-mono flex items-center justify-between transition text-[var(--citrine-gold)] bg-white/10 font-bold border border-white/20">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-xs bg-[var(--citrine-gold)] shadow-[0_0_6px_var(--citrine-gold)]"></span>
+                            <span>🧊 STRATA 3D</span>
+                        </div>
+                        <span class="text-[8px] text-[var(--citrine-gold)] font-mono font-bold">ACTIVE</span>
+                    </button>
+
+                    <!-- ✨ Internet Angel -->
+                    <button onclick="ui.switchTheme('needy_theme.html')" class="w-full text-left px-2 py-1.5 rounded text-[10.5px] font-mono flex items-center justify-between hover:bg-white/10 transition text-pink-300">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs">✨</span>
+                            <span>Internet Angel</span>
+                        </div>
+                    </button>
+
+                    <!-- ⚡ Cyberpunk 2077 -->
+                    <button onclick="ui.switchTheme('cyberpunk.html')" class="w-full text-left px-2 py-1.5 rounded text-[10.5px] font-mono flex items-center justify-between hover:bg-white/10 transition text-yellow-300">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs">⚡</span>
+                            <span>Cyberpunk 2077</span>
+                        </div>
+                    </button>
+
+                    <!-- 🤖 Cyber Mech -->
+                    <button onclick="ui.switchTheme('mech_theme.html')" class="w-full text-left px-2 py-1.5 rounded text-[10.5px] font-mono flex items-center justify-between hover:bg-white/10 transition text-cyan-300">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs">🤖</span>
+                            <span>Cyber Mech</span>
+                        </div>
+                    </button>
+
+                    <!-- 🖼️ Immersive Glass -->
+                    <button onclick="ui.switchTheme('image_theme.html')" class="w-full text-left px-2 py-1.5 rounded text-[10.5px] font-mono flex items-center justify-between hover:bg-white/10 transition text-purple-300">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs">🖼️</span>
+                            <span>Immersive Glass</span>
+                        </div>
+                    </button>
+
+                    <!-- 🌸 Light Ambient -->
+                    <button onclick="ui.switchTheme('light.html')" class="w-full text-left px-2 py-1.5 rounded text-[10.5px] font-mono flex items-center justify-between hover:bg-white/10 transition text-emerald-300">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs">🌸</span>
+                            <span>Light Ambient</span>
+                        </div>
+                    </button>
+
+                    <!-- 🎵 Default Dark -->
+                    <button onclick="ui.switchTheme('index.html')" class="w-full text-left px-2 py-1.5 rounded text-[10.5px] font-mono flex items-center justify-between hover:bg-white/10 transition text-gray-300">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs">🎵</span>
+                            <span>Default Dark</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 視窗控制按鈕 -->
+            <div class="flex items-center gap-1 shrink-0">
+                <button onclick="pywebview.api.minimize_window()" class="w-6 h-6 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 rounded text-xs">_</button>
+                <button onclick="pywebview.api.toggle_maximize_window()" class="w-6 h-6 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 rounded text-xs">□</button>
+                <button onclick="pywebview.api.close_app()" class="w-6 h-6 flex items-center justify-center text-red-400 hover:text-white hover:bg-red-600 rounded text-xs">✕</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========================================================================= -->
+    <!-- 🎴 核心主展區：3D 虛擬透明玻璃面板畫廊 (3D Glass Slab Album Showcase)       -->
+    <!-- ========================================================================= -->
+    <main class="relative z-10 flex-1 px-6 py-3.5 overflow-hidden flex flex-col justify-between gap-3">
+        
+        <!-- 畫廊上方功能條：分類篩選與快速搜尋 -->
+        <div class="flex items-center justify-between pb-2 border-b border-[var(--hairline-dim)]">
+            <div class="flex items-center gap-3">
+                <span class="text-xs font-bold font-mono text-white tracking-wider flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 bg-[var(--citrine-gold)] rounded-xs shadow-[0_0_8px_var(--citrine-gold)]"></span>
+                    HOLOGRAPHIC SOUND ARCHIVE
+                </span>
+                <span class="text-[11px] font-mono text-gray-400" id="library-count-label">Loading library albums...</span>
+            </div>
+
+            <!-- 篩選器與搜尋 -->
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-1 text-[10px] font-mono">
+                    <button onclick="ui.filterCategory('all')" id="filter-all" class="px-2.5 py-1 rounded font-bold bg-[var(--citrine-gold)] text-black">ALL</button>
+                    <button onclick="ui.filterCategory('favorites')" id="filter-favorites" class="px-2.5 py-1 rounded font-bold text-gray-400 hover:text-white">★ FAVORITES</button>
+                    <button onclick="ui.filterCategory('top10')" id="filter-top10" class="px-2.5 py-1 rounded font-bold text-gray-400 hover:text-white">⚡ TOP 10</button>
+                </div>
+
+                <div class="relative w-56">
+                    <input type="text" id="album-search" placeholder="Search archive..." 
+                           oninput="ui.onSearchInput(this.value)"
+                           class="w-full text-xs font-mono py-1 px-2.5 pl-7 rounded bg-[#101712] border border-white/15 text-white placeholder-gray-500 outline-none focus:border-[var(--citrine-gold)]">
+                    <span class="material-icons-round text-sm absolute left-2 top-1.5 text-gray-400">search</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🧊 核心 3D 舞台：手風琴懸浮厚玻璃卡匣 (The 3D Perspective Stage) -->
+        <div id="stage-container" class="flex-1 perspective-stage view-accordion overflow-y-auto overflow-x-hidden px-8 pt-6 pb-28 flex flex-col justify-start items-stretch">
+            
+            <div id="perspective-grid" class="perspective-grid w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 items-stretch py-2">
+                <!-- 動態由 JavaScript ui.renderAlbums() 渲染真實資料庫專輯卡片 -->
+            </div>
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- 🎵 底部極簡全像玻璃播放控制艙 (Holographic Glass Audio Deck)                 -->
+        <!-- ========================================================================= -->
+        <footer class="liquid-glass chamfer-cut-sm p-3 flex items-center justify-between gap-5 select-none relative">
+            
+            <!-- 裝飾夾扣件 -->
+            <div class="clamp-bracket clamp-tl"></div>
+            <div class="clamp-bracket clamp-tr"></div>
+
+            <!-- 左側：正在播放的立體水晶名片 (Now Playing Badge) -->
+            <div class="flex items-center gap-3 min-w-[280px]">
+                <div class="w-11 h-11 rounded border border-white/30 overflow-hidden relative shrink-0 shadow-lg bg-[#0e1612] flex items-center justify-center">
+                    <img id="deck-cover" src="" alt="Now Playing Cover" class="w-full h-full object-cover hidden">
+                    <div id="deck-cover-fallback" class="w-full h-full flex items-center justify-center text-xs font-mono font-bold text-[var(--citrine-gold)]">
+                        STR
+                    </div>
+                </div>
+                <div class="min-w-0">
+                    <div id="deck-title" class="text-xs font-bold font-mono text-white truncate">
+                        IDLE // READY FOR TRANSMISSION
+                    </div>
+                    <div class="flex items-center gap-2 text-[10px] font-mono text-gray-400 mt-0.5">
+                        <span id="deck-artist" class="text-[var(--aero-blue-bright)] truncate max-w-[140px]">MPV CORE READY</span>
+                        <span>•</span>
+                        <!-- 點綴青瓷綠極簡指示燈 -->
+                        <span class="text-[var(--spot-celadon)] font-bold flex items-center gap-1 shrink-0">
+                            <span class="w-1.5 h-1.5 bg-[var(--spot-celadon)] rounded-full shadow-[0_0_6px_var(--spot-celadon)]"></span> 
+                            <span id="deck-res-label">192kHz HI-RES</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 中間：進度條與傳輸按鈕 (Progress & Audio Transport) -->
+            <div class="flex-1 max-w-xl flex flex-col items-center gap-1.5">
+                <!-- 播放控制鍵組 -->
+                <div class="flex items-center gap-3">
+                    <!-- 播放模式切換按鍵 -->
+                    <button id="btn-play-mode" onclick="ui.togglePlayMode()" class="btn-strata btn-strata-dark text-[10px] py-0.5 px-2 rounded" title="Loop Mode (Sequential, Random, Repeat, Continue)">
+                        <span id="icon-mode" class="material-icons-round text-xs text-[var(--citrine-gold)]">repeat</span>
+                        <span id="label-mode" class="text-[9px]">CONTINUE</span>
+                    </button>
+
+                    <button onclick="ui.prevTrack()" class="btn-strata btn-strata-dark text-xs p-1 rounded" title="Previous Track">
+                        <span class="material-icons-round text-base">skip_previous</span>
+                    </button>
+                    <button id="btn-play-toggle" onclick="ui.togglePlayState()" class="w-8 h-8 rounded-full bg-[var(--tech-white)] text-black flex items-center justify-center hover:scale-105 transition-transform shadow-[0_0_15px_var(--tech-white-glow)]" title="Play / Pause">
+                        <span id="icon-play" class="material-icons-round text-xl">play_arrow</span>
+                    </button>
+                    <button onclick="ui.nextTrack()" class="btn-strata btn-strata-dark text-xs p-1 rounded" title="Next Track">
+                        <span class="material-icons-round text-base">skip_next</span>
+                    </button>
+
+                    <!-- 浮動畫中畫按鍵 (PiP) -->
+                    <button onclick="pywebview.api.open_pip_window()" class="btn-strata btn-strata-dark text-xs p-1 rounded" title="Open Mini PiP Player">
+                        <span class="material-icons-round text-base text-[var(--aero-blue-bright)]">picture_in_picture_alt</span>
+                    </button>
+                </div>
+
+                <!-- 纖細漸變彩進度拉桿 (Chroma Gradient Progress Bar with Smooth Drag & Zero Jitter) -->
+                <div class="w-full flex items-center gap-3 text-[10px] font-mono text-gray-400 no-drag">
+                    <span id="time-cur" class="w-10 text-right shrink-0">00:00</span>
+                    <div class="flex-1 relative flex items-center h-4 group cursor-pointer">
+                        <!-- 底層：深色凹槽與動態漸變彩條 (Chroma Gradient Bar) -->
+                        <div class="absolute inset-x-0 h-1.5 bg-[#121c16] rounded-xs overflow-hidden border border-white/10 pointer-events-none">
+                            <div id="progress-bar" 
+                                 class="h-full bg-gradient-to-r from-[var(--aero-blue)] via-[var(--spot-celadon)] to-[var(--citrine-gold)] transition-all duration-75 shadow-[0_0_8px_var(--citrine-glow)]" 
+                                 style="width: 0%;"></div>
+                        </div>
+                        <!-- 頂層：透明無縫精準拖曳推桿 (覆蓋在漸變彩條上) -->
+                        <input type="range" id="seek-slider" min="0" max="100" step="0.1" value="0"
+                               class="deck-seek-slider w-full no-drag relative z-10"
+                               oninput="ui.onSeekInput(this.value)"
+                               onchange="ui.onSeekChange(this.value)"
+                               onmousedown="ui.isDragging = true;"
+                               onmouseup="ui.isDragging = false;"
+                               ontouchstart="ui.isDragging = true;"
+                               ontouchend="ui.isDragging = false;">
+                    </div>
+                    <span id="time-tot" class="w-10 shrink-0">00:00</span>
+                </div>
+            </div>
+
+            <!-- 右側：音量調控與全螢幕 (Volume & Immersion Controls) -->
+            <div class="flex items-center gap-3 min-w-[240px] justify-end font-mono">
+                <!-- 靜音開關 -->
+                <button onclick="ui.toggleMute()" id="btn-mute" class="text-gray-400 hover:text-white transition">
+                    <span id="icon-mute" class="material-icons-round text-base text-[var(--citrine-gold)]">volume_up</span>
+                </button>
+
+                <!-- 音量推桿 -->
+                <div class="flex items-center gap-2">
+                    <input type="range" id="vol-slider" min="0" max="100" value="100" class="w-20 accent-[var(--citrine-gold)] cursor-pointer h-1"
+                           oninput="ui.onVolumeInput(this.value)">
+                    <span id="vol-val" class="text-xs text-[var(--citrine-bright)] font-bold w-9 text-right">100%</span>
+                </div>
+
+                <div class="h-3 w-[1px] bg-white/20"></div>
+
+                <!-- 航太全螢幕開關 -->
+                <button onclick="ui.toggleFullscreen()" class="btn-strata btn-strata-dark text-[10px] py-1 px-2.5 chamfer-cut-sm" title="Toggle Real Fullscreen">
+                    <span class="material-icons-round text-xs text-[var(--citrine-gold)]">fullscreen</span> ⛶
+                </button>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- ========================================================================= -->
+    <!-- 📋 專輯曲目透視抽屜 (Holographic Tracklist Manifest Drawer)                 -->
+    <!-- ========================================================================= -->
+    <div id="tracklist-modal" 
+         class="fixed inset-0 z-[300] bg-black/75 backdrop-blur-md flex items-stretch justify-end opacity-0 pointer-events-none transition-opacity duration-300">
+        
+        <!-- 左側空白區域點擊退出 (Click Left Region to Exit) -->
+        <div class="flex-1 h-full cursor-pointer" onclick="ui.closeTracklist()" title="Click left area to close tracklist"></div>
+
+        <!-- 右側抽屜主體 -->
+        <div class="relative w-[520px] max-w-[90vw] h-full bg-[#080d0a]/98 border-l border-white/20 p-5 flex flex-col justify-between shadow-2xl modal-interactive z-10" onclick="event.stopPropagation()">
+            
+            <!-- 頂部：專輯名與關閉按鍵 (保證在頂部且不被 header 遮蔽) -->
+            <div>
+                <div class="flex items-center justify-between pb-3 border-b border-white/10 pt-1">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-2.5 h-2.5 bg-[var(--citrine-gold)] rounded-xs shadow-[0_0_8px_var(--citrine-gold)] shrink-0"></span>
+                        <div class="text-xs font-bold font-mono text-white truncate max-w-[340px]" id="manifest-album-title">
+                            ALBUM MANIFEST
+                        </div>
+                    </div>
+                    <button onclick="ui.closeTracklist()" class="btn-strata btn-strata-dark text-xs py-1 px-3 chamfer-cut-sm hover:bg-red-500/20 hover:text-red-300 hover:border-red-400/40 shrink-0 font-bold" title="Close Album Manifest">✕ CLOSE</button>
+                </div>
+
+                <!-- 快捷功能條：一鍵播放整張專輯與資料夾路徑 -->
+                <div class="py-3 flex items-center justify-between border-b border-white/10">
+                    <button onclick="ui.playEntireAlbum()" class="btn-strata btn-strata-active chamfer-cut-sm text-xs py-1.5 px-3">
+                        <span class="material-icons-round text-sm">play_arrow</span> PLAY ENTIRE ALBUM
+                    </button>
+                    <span class="text-[10px] font-mono text-gray-400" id="manifest-track-count">0 TRACKS</span>
+                </div>
+            </div>
+
+            <!-- 曲目列表容器 -->
+            <div id="manifest-tracks-list" class="flex-1 overflow-y-auto my-3 pr-1 space-y-1.5 font-mono text-xs">
+                <!-- 動態注入曲目行 -->
+            </div>
+
+            <!-- 底部：移除資料夾等操作 -->
+            <div class="pt-3 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-gray-400">
+                <span id="manifest-folder-path" class="truncate max-w-[360px]">PATH: /...</span>
+                <button onclick="ui.deleteActiveFolder()" class="text-red-400 hover:text-red-300 font-bold transition">REMOVE ALBUM</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 🎛️ 音訊串接矩陣模態窗 (Audio Bridge & Multi-Speaker Array Modal)           -->
+    <!-- ========================================================================= -->
+    <div id="bridge-modal" onclick="if (event.target === this) ui.closeBridgeModal();" class="fixed inset-0 z-[300] bg-black/80 backdrop-blur-xl flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="relative w-[780px] max-w-[94vw] max-h-[90vh] bg-[#090f0c] border border-white/20 chamfer-cut p-6 shadow-2xl flex flex-col justify-between gap-4 modal-interactive">
+            
+            <!-- 標題與關閉 -->
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <div class="flex items-center gap-3">
+                    <span class="w-2.5 h-2.5 bg-[var(--spot-celadon)] rounded-xs shadow-[0_0_8px_var(--spot-celadon)]"></span>
+                    <span class="font-extrabold text-sm tracking-wider tech text-white">AUDIO MATRIX // HARMONIC RELAY & PARALLEL ACOUSTIC ARRAYS</span>
+                </div>
+                <button onclick="ui.closeBridgeModal()" class="btn-strata btn-strata-dark text-xs py-1 px-3 chamfer-cut-sm">✕ CLOSE</button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto space-y-4 pr-1">
+                <!-- 主開關與模式選擇 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- 主橋接開關卡片 -->
+                    <div class="bg-[#101713] p-3.5 rounded border border-white/10 space-y-2">
+                        <div class="text-[11px] font-mono text-gray-400 font-bold flex items-center justify-between">
+                            <span>MASTER STREAM RELAY</span>
+                            <span id="modal-bridge-state-text" class="text-[var(--citrine-bright)]">STANDBY</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button onclick="ui.toggleBridgeMaster()" id="btn-modal-bridge-toggle" class="btn-strata btn-strata-dark text-xs py-1.5 px-4 chamfer-cut-sm">
+                                TOGGLE RELAY
+                            </button>
+                            <span class="text-[10px] font-mono text-gray-400">Low-latency WASAPI router</span>
+                        </div>
+                    </div>
+
+                    <!-- 模式選擇 -->
+                    <div class="bg-[#101713] p-3.5 rounded border border-white/10 space-y-2">
+                        <div class="text-[11px] font-mono text-gray-400 font-bold">ROUTING ENGINE MODE</div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="ui.setBridgeMode('player')" id="btn-mode-player" class="btn-strata btn-strata-dark text-xs py-1 px-3">
+                                PLAYER LOOPBACK
+                            </button>
+                            <button onclick="ui.setBridgeMode('system')" id="btn-mode-system" class="btn-strata btn-strata-dark text-xs py-1 px-3">
+                                TCP BROADCAST (SYSTEM)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🛡️ 迴路防護狀態警示列 (Loop Prevention Banner & Safe Mode Guard) -->
+                <div id="bridge-loop-alert" class="p-2.5 rounded border font-mono text-xs font-bold transition flex items-center justify-between gap-2 bg-[#121f18] text-[var(--spot-celadon)] border-[var(--spot-celadon)]/40 shadow-xs">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <span class="material-icons-round text-base shrink-0" id="bridge-loop-icon">verified_user</span>
+                        <span id="bridge-loop-text" class="truncate">🛡️ 本機直通模式 (Direct DSP)：零延遲、免選輸入輸出設備、零迴路風險。</span>
+                    </div>
+                    <span id="bridge-loop-badge" class="px-2 py-0.5 rounded-xs text-[9px] font-mono font-bold bg-[var(--spot-celadon)]/20 text-[var(--spot-celadon)] border border-[var(--spot-celadon)]/40 shrink-0">LOCAL SAFE</span>
+                </div>
+
+                <!-- ================================================================= -->
+
+
+                <!-- 多喇叭並接輸出熱插拔陣列 (Parallel Multi-Speaker Output Matrix) -->
+                <div class="bg-[#101713] p-4 rounded border border-white/10 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="material-icons-round text-sm text-[var(--citrine-gold)]">speaker_group</span>
+                            <span class="text-xs font-mono font-bold text-white">PARALLEL OUTPUT SPEAKERS (HOT-PLUG SUPPORT)</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <label class="text-[10px] font-mono text-gray-300 flex items-center gap-1.5 cursor-pointer">
+                                <input type="checkbox" id="chk-multi-output" onchange="ui.onToggleMultiOutput(this.checked)" class="accent-[var(--citrine-gold)]">
+                                ENABLE MULTI-OUTPUT
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 喇叭清單與各別音量 -->
+                    <div id="bridge-speakers-list" class="space-y-2 max-h-56 overflow-y-auto pr-1">
+                        <div class="text-[11px] font-mono text-gray-500 py-3 text-center">Detecting connected WASAPI acoustic devices...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 底部資訊 -->
+            <div class="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-gray-400">
+                <span>BUFFER: OPTIMAL // DRIFT: 0.00ms</span>
+                <span class="text-[var(--spot-celadon)] font-bold">HOT-PLUG PROTECTION ACTIVE</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 🎚️ 10-Band EQ 等化器與 DSP 模態窗 (Equalizer & DSP Modulator Modal)        -->
+    <!-- ========================================================================= -->
+    <div id="eq-modal" onclick="if (event.target === this) ui.closeEqModal();" class="fixed inset-0 z-[300] bg-black/80 backdrop-blur-xl flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="relative w-[780px] max-w-[94vw] bg-[#090f0c] border border-white/20 chamfer-cut p-6 shadow-2xl flex flex-col justify-between gap-4 modal-interactive">
+            
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <div class="flex items-center gap-3">
+                    <span class="w-2.5 h-2.5 bg-[var(--citrine-gold)] rounded-xs shadow-[0_0_8px_var(--citrine-gold)]"></span>
+                    <span class="font-extrabold text-sm tracking-wider tech text-white">10-BAND PARAMETRIC EQUALIZER & DSP MODULATOR</span>
+                </div>
+                <button onclick="ui.closeEqModal()" class="btn-strata btn-strata-dark text-xs py-1 px-3 chamfer-cut-sm">✕ CLOSE</button>
+            </div>
+
+            <div class="space-y-5">
+                <!-- EQ 開關與預設集選單 -->
+                <div class="flex items-center justify-between bg-[#101713] p-3 rounded border border-white/10">
+                    <label class="flex items-center gap-2 cursor-pointer font-mono text-xs font-bold text-white">
+                        <input type="checkbox" id="chk-eq-enable" onchange="ui.onToggleEq(this.checked)" class="accent-[var(--citrine-gold)]">
+                        ENABLE 10-BAND EQ
+                    </label>
+
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-mono text-gray-400">PRESET:</span>
+                        <select id="eq-preset-select" onchange="ui.onSelectEqPreset(this.value)" class="bg-[#080d0a] border border-white/20 rounded text-xs font-mono px-2 py-1 text-white outline-none">
+                            <option value="Flat">Flat (0 dB)</option>
+                            <option value="Rock">Rock</option>
+                            <option value="Pop">Pop</option>
+                            <option value="Jazz">Jazz</option>
+                            <option value="Electronic">Electronic</option>
+                            <option value="Vocal">Vocal Boost</option>
+                            <option value="Bass">Deep Bass</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 10 段拉桿滑桿 -->
+                <div class="grid grid-cols-10 gap-2 py-3 bg-[#0d1410] p-4 rounded border border-white/10">
+                    <!-- 31Hz - 16kHz -->
+                    <script>
+                        const freqs = ['31', '62', '125', '250', '500', '1k', '2k', '4k', '8k', '16k'];
+                        document.write(freqs.map((f, i) => `
+                            <div class="flex flex-col items-center gap-2 font-mono">
+                                <span class="text-[9px] text-[var(--citrine-bright)] font-bold" id="eq-val-${i}">0</span>
+                                <input type="range" min="-12" max="12" value="0" step="1" 
+                                       class="h-32 w-1.5 accent-[var(--citrine-gold)] cursor-pointer" 
+                                       style="writing-mode: vertical-lr; direction: rtl;" 
+                                       oninput="ui.onEqBandInput(${i}, this.value)">
+                                <span class="text-[9px] text-gray-400 mt-1">${f}</span>
+                            </div>
+                        `).join(''));
+                    </script>
+                </div>
+
+                <!-- DSP 功能開關 (Upsampling & Normalization) -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-[#101713] p-3 rounded border border-white/10 flex items-center justify-between font-mono text-xs">
+                        <div>
+                            <div class="font-bold text-white">HI-RES AUDIO UPSAMPLING</div>
+                            <div class="text-[9px] text-gray-400">Soxr 384kHz Resampler</div>
+                        </div>
+                        <button onclick="ui.toggleUpsample()" id="btn-dsp-upsample" class="btn-strata btn-strata-dark text-xs py-1 px-3">OFF</button>
+                    </div>
+
+                    <div class="bg-[#101713] p-3 rounded border border-white/10 flex items-center justify-between font-mono text-xs">
+                        <div>
+                            <div class="font-bold text-white">LOUDNESS NORMALIZATION</div>
+                            <div class="text-[9px] text-gray-400">EBU R128 Dynamic Balancer</div>
+                        </div>
+                        <button onclick="ui.toggleNormalize()" id="btn-dsp-normalize" class="btn-strata btn-strata-dark text-xs py-1 px-3">OFF</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-gray-400">
+                <span>FILTER ENGINE: LIBAVFILTER / MPV DSP</span>
+                <span class="text-[var(--citrine-bright)] font-bold">CHANGES PERSISTED TO CONFIG</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 🚀 飛船航太遙測監控彈窗 (WB-027 Avionics Telemetry Modal)                   -->
+    <!-- ========================================================================= -->
+    <div id="vessel-modal" onclick="if (event.target === this) ui.closeVesselModal();" class="fixed inset-0 z-[300] bg-black/80 backdrop-blur-xl flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="relative w-[880px] max-w-[94vw] bg-[#080e0b] border border-white/25 chamfer-cut p-6 shadow-2xl space-y-4 modal-interactive">
+            
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <div class="flex items-center gap-3">
+                    <span class="w-2.5 h-2.5 bg-[var(--citrine-gold)] rounded-xs shadow-[0_0_8px_var(--citrine-gold)]"></span>
+                    <span class="font-extrabold text-sm tracking-wider tech text-white">WB-027 // AEROSPACE OVERFLIGHT SURVEILLANCE</span>
+                </div>
+                <button onclick="ui.closeVesselModal()" class="btn-strata btn-strata-dark text-xs py-1 px-3 chamfer-cut-sm">✕ CLOSE HUD</button>
+            </div>
+
+            <!-- 飛船戰術向量藍圖 (Pure Vector HUD Display) -->
+            <div class="w-full h-80 rounded overflow-hidden relative border border-white/15 bg-[#050807] flex items-center justify-center">
+                <svg class="w-full h-full" viewBox="0 0 700 320" fill="none">
+                    <!-- 經緯線網格 -->
+                    <defs>
+                        <pattern id="hud-grid" width="30" height="30" patternUnits="userSpaceOnUse">
+                            <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#hud-grid)"/>
+
+                    <!-- 飛船主線圖 -->
+                    <path d="M 350 40 L 370 120 L 510 210 L 530 230 L 410 230 L 380 290 L 350 270 L 320 290 L 290 230 L 170 230 L 190 210 L 330 120 Z" 
+                          stroke="#ffffff" stroke-width="2" fill="rgba(82,168,255,0.08)" filter="drop-shadow(0 0 8px rgba(82,168,255,0.5))"/>
+                    <line x1="350" y1="40" x2="350" y2="270" stroke="rgba(255,170,0,0.8)" stroke-width="1.5" stroke-dasharray="6 4"/>
+                    
+                    <!-- 向量指示十字準心 -->
+                    <circle cx="350" cy="180" r="90" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+                    <circle cx="350" cy="180" r="40" stroke="rgba(255,170,0,0.4)" stroke-width="1" stroke-dasharray="4 4"/>
+                    <circle cx="350" cy="180" r="4" fill="var(--citrine-gold)"/>
+
+                    <text x="360" y="70" fill="var(--citrine-bright)" font-family="monospace" font-size="11" font-weight="bold">WB-027 LONG-RANGE CRUISER</text>
+                    <text x="360" y="90" fill="rgba(255,255,255,0.6)" font-family="monospace" font-size="9">HEADING: 042° VECTOR // 14,820 M</text>
+                </svg>
+
+                <div class="absolute top-4 left-4 bg-black/70 backdrop-blur-md p-3 rounded border border-white/15 text-[10px] font-mono space-y-1">
+                    <div class="text-[var(--citrine-bright)] font-bold">CRUISE TELEMETRY LOG</div>
+                    <div>AIRSPEED: 1,420 KM/H (MACH 2.42)</div>
+                    <div>CRUISE ALTITUDE: 14,820 METERS</div>
+                    <div>PITCH: +1.2° // ROLL: 0.0° // YAW: 042°</div>
+                </div>
+
+                <div class="absolute bottom-4 right-4 bg-black/70 backdrop-blur-md p-3 rounded border border-white/15 text-[10px] font-mono text-right space-y-1">
+                    <div class="text-white font-bold">TRANSMISSION FREQUENCY</div>
+                    <div class="text-[var(--spot-celadon)] font-bold">CARRIER: 142.85 MHz [LOCKED]</div>
+                    <div id="vessel-audio-sync">AUDIO SYNC: IDLE</div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between text-xs font-mono text-gray-400 pt-2 border-t border-white/10">
+                <span>RADAR VECTOR SCAN ACTIVE</span>
+                <span class="text-[var(--citrine-bright)] font-bold">PRESS ESC OR CLICK CLOSE TO RETURN</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 提示吐司 (Toast Overlay) -->
+    <div id="strata-toast" class="fixed top-14 left-1/2 -translate-x-1/2 z-50 bg-[#0d1410] border border-white/30 px-4 py-1.5 rounded text-xs font-mono font-bold text-white shadow-2xl opacity-0 transition-opacity pointer-events-none">
+        STRATA PROTOCOL
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 🕹️ 核心腳本：完整連結 DEV 主題功能與後端 API                                 -->
+    <!-- ========================================================================= -->
+    <script>
+        const PALETTES = {
+            amber: {
+                name: 'AMBER GOLD',
+                gold: '#ffaa00',
+                bright: '#ffc433',
+                glow: 'rgba(255, 170, 0, 0.45)',
+                hairline: 'rgba(255, 170, 0, 0.35)'
+            },
+            celadon: {
+                name: 'CELADON JADE',
+                gold: '#2ef8a0',
+                bright: '#67ffb9',
+                glow: 'rgba(46, 248, 160, 0.45)',
+                hairline: 'rgba(46, 248, 160, 0.35)'
+            },
+            glacial: {
+                name: 'GLACIAL CYAN',
+                gold: '#00e5ff',
+                bright: '#5df2ff',
+                glow: 'rgba(0, 229, 255, 0.45)',
+                hairline: 'rgba(0, 229, 255, 0.35)'
+            },
+            plasma: {
+                name: 'PLASMA VIOLET',
+                gold: '#b845ff',
+                bright: '#d480ff',
+                glow: 'rgba(184, 69, 255, 0.45)',
+                hairline: 'rgba(184, 69, 255, 0.35)'
+            },
+            crimson: {
+                name: 'SOLAR CRIMSON',
+                gold: '#ff334b',
+                bright: '#ff6b7d',
+                glow: 'rgba(255, 51, 75, 0.45)',
+                hairline: 'rgba(255, 51, 75, 0.35)'
+            },
+            white: {
+                name: 'CHROMA WHITE',
+                gold: '#ffffff',
+                bright: '#e2f1ea',
+                glow: 'rgba(255, 255, 255, 0.45)',
+                hairline: 'rgba(255, 255, 255, 0.35)'
+            }
+        };
+
+        const ui = {
+            isPlaying: false,
+            isDragging: false,
+            activeAlbumIdx: 0,
+            missionSeconds: 108722,
+            albums: [],
+            currentTracks: [],
+            activeFolderPath: null,
+            playMode: 'album_continue',
+            duration: 0,
+            currentTime: 0,
+            volume: 100,
+            isMuted: false,
+            currentPalette: 'amber',
+            telemetryMode: 'battery', // 'battery' | 'ram' | 'cpu' | 'net'
+            systemTelemetry: { battery: 100, is_ac: true, ram: 50, cpu: 12, net: 'ONLINE', time: '00:00:00' },
+            currentPlayingPath: '',
+
+            // 初始化與啟動
+            init: async () => {
+                // 1. 載入儲存的配色與遙測模式
+                if (window.pywebview && pywebview.api && pywebview.api.get_theme_setting) {
+                    try {
+                        const savedPal = await pywebview.api.get_theme_setting('strata_palette', 'amber');
+                        if (savedPal && PALETTES[savedPal]) ui.setPalette(savedPal, false);
+                        else ui.setPalette('amber', false);
+                        const savedTelem = await pywebview.api.get_theme_setting('strata_telemetry_mode', 'battery');
+                        if (savedTelem) ui.telemetryMode = savedTelem;
+                    } catch(e) {
+                        ui.setPalette('amber', false);
+                    }
+                } else {
+                    ui.setPalette('amber', false);
+                }
+
+                // 2. 啟動真實電腦本地時鐘與硬體遙測
+                ui.startClockAndTelemetry();
+
+                // 3. 點擊外部關閉調色盤、桌布選單與主題選單
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('#btn-palette-picker') && !e.target.closest('#palette-dropdown')) {
+                        const dd = document.getElementById('palette-dropdown');
+                        if (dd) dd.classList.add('hidden');
+                    }
+                    if (!e.target.closest('#btn-wallpaper-picker') && !e.target.closest('#wallpaper-dropdown')) {
+                        const wdd = document.getElementById('wallpaper-dropdown');
+                        if (wdd) wdd.classList.add('hidden');
+                    }
+                    if (!e.target.closest('#btn-theme-picker') && !e.target.closest('#theme-dropdown')) {
+                        const tdd = document.getElementById('theme-dropdown');
+                        if (tdd) tdd.classList.add('hidden');
+                    }
+                });
+
+                // 4. 鍵盤 ESC 關閉所有視窗與懸浮選單
+                window.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        ui.closeVesselModal();
+                        ui.closeTracklist();
+                        ui.closeBridgeModal();
+                        ui.closeEqModal();
+                        const dd = document.getElementById('palette-dropdown');
+                        if (dd) dd.classList.add('hidden');
+                        const wdd = document.getElementById('wallpaper-dropdown');
+                        if (wdd) wdd.classList.add('hidden');
+                        const tdd = document.getElementById('theme-dropdown');
+                        if (tdd) tdd.classList.add('hidden');
+                    }
+                });
+
+                // 5. 載入音樂資料庫專輯
+                await ui.loadLibraryFolders();
+
+                // 6. 同步播放狀態並開啟定時輪詢 (每 400ms 高頻精準同步)
+                ui.syncState();
+                setInterval(ui.syncState, 400);
+
+                // 7. 初始化 EQ 與音訊橋接狀態
+                ui.initEqAndBridgeState();
+
+                // 8. 初始化自訂桌布背景
+                await ui.initWallpaper();
+            },
+
+            // 🖼️ 背景桌布系統 (Custom Wallpaper Engine)
+            currentWallpaperUrl: null,
+            wallpaperDim: 40,
+
+            toFileUrl: (path) => {
+                if (!path) return '';
+                if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:') || path.startsWith('file://')) return path;
+                return 'file:///' + path.replace(/\\/g, '/');
+            },
+
+            toggleWallpaperDropdown: () => {
+                const dd = document.getElementById('wallpaper-dropdown');
+                if (dd) dd.classList.toggle('hidden');
+                const palDd = document.getElementById('palette-dropdown');
+                if (palDd) palDd.classList.add('hidden');
+                const tdd = document.getElementById('theme-dropdown');
+                if (tdd) tdd.classList.add('hidden');
+            },
+
+            selectCustomWallpaper: async () => {
+                const dd = document.getElementById('wallpaper-dropdown');
+                if (dd) dd.classList.add('hidden');
+
+                let wpPath = null;
+                if (window.pywebview && pywebview.api && pywebview.api.select_wallpaper) {
+                    wpPath = await pywebview.api.select_wallpaper();
+                } else {
+                    wpPath = prompt("Please enter image URL or local file path:");
+                }
+
+                if (wpPath) {
+                    ui.applyWallpaper(wpPath);
+                    if (window.pywebview && pywebview.api && pywebview.api.set_wallpaper) {
+                        await pywebview.api.set_wallpaper(wpPath);
+                    }
+                    ui.toast("🖼️ CUSTOM WALLPAPER APPLIED");
+                }
+            },
+
+            resetWallpaper: async () => {
+                const dd = document.getElementById('wallpaper-dropdown');
+                if (dd) dd.classList.add('hidden');
+
+                if (window.pywebview && pywebview.api && pywebview.api.reset_wallpaper) {
+                    await pywebview.api.reset_wallpaper();
+                }
+                ui.applyWallpaper(null);
+                ui.toast("🌌 RESTORED DEFAULT STRATA HORIZON");
+            },
+
+            applyWallpaper: (path) => {
+                ui.currentWallpaperUrl = path;
+                const bgEl = document.getElementById('custom-wallpaper-bg');
+                const overlayEl = document.getElementById('custom-wallpaper-overlay');
+                const pill = document.getElementById('wallpaper-status-pill');
+
+                if (!path) {
+                    if (bgEl) {
+                        bgEl.style.backgroundImage = 'none';
+                        bgEl.classList.add('opacity-0');
+                    }
+                    if (overlayEl) {
+                        overlayEl.classList.add('opacity-0');
+                    }
+                    if (pill) {
+                        pill.innerText = "DEFAULT";
+                        pill.className = "text-[8px] text-gray-400 font-mono";
+                    }
+                    localStorage.removeItem('strata_custom_wallpaper');
+                    return;
+                }
+
+                const url = ui.toFileUrl(path);
+                if (bgEl) {
+                    bgEl.style.backgroundImage = `url('${url}')`;
+                    bgEl.classList.remove('opacity-0');
+                }
+                if (overlayEl) {
+                    overlayEl.classList.remove('opacity-0');
+                    overlayEl.style.backgroundColor = `rgba(0, 0, 0, ${(ui.wallpaperDim || 40) / 100})`;
+                }
+                if (pill) {
+                    pill.innerText = "CUSTOM ACTIVE";
+                    pill.className = "text-[8px] text-[var(--spot-celadon)] font-mono font-bold";
+                }
+                localStorage.setItem('strata_custom_wallpaper', path);
+            },
+
+            onWallpaperDimInput: (val) => {
+                ui.wallpaperDim = parseInt(val);
+                const disp = document.getElementById('wallpaper-dim-disp');
+                if (disp) disp.innerText = `${val}%`;
+                const overlayEl = document.getElementById('custom-wallpaper-overlay');
+                if (overlayEl && ui.currentWallpaperUrl) {
+                    overlayEl.style.backgroundColor = `rgba(0, 0, 0, ${val / 100})`;
+                }
+                localStorage.setItem('strata_wallpaper_dim', val);
+            },
+
+            initWallpaper: async () => {
+                const savedDim = localStorage.getItem('strata_wallpaper_dim');
+                if (savedDim !== null) {
+                    ui.wallpaperDim = parseInt(savedDim);
+                    const slider = document.getElementById('wallpaper-dim-slider');
+                    const disp = document.getElementById('wallpaper-dim-disp');
+                    if (slider) slider.value = savedDim;
+                    if (disp) disp.innerText = `${savedDim}%`;
+                }
+
+                let wp = null;
+                if (window.pywebview && pywebview.api && pywebview.api.get_wallpaper) {
+                    try {
+                        wp = await pywebview.api.get_wallpaper();
+                    } catch (e) {}
+                }
+                if (!wp) {
+                    wp = localStorage.getItem('strata_custom_wallpaper');
+                }
+                if (wp) {
+                    ui.applyWallpaper(wp);
+                }
+            },
+
+            // 切換調色盤下拉選單
+            togglePalettePicker: () => {
+                const dd = document.getElementById('palette-dropdown');
+                if (dd) dd.classList.toggle('hidden');
+                const wdd = document.getElementById('wallpaper-dropdown');
+                if (wdd) wdd.classList.add('hidden');
+                const tdd = document.getElementById('theme-dropdown');
+                if (tdd) tdd.classList.add('hidden');
+            },
+
+            // 切換主題 / DEV 下拉選單
+            toggleThemeDropdown: () => {
+                const dd = document.getElementById('theme-dropdown');
+                if (dd) dd.classList.toggle('hidden');
+                const palDd = document.getElementById('palette-dropdown');
+                if (palDd) palDd.classList.add('hidden');
+                const wdd = document.getElementById('wallpaper-dropdown');
+                if (wdd) wdd.classList.add('hidden');
+            },
+
+            // 切換播放器介面主題
+            switchTheme: (themeFile) => {
+                const dd = document.getElementById('theme-dropdown');
+                if (dd) dd.classList.add('hidden');
+                if (window.pywebview && pywebview.api && pywebview.api.change_theme) {
+                    pywebview.api.change_theme(themeFile);
+                }
+            },
+
+            // 設定主題重點色
+            setPalette: (key, notify = true) => {
+                const pal = PALETTES[key] || PALETTES.amber;
+                ui.currentPalette = key;
+                document.documentElement.style.setProperty('--citrine-gold', pal.gold);
+                document.documentElement.style.setProperty('--citrine-bright', pal.bright);
+                document.documentElement.style.setProperty('--citrine-glow', pal.glow);
+                document.documentElement.style.setProperty('--hairline-amber', pal.hairline);
+
+                const dot = document.getElementById('palette-current-dot');
+                if (dot) dot.style.backgroundColor = pal.bright;
+
+                // 標記下拉選單當前選中項 (Checkmark & Highlight)
+                const keys = ['amber', 'celadon', 'glacial', 'plasma', 'crimson', 'white'];
+                keys.forEach(k => {
+                    const btn = document.getElementById(`pal-btn-${k}`);
+                    if (btn) {
+                        const check = btn.querySelector('.pal-check');
+                        if (k === key) {
+                            btn.classList.add('bg-white/15', 'border', 'border-white/30');
+                            if (check) check.classList.remove('hidden');
+                        } else {
+                            btn.classList.remove('bg-white/15', 'border', 'border-white/30');
+                            if (check) check.classList.add('hidden');
+                        }
+                    }
+                });
+
+                const dd = document.getElementById('palette-dropdown');
+                if (dd) dd.classList.add('hidden');
+
+                if (notify) ui.toast(`🎨 PALETTE: ${pal.name}`);
+
+                if (window.pywebview && pywebview.api && pywebview.api.save_theme_setting) {
+                    pywebview.api.save_theme_setting('strata_palette', key);
+                }
+            },
+
+            // 循環切換右上角系統遙測模式 (BAT -> RAM -> CPU -> NET)
+            cycleTelemetryMode: () => {
+                const modes = ['battery', 'ram', 'cpu', 'net'];
+                const curIdx = modes.indexOf(ui.telemetryMode);
+                ui.telemetryMode = modes[(curIdx + 1) % modes.length];
+                ui.renderTelemetryGauge();
+                ui.toast(`◈ TELEMETRY: ${ui.telemetryMode.toUpperCase()}`);
+                if (window.pywebview && pywebview.api && pywebview.api.save_theme_setting) {
+                    pywebview.api.save_theme_setting('strata_telemetry_mode', ui.telemetryMode);
+                }
+            },
+
+            // 繪製遙測儀表與百分比 (嚴格分離文字與雷電圖標，杜絕換行撐大高度)
+            renderTelemetryGauge: () => {
+                const t = ui.systemTelemetry;
+                const labelEl = document.getElementById('hud-telemetry-label');
+                const boltEl = document.getElementById('hud-ac-bolt');
+                const arcEl = document.getElementById('hud-thrust-val');
+                let pct = 100;
+                let txt = 'BAT 100%';
+                let showBolt = false;
+
+                if (ui.telemetryMode === 'battery') {
+                    pct = t.battery !== undefined ? t.battery : 100;
+                    txt = `BAT ${pct}%`;
+                    showBolt = !!t.is_ac;
+                } else if (ui.telemetryMode === 'ram') {
+                    pct = t.ram !== undefined ? t.ram : 50;
+                    txt = `RAM ${pct}%`;
+                } else if (ui.telemetryMode === 'cpu') {
+                    pct = t.cpu !== undefined ? t.cpu : 15;
+                    txt = `CPU ${pct}%`;
+                } else if (ui.telemetryMode === 'net') {
+                    pct = 100;
+                    txt = `NET ${t.net || 'ONLINE'}`;
+                }
+
+                if (labelEl) labelEl.innerText = txt;
+                if (boltEl) {
+                    if (showBolt) boltEl.classList.remove('hidden');
+                    else boltEl.classList.add('hidden');
+                }
+                if (arcEl) {
+                    const offset = Math.max(0, Math.min(100, 100 - pct));
+                    arcEl.style.strokeDashoffset = offset;
+                }
+            },
+
+            // 啟動電腦本地真實時間與硬體遙測輪詢
+            startClockAndTelemetry: () => {
+                const updateLocalClock = () => {
+                    const now = new Date();
+                    const pad = (n) => String(n).padStart(2, '0');
+                    const clockStr = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+                    const clockEl = document.getElementById('flight-clock');
+                    if (clockEl) clockEl.innerText = clockStr;
+                };
+                updateLocalClock();
+                setInterval(updateLocalClock, 1000);
+
+                const fetchTelemetry = async () => {
+                    if (window.pywebview && pywebview.api && pywebview.api.get_system_telemetry) {
+                        try {
+                            const data = await pywebview.api.get_system_telemetry();
+                            if (data) {
+                                ui.systemTelemetry = data;
+                                ui.renderTelemetryGauge();
+                            }
+                        } catch(e) {}
+                    }
+                };
+                fetchTelemetry();
+                setInterval(fetchTelemetry, 2500);
+            },
+
+            // 讀取真實資料夾專輯清單
+            loadLibraryFolders: async () => {
+                if (window.pywebview && pywebview.api && pywebview.api.get_library_folders) {
+                    try {
+                        const folders = await pywebview.api.get_library_folders();
+                        ui.albums = folders || [];
+                    } catch (e) {
+                        console.error('get_library_folders error:', e);
+                        ui.albums = [];
+                    }
+                } else {
+                    ui.albums = [];
+                }
+                ui.renderAlbums(ui.albums);
+            },
+
+            // 渲染 3D 浮空玻璃專輯矩陣
+            renderAlbums: (albums) => {
+                const grid = document.getElementById('perspective-grid');
+                const countLabel = document.getElementById('library-count-label');
+
+                if (!albums || albums.length === 0) {
+                    countLabel.innerText = "0 ALBUMS DETECTED";
+                    grid.innerHTML = `
+                        <div class="col-span-full py-16 flex flex-col items-center justify-center space-y-3 font-mono">
+                            <span class="material-icons-round text-5xl text-[var(--citrine-gold)]">folder_open</span>
+                            <div class="text-sm font-bold text-white">NO SOUND REPOSITORY DETECTED</div>
+                            <div class="text-xs text-gray-400">Click below or top-left [+ SCAN] to load local music folders!</div>
+                            <button onclick="ui.scanNewFolder()" class="btn-strata btn-strata-active chamfer-cut-sm mt-2 text-xs py-2 px-5">
+                                + SCAN LOCAL FOLDER
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                countLabel.innerText = `${albums.length} ALBUMS LOADED // ALL REPOSITORIES`;
+
+                let html = '';
+                albums.forEach((alb, idx) => {
+                    const isActive = idx === ui.activeAlbumIdx ? 'is-active' : '';
+                    const safeName = (alb.name || 'UNNAMED ALBUM').replace(/"/g, '&quot;');
+                    const safePath = (alb.path || '').replace(/\\/g, '/');
+                    const code = `STR-${String(idx + 1).padStart(2, '0')}`;
+                    
+                    // 封面渲染邏輯與多層鏡面透光虛像層
+                    let coverHtml = '';
+                    let ghostHtml = '';
+                    if (alb.cover) {
+                        const coverUrl = alb.cover.startsWith('file://') ? alb.cover : `file:///${alb.cover.replace(/\\/g, '/')}`;
+                        coverHtml = `<img src="${coverUrl}" alt="${safeName}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">`;
+                        ghostHtml = `<div class="glass-ghost-layer" style="background-image: url('${coverUrl}');"></div>`;
+                    } else {
+                        // 若無封面圖，渲染高科技向量圖騰
+                        coverHtml = `
+                            <div class="w-full h-full bg-gradient-to-br from-[#101b15] to-[#080d0a] flex flex-col items-center justify-center relative p-3">
+                                <svg class="w-12 h-12 text-[var(--citrine-gold)] opacity-40 mb-1" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                </svg>
+                                <span class="text-[10px] font-mono font-bold text-white text-center truncate w-full">${safeName}</span>
+                            </div>
+                        `;
+                        ghostHtml = `<div class="glass-ghost-layer bg-gradient-to-br from-white/10 to-transparent"></div>`;
+                    }
+
+                    html += `
+                        <div class="slab-wrapper ${isActive}" 
+                             id="album-card-${idx}"
+                             onclick="ui.inspectAlbumByIndex(${idx})">
+                            
+                            <!-- 🧊 玻璃厚度實體透光虛影 (以深黑灰虛影呈現 24mm 厚度，免除刺眼白邊) -->
+                            <div class="glass-thickness-ghost chamfer-cut"></div>
+
+                            <!-- 鈦金屬深色夾具扣件 (柔和灰黑相容) -->
+                            <div class="clamp-bracket clamp-tl"></div>
+                            <div class="clamp-bracket clamp-tr"></div>
+                            <div class="clamp-bracket clamp-bl"></div>
+                            <div class="clamp-bracket clamp-br"></div>
+
+                            <!-- 沉重光學厚水晶玻璃面板 (The Heavy Lucite Monolith) -->
+                            <div class="crystal-glass-slab chamfer-cut p-3.5 flex flex-col justify-between h-full group relative overflow-hidden">
+                                
+                                <!-- 表層動態鏡面高光條 (柔和冷光掠過) -->
+                                <div class="glass-specular-sheen"></div>
+
+                                <div class="space-y-3 relative z-10">
+                                    <!-- 沉降式厚玻璃卡匣槽 (Deep Recessed Bevel Frame) -->
+                                    <div class="w-full aspect-square rounded-sm overflow-hidden relative shadow-md bg-[#060a08]/40 glass-inner-recess">
+                                        <!-- 1. 最上層實體原圖 (上層清晰可見，不設模糊) -->
+                                        <div class="glass-base-artwork relative z-10 w-full h-full">
+                                            ${coverHtml}
+                                        </div>
+
+                                        <!-- 2. 微弱內層透光虛像 (0.08 低不透明度微弱折射，避免 3D 眩暈) -->
+                                        ${ghostHtml}
+
+                                        <!-- 3. 內嵌晶體微弱倒影斜切高光 -->
+                                        <div class="glass-internal-bevel"></div>
+
+                                        <div class="absolute top-2 left-2 bg-black/80 backdrop-blur-md px-1.5 py-0.5 rounded text-[8px] font-mono text-white font-bold border border-white/10 z-20">
+                                            ${code}
+                                        </div>
+                                        <div class="absolute top-2 right-2 bg-[var(--citrine-gold)]/20 border border-[var(--citrine-bright)]/40 px-1.5 py-0.5 rounded text-[8px] font-mono text-[var(--citrine-bright)] font-bold z-20">
+                                            OPTIC 24mm
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div class="text-[11px] font-bold font-mono text-white leading-snug group-hover:text-[var(--citrine-bright)] transition-colors truncate drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
+                                            ${safeName}
+                                        </div>
+                                        <div class="text-[9.5px] font-mono text-gray-400 truncate mt-0.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                                            ${safePath}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-gray-400 mt-2 relative z-10">
+                                    <span>INSPECT</span>
+                                    <span class="text-[var(--citrine-bright)] font-bold flex items-center gap-0.5">
+                                        <span class="material-icons-round text-xs">queue_music</span> TRACKS
+                                    </span>
+                                </div>
+
+                                <!-- 厚玻璃下緣折射台 (Subtle Refraction Bottom Shelf) -->
+                                <div class="glass-bottom-facet"></div>
+                            </div>
+
+                            <div class="glass-reflection-shelf"></div>
+                        </div>
+                    `;
+                });
+
+                grid.innerHTML = html;
+
+                // 綁定 3D 滑鼠光學視差微動
+                ui.attachMouseParallax();
+
+                // 對齊中央貫穿光柱
+                setTimeout(() => ui.updateZenithBeam(ui.activeAlbumIdx), 200);
+            },
+
+            // 綁定卡片滑鼠微動 3D 視差與多層鏡面透光虛像 (沉穩克制物理阻尼感，避免 3D 眩暈，由深黑虛影呈現厚度)
+            attachMouseParallax: () => {
+                document.querySelectorAll('.slab-wrapper').forEach(wrapper => {
+                    wrapper.addEventListener('mouseenter', () => {
+                        wrapper.style.transition = 'transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                    });
+                    wrapper.addEventListener('mousemove', (e) => {
+                        const rect = wrapper.getBoundingClientRect();
+                        const x = (e.clientX - rect.left) / rect.width - 0.5;
+                        const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+                        const stage = document.getElementById('stage-container');
+                        const isStack = stage && stage.classList.contains('view-stack');
+                        const baseRotX = isStack ? 3 : 0;
+
+                        // 沉穩克制的微視角轉動 (5.5deg 溫潤微傾角，杜絕劇烈晃動造成 3D 眩暈)
+                        wrapper.style.transform = `perspective(1100px) rotateY(${x * 5.5}deg) rotateX(${baseRotX - y * 5.5}deg) translateZ(36px) scale(1.025)`;
+
+                        // 1. 厚度實體虛影 (Thickness Ghost Silhouette) - 隨視角反向微移，以深黑虛影呈現 24mm 厚度
+                        const thicknessGhost = wrapper.querySelector('.glass-thickness-ghost');
+                        if (thicknessGhost) {
+                            thicknessGhost.style.transform = `translate3d(${10 - x * 6}px, ${16 - y * 6}px, -24px)`;
+                        }
+
+                        // 2. 內部微弱鏡面虛像視差 (微幅平移 1.5px，杜絕重影模糊)
+                        const ghost = wrapper.querySelector('.glass-ghost-layer');
+                        if (ghost) {
+                            ghost.style.transform = `translate(${x * 1.5}px, ${y * 1.5}px) scale(0.995)`;
+                        }
+
+                        // 3. 表層動態鏡面高光條 (柔和冷光掠過)
+                        const sheen = wrapper.querySelector('.glass-specular-sheen');
+                        if (sheen) {
+                            sheen.style.background = `linear-gradient(${115 + x * 30}deg, transparent ${35 - y * 25}%, rgba(255, 255, 255, 0.08) ${48 - y * 25}%, rgba(255, 255, 255, 0.03) ${52 - y * 25}%, transparent ${68 - y * 25}%)`;
+                        }
+                    });
+                    wrapper.addEventListener('mouseleave', () => {
+                        wrapper.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                        wrapper.style.transform = '';
+                        const thicknessGhost = wrapper.querySelector('.glass-thickness-ghost');
+                        if (thicknessGhost) thicknessGhost.style.transform = '';
+                        const ghost = wrapper.querySelector('.glass-ghost-layer');
+                        if (ghost) ghost.style.transform = '';
+                        const sheen = wrapper.querySelector('.glass-specular-sheen');
+                        if (sheen) sheen.style.background = '';
+                    });
+                });
+            },
+
+            // 掃描新音樂資料夾
+            scanNewFolder: async () => {
+                if (window.pywebview && pywebview.api && pywebview.api.scan_folder) {
+                    ui.toast("📁 OPENING DIRECTORY SCANNER...");
+                    await pywebview.api.scan_folder();
+                    await ui.loadLibraryFolders();
+                }
+            },
+
+            // 點擊專輯：更新選中狀態並呼出曲目透視抽屜
+            inspectAlbumByIndex: async (idx) => {
+                const alb = ui.albums[idx];
+                if (!alb) return;
+                ui.activeAlbumIdx = idx;
+                ui.activeFolderPath = alb.path;
+
+                document.querySelectorAll('.slab-wrapper').forEach((el, i) => {
+                    if (i === idx) el.classList.add('is-active');
+                    else el.classList.remove('is-active');
+                });
+
+                ui.updateZenithBeam(idx);
+
+                // 呼叫後端讀取該資料夾下所有曲目
+                if (window.pywebview && pywebview.api && pywebview.api.get_folder_tracks) {
+                    ui.toast(`📂 LOADING TRACKS: ${alb.name}`);
+                    const tracks = await pywebview.api.get_folder_tracks(alb.path);
+                    ui.currentTracks = tracks || [];
+                    ui.renderTracklistDrawer(alb.name, alb.path, ui.currentTracks);
+                }
+            },
+
+            // 渲染曲目抽屜清單 (含動態音波等化器、雷射掃描與自適應收藏狀態)
+            renderTracklistDrawer: (albumName, folderPath, tracks) => {
+                const modal = document.getElementById('tracklist-modal');
+                const titleEl = document.getElementById('manifest-album-title');
+                const countEl = document.getElementById('manifest-track-count');
+                const pathEl = document.getElementById('manifest-folder-path');
+                const listEl = document.getElementById('manifest-tracks-list');
+
+                titleEl.innerText = albumName;
+                countEl.innerText = `${tracks.length} TRACKS`;
+                pathEl.innerText = `PATH: ${folderPath}`;
+
+                if (!tracks || tracks.length === 0) {
+                    listEl.innerHTML = `<div class="text-center py-10 text-gray-500 font-mono text-xs">NO AUDIO FILES IN THIS REPOSITORY</div>`;
+                } else {
+                    let html = '';
+                    const curNorm = (ui.currentPlayingPath || '').replace(/\\/g, '/').toLowerCase();
+                    const curFile = curNorm.split('/').pop();
+
+                    tracks.forEach((t, i) => {
+                        const safeTitle = (t.filename || osBasename(t.path)).replace(/"/g, '&quot;');
+                        const tNorm = (t.path || '').replace(/\\/g, '/').toLowerCase();
+                        const tFile = tNorm.split('/').pop();
+                        const isCurrent = curNorm && (tNorm === curNorm || curNorm.endsWith(tNorm) || tNorm.endsWith(curNorm) || (curFile && tFile && curFile === tFile));
+                        const isFav = (t.is_favorite === 1 || t.is_favorite === true);
+                        const favColor = isFav ? 'text-[var(--citrine-bright)]' : 'text-white/30 hover:text-white/70';
+                        const favIcon = isFav ? 'star' : 'star_border';
+                        const rowClass = isCurrent ? 'track-row-playing' : 'border-white/10 hover:border-[var(--citrine-bright)] bg-[#0d1410]';
+
+                        html += `
+                            <div class="track-row p-2 rounded border flex items-center justify-between gap-3 group transition cursor-pointer ${rowClass}"
+                                 data-track-index="${i}"
+                                 data-track-path="${t.path.replace(/"/g, '&quot;')}"
+                                 onclick="ui.playTrackByIndex(${i})">
+                                <div class="flex items-center gap-2.5 min-w-0">
+                                    <div class="track-num-container flex items-center justify-center shrink-0 w-5">
+                                        ${isCurrent ? `
+                                            <div class="playing-equalizer-bars">
+                                                <span class="bar bar-1"></span>
+                                                <span class="bar bar-2"></span>
+                                                <span class="bar bar-3"></span>
+                                                <span class="bar bar-4"></span>
+                                            </div>
+                                        ` : `
+                                            <span class="text-gray-500 w-5 text-right font-bold text-[10px] track-num-label">${String(i + 1).padStart(2, '0')}</span>
+                                        `}
+                                    </div>
+                                    <div class="flex items-center gap-1.5 min-w-0">
+                                        <span class="track-title-text text-white group-hover:text-[var(--citrine-bright)] transition-colors truncate text-[11px] font-bold ${isCurrent ? 'text-[var(--citrine-bright)] drop-shadow-[0_0_8px_var(--citrine-glow)]' : ''}">${safeTitle}</span>
+                                        <div class="track-badge-container flex items-center">
+                                            ${isCurrent ? `
+                                                <span class="text-[8px] font-mono font-extrabold px-1.5 py-0.2 rounded bg-[var(--citrine-gold)]/20 text-[var(--citrine-bright)] border border-[var(--citrine-bright)]/40 shrink-0 flex items-center gap-1 track-playing-badge animate-pulse">
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-[var(--citrine-bright)] animate-ping"></span>
+                                                    PLAYING
+                                                </span>
+                                            ` : ''}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 shrink-0" onclick="event.stopPropagation()">
+                                    <button onclick="ui.toggleTrackFavoriteByIndex(${i}, this)" class="hover:scale-110 transition ${favColor}" title="Toggle Favorite">
+                                        <span class="material-icons-round text-sm">${favIcon}</span>
+                                    </button>
+                                    <button onclick="ui.playTrackByIndex(${i})" class="btn-track-play text-[var(--citrine-gold)] hover:text-white transition" title="Play">
+                                        <span class="material-icons-round text-base">${isCurrent && ui.isPlaying ? 'pause_circle' : 'play_circle'}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    listEl.innerHTML = html;
+                }
+
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                setTimeout(() => {
+                    const activeRow = listEl.querySelector('.track-row-playing');
+                    if (activeRow) activeRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            },
+
+            playTrackByIndex: async (trackIdx) => {
+                const track = ui.currentTracks[trackIdx];
+                if (!track) return;
+                if (window.pywebview && pywebview.api && pywebview.api.play_playlist) {
+                    ui.toast(`▶ PLAYING: ${track.filename || osBasename(track.path)}`);
+                    await pywebview.api.play_playlist(ui.currentTracks, trackIdx);
+                } else if (window.pywebview && pywebview.api && pywebview.api.play_video) {
+                    await pywebview.api.play_video(track.path);
+                }
+            },
+
+            toggleTrackFavoriteByIndex: async (trackIdx, btnEl) => {
+                const track = ui.currentTracks[trackIdx];
+                if (!track) return;
+                if (window.pywebview && pywebview.api && pywebview.api.toggle_favorite) {
+                    const res = await pywebview.api.toggle_favorite(track.path);
+                    const isFav = typeof res === 'object' ? (res.is_favorite === 1 || res.is_favorite === true) : Boolean(res);
+                    track.is_favorite = isFav ? 1 : 0;
+                    const iconSpan = btnEl.querySelector('.material-icons-round') || btnEl;
+                    if (isFav) {
+                        btnEl.className = "hover:scale-110 transition text-[var(--citrine-bright)]";
+                        if (iconSpan) iconSpan.innerText = "star";
+                        ui.toast("★ ADDED TO FAVORITES");
+                    } else {
+                        btnEl.className = "hover:scale-110 transition text-white/30 hover:text-white/70";
+                        if (iconSpan) iconSpan.innerText = "star_border";
+                        ui.toast("☆ REMOVED FROM FAVORITES");
+                    }
+                }
+            },
+
+            closeTracklist: () => {
+                const modal = document.getElementById('tracklist-modal');
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            },
+
+            // 播放整張專輯
+            playEntireAlbum: async () => {
+                if (ui.currentTracks && ui.currentTracks.length > 0 && window.pywebview && pywebview.api) {
+                    ui.toast(`▶ BROADCASTING ALBUM: ${ui.currentTracks.length} TRACKS`);
+                    await pywebview.api.play_playlist(ui.currentTracks, 0);
+                    ui.closeTracklist();
+                }
+            },
+
+            // 播放單一音軌
+            playTrackDirect: async (trackPath) => {
+                if (window.pywebview && pywebview.api && pywebview.api.play_video) {
+                    ui.toast(`▶ PLAYING: ${trackPath.split('/').pop()}`);
+                    await pywebview.api.play_video(trackPath);
+                }
+            },
+
+            // 切換我的最愛收藏
+            toggleTrackFavorite: async (path, btnEl) => {
+                if (window.pywebview && pywebview.api && pywebview.api.toggle_favorite) {
+                    const res = await pywebview.api.toggle_favorite(path);
+                    const isFav = typeof res === 'object' ? (res.is_favorite === 1 || res.is_favorite === true) : Boolean(res);
+                    const iconSpan = btnEl.querySelector('.material-icons-round') || btnEl;
+                    if (isFav) {
+                        btnEl.className = "hover:scale-110 transition text-[var(--citrine-bright)]";
+                        if (iconSpan) iconSpan.innerText = "star";
+                        ui.toast("★ ADDED TO FAVORITES");
+                    } else {
+                        btnEl.className = "hover:scale-110 transition text-white/30 hover:text-white/70";
+                        if (iconSpan) iconSpan.innerText = "star_border";
+                        ui.toast("☆ REMOVED FROM FAVORITES");
+                    }
+                }
+            },
+
+            // 刪除目前資料夾
+            deleteActiveFolder: async () => {
+                if (!ui.activeFolderPath) return;
+                if (confirm(`Remove this album repository from STRATA library?\n${ui.activeFolderPath}`)) {
+                    if (window.pywebview && pywebview.api && pywebview.api.delete_folder) {
+                        await pywebview.api.delete_folder(ui.activeFolderPath, false);
+                        ui.closeTracklist();
+                        await ui.loadLibraryFolders();
+                        ui.toast("🗑 REMOVED ALBUM FROM LIBRARY");
+                    }
+                }
+            },
+
+            // 貫穿光柱對齊
+            updateZenithBeam: (idx) => {
+                const card = document.getElementById(`album-card-${idx}`);
+                const beam = document.getElementById('zenith-beam');
+                if (!card || !beam) return;
+                const rect = card.getBoundingClientRect();
+                const centerLeft = rect.left + (rect.width / 2);
+                beam.style.left = `${centerLeft}px`;
+            },
+
+            // 3D 視角模式切換
+            setViewMode: (mode) => {
+                const stage = document.getElementById('stage-container');
+                stage.classList.remove('view-accordion', 'view-stack', 'view-grid');
+                stage.classList.add(`view-${mode}`);
+
+                const modes = ['accordion', 'stack', 'grid'];
+                modes.forEach(m => {
+                    const btn = document.getElementById(`view-mode-${m}`);
+                    if (!btn) return;
+                    if (m === mode) {
+                        btn.className = "btn-strata btn-strata-active chamfer-cut-sm flex items-center gap-1.5 whitespace-nowrap shrink-0 py-1 px-2.5";
+                    } else {
+                        btn.className = "btn-strata btn-strata-dark chamfer-cut-sm flex items-center gap-1.5 whitespace-nowrap shrink-0 py-1 px-2.5";
+                    }
+                });
+
+                setTimeout(() => ui.updateZenithBeam(ui.activeAlbumIdx), 450);
+
+                const titles = {
+                    accordion: '◰ ACCORDION 3D GLASS PLATES',
+                    stack: '◱ VERTICAL SLAB STACK WITH ZENITH BEAM',
+                    grid: '⊞ ORTHOGRAPHIC MACRO GRID'
+                };
+                ui.toast(`📐 PERSPECTIVE SHIFT: ${titles[mode]}`);
+            },
+
+            // 播放控制 (即時零延遲切換)
+            togglePlayState: async () => {
+                if (window.pywebview && pywebview.api && pywebview.api.control) {
+                    ui.isPlaying = !ui.isPlaying;
+                    const icon = document.getElementById('icon-play');
+                    if (icon) icon.innerText = ui.isPlaying ? 'pause' : 'play_arrow';
+                    await pywebview.api.control('play_pause');
+                }
+            },
+
+            prevTrack: async () => {
+                if (window.pywebview && pywebview.api && pywebview.api.control) {
+                    await pywebview.api.control('prev');
+                }
+            },
+
+            nextTrack: async () => {
+                if (window.pywebview && pywebview.api && pywebview.api.control) {
+                    await pywebview.api.control('next');
+                }
+            },
+
+            // 進度推桿拖曳中即時更新時間標籤與漸變彩條寬度 (避免干擾播放)
+            onSeekInput: (val) => {
+                ui.isDragging = true;
+                const sec = parseFloat(val);
+                const curEl = document.getElementById('time-cur');
+                const barEl = document.getElementById('progress-bar');
+                if (curEl) curEl.innerText = ui.formatTime(sec);
+                if (barEl && ui.duration > 0) {
+                    const pct = Math.min(100, Math.max(0, (sec / ui.duration) * 100));
+                    barEl.style.width = `${pct.toFixed(1)}%`;
+                }
+            },
+
+            // 放開推桿時發送精準絕對秒數至後端 MPV
+            onSeekChange: async (val) => {
+                const sec = parseFloat(val);
+                ui.currentTime = sec;
+                if (window.pywebview && pywebview.api && pywebview.api.control) {
+                    await pywebview.api.control('seek', sec);
+                }
+                setTimeout(() => { ui.isDragging = false; }, 250);
+            },
+
+            seekProgress: async (e) => {
+                const slider = document.getElementById('seek-slider');
+                if (slider) {
+                    ui.onSeekChange(slider.value);
+                }
+            },
+
+            onVolumeInput: async (val) => {
+                ui.volume = parseInt(val);
+                document.getElementById('vol-val').innerText = `${val}%`;
+                if (window.pywebview && pywebview.api && pywebview.api.control) {
+                    await pywebview.api.control('set_volume', ui.volume);
+                }
+            },
+
+            toggleMute: async () => {
+                if (window.pywebview && pywebview.api && pywebview.api.toggle_mute) {
+                    const isMuted = await pywebview.api.toggle_mute();
+                    ui.updateMuteState(isMuted);
+                }
+            },
+
+            togglePlayMode: async () => {
+                if (window.pywebview && pywebview.api && pywebview.api.toggle_play_mode) {
+                    const newMode = await pywebview.api.toggle_play_mode();
+                    ui.updatePlayMode(newMode);
+                }
+            },
+
+            toggleFullscreen: async () => {
+                if (window.pywebview && pywebview.api) {
+                    if (pywebview.api.toggle_maximize_window) {
+                        await pywebview.api.toggle_maximize_window();
+                    }
+                    if (pywebview.api.control) {
+                        await pywebview.api.control('fullscreen');
+                    }
+                    ui.toast("⛶ FULLSCREEN TOGGLED");
+                }
+            },
+
+            // 分類與搜尋過濾
+            filterCategory: async (cat) => {
+                const cats = ['all', 'favorites', 'top10'];
+                cats.forEach(c => {
+                    const el = document.getElementById(`filter-${c}`);
+                    if (!el) return;
+                    if (c === cat) {
+                        el.className = "px-2.5 py-1 rounded font-bold bg-[var(--citrine-gold)] text-black";
+                    } else {
+                        el.className = "px-2.5 py-1 rounded font-bold text-gray-400 hover:text-white";
+                    }
+                });
+
+                if (cat === 'all') {
+                    await ui.loadLibraryFolders();
+                } else if (cat === 'favorites' && window.pywebview && pywebview.api && pywebview.api.get_favorites) {
+                    ui.toast("★ RETRIEVING FAVORITES...");
+                    const favs = await pywebview.api.get_favorites();
+                    ui.renderTracklistDrawer("STARRED FAVORITES", "SYSTEM VAULT", favs || []);
+                } else if (cat === 'top10' && window.pywebview && pywebview.api && pywebview.api.get_top10) {
+                    ui.toast("⚡ RETRIEVING TOP 10 PLAYLIST...");
+                    const top = await pywebview.api.get_top10();
+                    ui.renderTracklistDrawer("TOP 10 PLAYCOUNT", "SYSTEM TELEMETRY", top || []);
+                }
+            },
+
+            onSearchInput: (query) => {
+                const q = query.toLowerCase().trim();
+                const cards = document.querySelectorAll('.slab-wrapper');
+                cards.forEach(card => {
+                    const text = card.innerText.toLowerCase();
+                    if (!q || text.includes(q)) card.style.display = 'block';
+                    else card.style.display = 'none';
+                });
+            },
+
+            // =========================================================
+            // 📡 後端狀態即時監聽與更新回調 (safe_evaluate_js Callbacks)
+            // =========================================================
+            updatePlayState: (isPaused) => {
+                ui.isPlaying = !isPaused;
+                const icon = document.getElementById('icon-play');
+                if (icon) icon.innerText = ui.isPlaying ? 'pause' : 'play_arrow';
+                const activePlayBtn = document.querySelector('#manifest-tracks-list .track-row-playing .btn-track-play .material-icons-round');
+                if (activePlayBtn) activePlayBtn.innerText = ui.isPlaying ? 'pause_circle' : 'play_circle';
+                document.querySelectorAll('.playing-equalizer-bars .bar').forEach(bar => {
+                    bar.style.animationPlayState = ui.isPlaying ? 'running' : 'paused';
+                });
+            },
+
+            updateProgress: (pos) => {
+                if (ui.isDragging) return; // 拖曳中鎖定，杜絕定時輪詢引發的滑桿跳動
+                ui.currentTime = pos || 0;
+                const curEl = document.getElementById('time-cur');
+                const slider = document.getElementById('seek-slider');
+                const barEl = document.getElementById('progress-bar');
+                if (curEl) curEl.innerText = ui.formatTime(ui.currentTime);
+                if (slider) slider.value = ui.currentTime;
+                if (barEl && ui.duration > 0) {
+                    const pct = Math.min(100, Math.max(0, (ui.currentTime / ui.duration) * 100));
+                    barEl.style.width = `${pct.toFixed(1)}%`;
+                }
+            },
+
+            updateDuration: (dur) => {
+                ui.duration = dur || 0;
+                const totEl = document.getElementById('time-tot');
+                const slider = document.getElementById('seek-slider');
+                if (totEl) totEl.innerText = ui.formatTime(ui.duration);
+                if (slider && ui.duration > 0) slider.max = ui.duration;
+            },
+
+            updateTitle: (title) => {
+                const deckTitle = document.getElementById('deck-title');
+                const vesselAudio = document.getElementById('vessel-audio-sync');
+                if (deckTitle) deckTitle.innerText = title || "IDLE // READY";
+                if (vesselAudio) vesselAudio.innerText = `AUDIO SYNC: ${title || "IDLE"}`;
+            },
+
+            updateCover: (coverUrl) => {
+                const img = document.getElementById('deck-cover');
+                const fallback = document.getElementById('deck-cover-fallback');
+                if (!img || !fallback) return;
+                if (coverUrl) {
+                    img.src = coverUrl;
+                    img.classList.remove('hidden');
+                    fallback.classList.add('hidden');
+                } else {
+                    img.classList.add('hidden');
+                    fallback.classList.remove('hidden');
+                }
+            },
+
+            updateMuteState: (isMuted) => {
+                ui.isMuted = isMuted;
+                const icon = document.getElementById('icon-mute');
+                if (icon) {
+                    icon.innerText = isMuted ? 'volume_off' : (ui.volume > 50 ? 'volume_up' : 'volume_down');
+                    icon.className = isMuted ? 'material-icons-round text-base text-red-400' : 'material-icons-round text-base text-[var(--citrine-gold)]';
+                }
+            },
+
+            updatePlayMode: (mode) => {
+                ui.playMode = mode;
+                const label = document.getElementById('label-mode');
+                const icon = document.getElementById('icon-mode');
+                if (!label || !icon) return;
+
+                const modeMap = {
+                    'loop': { label: 'LIST LOOP', icon: 'repeat' },
+                    'shuffle': { label: 'SHUFFLE', icon: 'shuffle' },
+                    'one': { label: 'REPEAT 1', icon: 'repeat_one' },
+                    'album_continue': { label: 'CONTINUE', icon: 'queue_music' }
+                };
+
+                const cfg = modeMap[mode] || { label: mode.toUpperCase(), icon: 'repeat' };
+                label.innerText = cfg.label;
+                icon.innerText = cfg.icon;
+            },
+
+            updateUpsampleState: (state) => {
+                const btn = document.getElementById('btn-dsp-upsample');
+                if (btn) {
+                    btn.innerText = state ? '384k ON' : 'OFF';
+                    btn.className = state ? 'btn-strata btn-strata-active text-xs py-1 px-3' : 'btn-strata btn-strata-dark text-xs py-1 px-3';
+                }
+            },
+
+            updateNormalizeState: (state) => {
+                const btn = document.getElementById('btn-dsp-normalize');
+                if (btn) {
+                    btn.innerText = state ? 'EBU ON' : 'OFF';
+                    btn.className = state ? 'btn-strata btn-strata-active text-xs py-1 px-3' : 'btn-strata btn-strata-dark text-xs py-1 px-3';
+                }
+            },
+
+            highlightTrack: (safePath, forceScroll = true) => {
+                if (!safePath) return;
+                ui.currentPlayingPath = safePath;
+                const normalize = (p) => {
+                    try { p = decodeURIComponent(p); } catch(e) {}
+                    return (p || '').replace(/\\/g, '/').toLowerCase().trim();
+                };
+                const curNorm = normalize(safePath);
+                const curFile = curNorm.split('/').pop();
+
+                let matchedRow = null;
+
+                document.querySelectorAll('#manifest-tracks-list .track-row').forEach(row => {
+                    const rawRowPath = row.getAttribute('data-track-path') || '';
+                    const rowNorm = normalize(rawRowPath);
+                    const rowFile = rowNorm.split('/').pop();
+
+                    const isMatch = (rowNorm === curNorm) || 
+                                    (curNorm && (curNorm.endsWith(rowNorm) || rowNorm.endsWith(curNorm))) ||
+                                    (curFile && rowFile && curFile === rowFile);
+
+                    const titleSpan = row.querySelector('.track-title-text');
+                    const badgeContainer = row.querySelector('.track-badge-container');
+                    const playIcon = row.querySelector('.btn-track-play .material-icons-round');
+                    const numContainer = row.querySelector('.track-num-container');
+                    const idx = row.getAttribute('data-track-index') || '0';
+                    const numStr = String(parseInt(idx, 10) + 1).padStart(2, '0');
+
+                    if (isMatch) {
+                        matchedRow = row;
+                        row.classList.add('track-row-playing');
+                        row.classList.remove('border-white/10', 'bg-[#0d1410]');
+
+                        if (numContainer) {
+                            numContainer.innerHTML = `
+                                <div class="playing-equalizer-bars">
+                                    <span class="bar bar-1"></span>
+                                    <span class="bar bar-2"></span>
+                                    <span class="bar bar-3"></span>
+                                    <span class="bar bar-4"></span>
+                                </div>
+                            `;
+                        }
+                        if (titleSpan) {
+                            titleSpan.classList.add('text-[var(--citrine-bright)]', 'drop-shadow-[0_0_8px_var(--citrine-glow)]');
+                        }
+                        if (badgeContainer) {
+                            badgeContainer.innerHTML = `
+                                <span class="text-[8px] font-mono font-extrabold px-1.5 py-0.2 rounded bg-[var(--citrine-gold)]/20 text-[var(--citrine-bright)] border border-[var(--citrine-bright)]/40 shrink-0 flex items-center gap-1 track-playing-badge animate-pulse">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[var(--citrine-bright)] animate-ping"></span>
+                                    PLAYING
+                                </span>
+                            `;
+                        }
+                        if (playIcon) {
+                            playIcon.innerText = ui.isPlaying ? 'pause_circle' : 'play_circle';
+                        }
+                    } else {
+                        row.classList.remove('track-row-playing');
+                        row.classList.add('border-white/10', 'bg-[#0d1410]');
+
+                        if (numContainer) {
+                            numContainer.innerHTML = `<span class="text-gray-500 w-5 text-right font-bold text-[10px] track-num-label">${numStr}</span>`;
+                        }
+                        if (titleSpan) {
+                            titleSpan.classList.remove('text-[var(--citrine-bright)]', 'drop-shadow-[0_0_8px_var(--citrine-glow)]');
+                        }
+                        if (badgeContainer) {
+                            badgeContainer.innerHTML = '';
+                        }
+                        if (playIcon) {
+                            playIcon.innerText = 'play_circle';
+                        }
+                    }
+                });
+
+                if (matchedRow && forceScroll) {
+                    matchedRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            },
+
+            syncState: async () => {
+                if (window.pywebview && pywebview.api && pywebview.api.get_playback_status) {
+                    try {
+                        const status = await pywebview.api.get_playback_status();
+                        if (status) {
+                            const isPaused = status.is_playing !== undefined ? !status.is_playing : !!status.paused;
+                            ui.updatePlayState(isPaused);
+                            ui.updateProgress(status.position !== undefined ? status.position : status.time_pos);
+                            ui.updateDuration(status.duration);
+                            ui.updateTitle(status.title || status.filename);
+                            if (status.cover_url || status.cover_path) {
+                                ui.updateCover(status.cover_url || status.cover_path);
+                            }
+                            if (status.current_path && status.current_path !== ui.currentPlayingPath) {
+                                ui.highlightTrack(status.current_path, true);
+                            }
+                            if (status.play_mode) {
+                                ui.updatePlayMode(status.play_mode);
+                            }
+                            if (status.is_muted !== undefined) {
+                                ui.updateMuteState(status.is_muted);
+                            }
+                            if (status.volume !== undefined) {
+                                ui.volume = status.volume;
+                                const volSlider = document.getElementById('vol-slider');
+                                const volVal = document.getElementById('vol-val');
+                                if (volSlider) volSlider.value = status.volume;
+                                if (volVal) volVal.innerText = `${status.volume}%`;
+                            }
+                        }
+                    } catch (e) {
+                        console.log('syncState fetch:', e);
+                    }
+                }
+            },
+
+            // =========================================================
+            // 🎛️ 音訊串接矩陣 (Audio Bridge & Hotplug Speakers)
+            // =========================================================
+            openBridgeModal: async () => {
+                const modal = document.getElementById('bridge-modal');
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                await ui.refreshBridgeStatus();
+                ui.toast("📡 OPENING AUDIO MATRIX CONSOLE");
+            },
+
+            closeBridgeModal: () => {
+                const modal = document.getElementById('bridge-modal');
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            },
+
+            // 🛡️ 迴路防護即時判定核心 (Loop Safe Detector)
+            checkBridgeLoop: async () => {
+                const mode = ui.bridgeStatus ? ui.bridgeStatus.mode : 'player';
+                const masterBtn = document.getElementById('btn-modal-bridge-toggle');
+                const alertEl = document.getElementById('bridge-loop-alert');
+                const alertText = document.getElementById('bridge-loop-text');
+                const alertIcon = document.getElementById('bridge-loop-icon');
+                const alertBadge = document.getElementById('bridge-loop-badge');
+
+                if (mode === 'player') {
+                    if (alertEl) {
+                        alertEl.className = "p-2.5 rounded border font-mono text-xs font-bold transition flex items-center justify-between gap-2 bg-[#121f18] text-[var(--spot-celadon)] border-[var(--spot-celadon)]/40 shadow-xs";
+                    }
+                    if (alertIcon) alertIcon.innerText = "verified";
+                    if (alertText) alertText.innerText = "🛡️ 本機直通模式 (Direct DSP)：零延遲、免選輸入輸出設備、零迴路風險。";
+                    if (alertBadge) {
+                        alertBadge.innerText = "LOCAL SAFE";
+                        alertBadge.className = "px-2 py-0.5 rounded-xs text-[9px] font-mono font-bold bg-[var(--spot-celadon)]/20 text-[var(--spot-celadon)] border border-[var(--spot-celadon)]/40 shrink-0";
+                    }
+                    if (masterBtn) {
+                        masterBtn.disabled = false;
+                        masterBtn.classList.remove('opacity-40', 'cursor-not-allowed');
+                    }
+                    return { isLoop: false, reason: "本機直通模式安全" };
+                }
+
+                // System mode (TCP broadcast)
+                const checkboxes = document.querySelectorAll('.speaker-chk:checked');
+                const selected = Array.from(checkboxes).map(c => c.value);
+                const multiEnabled = document.getElementById('chk-multi-output') ? document.getElementById('chk-multi-output').checked : false;
+
+                let isLoop = false;
+                let reason = "迴路安全";
+
+                if (multiEnabled && selected.length === 0) {
+                    isLoop = true;
+                    reason = "【輸出提示】多喇叭並接廣播模式下請至少勾選一個實體輸出喇叭設備！";
+                } else if (window.pywebview && pywebview.api && pywebview.api.check_audio_bridge_loop) {
+                    try {
+                        const check = await pywebview.api.check_audio_bridge_loop('loopback:default', '', true, multiEnabled, selected);
+                        isLoop = Boolean(check && check.is_loop);
+                        reason = check ? check.reason : "迴路安全";
+                    } catch (e) {
+                        console.error("check_audio_bridge_loop error:", e);
+                    }
+                }
+
+                if (isLoop) {
+                    if (alertEl) {
+                        alertEl.className = "p-2.5 rounded border font-mono text-xs font-bold transition flex items-center justify-between gap-2 bg-red-950/80 text-red-300 border-red-500/50 shadow-lg";
+                    }
+                    if (alertIcon) alertIcon.innerText = "warning";
+                    if (alertText) alertText.innerText = reason;
+                    if (alertBadge) {
+                        alertBadge.innerText = "LOOP CONFLICT";
+                        alertBadge.className = "px-2 py-0.5 rounded-xs text-[9px] font-mono font-bold bg-red-500/30 text-red-200 border border-red-500/50 animate-pulse shrink-0";
+                    }
+                    if (masterBtn) {
+                        masterBtn.disabled = true;
+                        masterBtn.classList.add('opacity-40', 'cursor-not-allowed');
+                    }
+                } else {
+                    if (alertEl) {
+                        alertEl.className = "p-2.5 rounded border font-mono text-xs font-bold transition flex items-center justify-between gap-2 bg-[#101e16] text-[var(--spot-celadon)] border-[var(--spot-celadon)]/50 shadow-xs";
+                    }
+                    if (alertIcon) alertIcon.innerText = "verified_user";
+                    if (alertText) alertText.innerText = multiEnabled
+                        ? `🛡️ 迴路防護就緒 (Loop Safe)：已安全連結 ${selected.length} 個實體喇叭輸出，杜絕巡迴反饋。`
+                        : "🛡️ 迴路防護就緒 (Loop Safe)：輸出已鎖定實體硬體設備，杜絕巡迴爆音反饋。";
+                    if (alertBadge) {
+                        alertBadge.innerText = "BROADCAST SAFE";
+                        alertBadge.className = "px-2 py-0.5 rounded-xs text-[9px] font-mono font-bold bg-[var(--spot-celadon)]/20 text-[var(--spot-celadon)] border border-[var(--spot-celadon)]/40 shrink-0";
+                    }
+                    if (masterBtn) {
+                        masterBtn.disabled = false;
+                        masterBtn.classList.remove('opacity-40', 'cursor-not-allowed');
+                    }
+                }
+
+                return { isLoop, reason };
+            },
+
+            refreshBridgeStatus: async () => {
+                if (!window.pywebview || !pywebview.api) return;
+                
+                // 讀取狀態
+                const status = await pywebview.api.get_audio_bridge_status();
+                ui.bridgeStatus = status;
+                const isActive = status && status.active;
+                const mode = status ? status.mode : 'player';
+
+                const stateText = document.getElementById('modal-bridge-state-text');
+                if (stateText) {
+                    stateText.innerText = isActive ? 'ONLINE // ACTIVE' : 'STANDBY // INACTIVE';
+                    stateText.className = isActive ? 'text-[var(--spot-celadon)] font-bold' : 'text-gray-400 font-bold';
+                }
+                
+                const btnToggle = document.getElementById('btn-modal-bridge-toggle');
+                if (btnToggle) {
+                    btnToggle.innerText = isActive ? 'STOP RELAY' : 'ENGAGE RELAY';
+                    btnToggle.className = isActive ? 'btn-strata btn-strata-active text-xs py-1.5 px-4 chamfer-cut-sm' : 'btn-strata btn-strata-dark text-xs py-1.5 px-4 chamfer-cut-sm';
+                }
+
+                const btnPlayer = document.getElementById('btn-mode-player');
+                const btnSystem = document.getElementById('btn-mode-system');
+                if (btnPlayer) btnPlayer.className = mode === 'player' ? 'btn-strata btn-strata-active text-xs py-1 px-3' : 'btn-strata btn-strata-dark text-xs py-1 px-3';
+                if (btnSystem) btnSystem.className = mode === 'system' ? 'btn-strata btn-strata-active text-xs py-1 px-3' : 'btn-strata btn-strata-dark text-xs py-1 px-3';
+
+                // 讀取端點與多喇叭並接
+                const devices = await pywebview.api.get_audio_bridge_devices();
+                const listEl = document.getElementById('bridge-speakers-list');
+                
+                if (!devices || !devices.outputs || devices.outputs.length === 0) {
+                    if (listEl) listEl.innerHTML = `<div class="text-center py-4 text-gray-500 font-mono text-xs">NO PHYSICAL OUTPUT ENDPOINTS FOUND</div>`;
+                    return;
+                }
+
+                // 讀取目前勾選的設備
+                const currentSelected = (status && status.output_devices) || [];
+                const multiEnabled = status && status.multi_output_enabled;
+                const chkMulti = document.getElementById('chk-multi-output');
+                if (chkMulti) chkMulti.checked = !!multiEnabled;
+
+                let html = '';
+                for (const dev of devices.outputs) {
+                    if (dev.id === 'auto') continue;
+                    const devId = dev.id || dev.name;
+                    const isChecked = currentSelected.includes(devId);
+                    
+                    // 【核心防迴路設備判定】
+                    const isVirtual = Boolean(dev.is_virtual || (dev.name && /cable|virtual|voicemeeter|audiorelay/i.test(dev.name)));
+                    const isLive = Boolean(status && status.active && status.active_output_devices && status.active_output_devices.includes(devId));
+                    
+                    // 若在系統串接模式下，虛擬聲卡嚴格禁止選取 (防止短路迴路反饋)
+                    const isDisabled = (mode === 'system' && isVirtual);
+                    
+                    let cardBorder = "border-white/10 bg-[#090d0b]";
+                    if (isVirtual) {
+                        cardBorder = "border-red-500/30 bg-[#16090a] opacity-60";
+                    } else if (isLive) {
+                        cardBorder = "border-[var(--spot-celadon)]/70 bg-[#0c1811] shadow-[0_0_10px_rgba(42,217,143,0.15)]";
+                    } else if (isChecked) {
+                        cardBorder = "border-[var(--citrine-gold)]/50 bg-[#111612]";
+                    }
+
+                    html += `
+                        <div class="p-2.5 rounded border ${cardBorder} flex items-center justify-between gap-3 font-mono text-xs transition">
+                            <label class="flex items-center gap-2.5 cursor-pointer min-w-0 ${isDisabled ? 'cursor-not-allowed opacity-60' : ''}">
+                                <input type="checkbox" class="accent-[var(--citrine-gold)] speaker-chk" value="${devId}" 
+                                       ${isChecked && !isDisabled ? 'checked' : ''} ${isDisabled ? 'disabled' : ''} onchange="ui.onSpeakerSelectionChange()">
+                                <div class="min-w-0">
+                                    <div class="text-white font-bold truncate text-[11px] flex items-center gap-1.5">
+                                        <span class="truncate">${dev.name}</span>
+                                        ${isVirtual ? `<span class="text-[8px] bg-red-950/80 text-red-400 border border-red-500/30 px-1 py-0.2 rounded font-bold shrink-0">⚠️ 虛擬端點 (防迴路禁選)</span>` : ''}
+                                        ${isLive ? `<span class="text-[8px] bg-[var(--spot-celadon)]/20 text-[var(--spot-celadon)] border border-[var(--spot-celadon)]/40 px-1 py-0.2 rounded font-bold shrink-0 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-[var(--spot-celadon)] inline-block animate-ping"></span>發聲中</span>` : ''}
+                                    </div>
+                                    <div class="text-[9px] text-gray-400 truncate">${dev.type || 'WASAPI RENDER'}</div>
+                                </div>
+                            </label>
+
+                            <!-- 音量推桿 -->
+                            <div class="flex items-center gap-2 shrink-0">
+                                <span class="material-icons-round text-xs text-[var(--citrine-gold)]">volume_up</span>
+                                <input type="range" min="0" max="100" value="100" ${isDisabled ? 'disabled' : ''} class="w-16 accent-[var(--citrine-gold)] cursor-pointer h-1"
+                                       oninput="ui.onDeviceVolumeChange('${devId}', this.value)">
+                            </div>
+                        </div>
+                    `;
+                }
+                if (listEl) listEl.innerHTML = html;
+                await ui.checkBridgeLoop();
+            },
+
+            toggleBridgeMaster: async () => {
+                if (!window.pywebview || !pywebview.api || !pywebview.api.toggle_audio_bridge) return;
+                const mode = ui.bridgeStatus ? ui.bridgeStatus.mode : 'player';
+                if (mode === 'system') {
+                    const check = await ui.checkBridgeLoop();
+                    if (check && check.isLoop) {
+                        ui.toast("⚠️ 迴路衝突保護中：" + check.reason);
+                        return;
+                    }
+                }
+                const res = await pywebview.api.toggle_audio_bridge();
+                if (res && res.error) {
+                    ui.toast("⚠️ 串接啟動阻擋: " + res.error);
+                }
+                await ui.refreshBridgeStatus();
+            },
+
+            setBridgeMode: async (mode) => {
+                if (window.pywebview && pywebview.api && pywebview.api.set_audio_bridge_mode) {
+                    const res = await pywebview.api.set_audio_bridge_mode(mode);
+                    if (res && res.status) {
+                        ui.bridgeStatus = res.status;
+                    }
+                    const btnPlayer = document.getElementById('btn-mode-player');
+                    const btnSystem = document.getElementById('btn-mode-system');
+                    if (btnPlayer) btnPlayer.className = mode === 'player' ? 'btn-strata btn-strata-active text-xs py-1 px-3' : 'btn-strata btn-strata-dark text-xs py-1 px-3';
+                    if (btnSystem) btnSystem.className = mode === 'system' ? 'btn-strata btn-strata-active text-xs py-1 px-3' : 'btn-strata btn-strata-dark text-xs py-1 px-3';
+                    
+                    await ui.refreshBridgeStatus();
+                    const check = await ui.checkBridgeLoop();
+                    if (mode === 'system' && check.isLoop) {
+                        ui.toast("⚠️ 模式切換：偵測到迴路衝突，已啟動安全保護！");
+                    } else {
+                        ui.toast(`📡 ROUTING MODE: ${mode === 'player' ? 'PLAYER DIRECT DSP' : 'TCP BROADCAST'}`);
+                    }
+                }
+            },
+
+            onToggleMultiOutput: async (enabled) => {
+                const checkboxes = document.querySelectorAll('.speaker-chk:checked');
+                const selected = Array.from(checkboxes).map(c => c.value);
+                if (window.pywebview && pywebview.api && pywebview.api.set_audio_bridge_multi_output) {
+                    const res = await pywebview.api.set_audio_bridge_multi_output(enabled, selected);
+                    if (res && res.error) {
+                        ui.toast("⚠️ " + res.error);
+                    } else {
+                        ui.toast(enabled ? "🔊 PARALLEL MULTI-SPEAKER OUTPUT ENGAGED" : "🔈 SINGLE PHYSICAL SPEAKER MODE");
+                    }
+                }
+                await ui.checkBridgeLoop();
+            },
+
+            onSpeakerSelectionChange: async () => {
+                const enabled = document.getElementById('chk-multi-output') ? document.getElementById('chk-multi-output').checked : false;
+                const checkboxes = document.querySelectorAll('.speaker-chk:checked');
+                const selected = Array.from(checkboxes).map(c => c.value);
+                if (window.pywebview && pywebview.api && pywebview.api.set_audio_bridge_multi_output) {
+                    const res = await pywebview.api.set_audio_bridge_multi_output(enabled, selected);
+                    if (res && res.error) {
+                        ui.toast("⚠️ " + res.error);
+                    }
+                }
+                await ui.checkBridgeLoop();
+            },
+
+            onDeviceVolumeChange: async (devId, vol) => {
+                if (window.pywebview && pywebview.api && pywebview.api.set_device_volume) {
+                    await pywebview.api.set_device_volume(devId, parseInt(vol));
+                }
+            },
+
+            // =========================================================
+            // 🎚️ 10-Band EQ & DSP
+            // =========================================================
+            initEqAndBridgeState: async () => {
+                if (!window.pywebview || !pywebview.api) return;
+                if (pywebview.api.get_eq_settings) {
+                    const eq = await pywebview.api.get_eq_settings();
+                    if (eq) {
+                        document.getElementById('chk-eq-enable').checked = !!eq.enabled;
+                        document.getElementById('eq-preset-select').value = eq.preset || "Flat";
+                        if (eq.gains && Array.isArray(eq.gains)) {
+                            eq.gains.forEach((g, i) => {
+                                const el = document.getElementById(`eq-val-${i}`);
+                                if (el) el.innerText = g;
+                            });
+                        }
+                    }
+                }
+                if (pywebview.api.get_audio_upsample_state) {
+                    const up = await pywebview.api.get_audio_upsample_state();
+                    ui.updateUpsampleState(up);
+                }
+                if (pywebview.api.get_audio_normalize_state) {
+                    const norm = await pywebview.api.get_audio_normalize_state();
+                    ui.updateNormalizeState(norm);
+                }
+            },
+
+            openEqModal: () => {
+                const modal = document.getElementById('eq-modal');
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+            },
+
+            closeEqModal: () => {
+                const modal = document.getElementById('eq-modal');
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            },
+
+            onToggleEq: async (enabled) => {
+                const gains = ui.collectEqGains();
+                const preset = document.getElementById('eq-preset-select').value;
+                if (window.pywebview && pywebview.api && pywebview.api.set_eq_settings) {
+                    await pywebview.api.set_eq_settings(enabled, gains, preset);
+                    ui.toast(enabled ? "🎚️ 10-BAND EQ FILTER ACTIVE" : "🎚️ EQ BYPASS");
+                }
+            },
+
+            onEqBandInput: (idx, val) => {
+                const label = document.getElementById(`eq-val-${idx}`);
+                if (label) label.innerText = val > 0 ? `+${val}` : val;
+                
+                clearTimeout(ui._eqTimer);
+                ui._eqTimer = setTimeout(async () => {
+                    const enabled = document.getElementById('chk-eq-enable').checked;
+                    const gains = ui.collectEqGains();
+                    if (window.pywebview && pywebview.api && pywebview.api.set_eq_settings) {
+                        await pywebview.api.set_eq_settings(enabled, gains, "Custom");
+                    }
+                }, 200);
+            },
+
+            collectEqGains: () => {
+                const gains = [];
+                for (let i = 0; i < 10; i++) {
+                    const el = document.getElementById(`eq-val-${i}`);
+                    gains.push(el ? parseInt(el.innerText) || 0 : 0);
+                }
+                return gains;
+            },
+
+            onSelectEqPreset: async (preset) => {
+                const presets = {
+                    'Flat': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    'Rock': [4, 3, 2, 0, -1, 1, 2, 3, 4, 4],
+                    'Pop': [-1, 1, 3, 4, 3, 1, -1, -1, 2, 2],
+                    'Jazz': [3, 2, 1, 2, -1, -1, 0, 1, 2, 3],
+                    'Electronic': [5, 4, 2, 0, -2, 2, 1, 3, 4, 5],
+                    'Vocal': [-2, -1, -1, 2, 4, 4, 3, 1, 0, -1],
+                    'Bass': [7, 6, 5, 2, 0, -1, -2, -2, 0, 0]
+                };
+                const g = presets[preset] || presets['Flat'];
+                g.forEach((val, i) => {
+                    const input = document.querySelector(`input[oninput*="onEqBandInput(${i}"]`);
+                    const label = document.getElementById(`eq-val-${i}`);
+                    if (input) input.value = val;
+                    if (label) label.innerText = val > 0 ? `+${val}` : val;
+                });
+                const enabled = document.getElementById('chk-eq-enable').checked;
+                if (window.pywebview && pywebview.api && pywebview.api.set_eq_settings) {
+                    await pywebview.api.set_eq_settings(enabled, g, preset);
+                    ui.toast(`🎚️ APPLIED EQ PRESET: ${preset.toUpperCase()}`);
+                }
+            },
+
+            toggleUpsample: async () => {
+                if (window.pywebview && pywebview.api && pywebview.api.toggle_audio_upsample) {
+                    const state = await pywebview.api.toggle_audio_upsample();
+                    ui.updateUpsampleState(state);
+                    ui.toast(state ? "✨ 384kHz HI-RES UPSAMPLING ENGAGED" : "UPSAMPLING BYPASSED");
+                }
+            },
+
+            toggleNormalize: async () => {
+                if (window.pywebview && pywebview.api && pywebview.api.toggle_audio_normalize) {
+                    const state = await pywebview.api.toggle_audio_normalize();
+                    ui.updateNormalizeState(state);
+                    ui.toast(state ? "⚖ LOUDNESS NORMALIZATION ENGAGED" : "NORMALIZATION BYPASSED");
+                }
+            },
+
+            // =========================================================
+            // 🚀 飛船遙測彈窗
+            // =========================================================
+            openVesselModal: () => {
+                const modal = document.getElementById('vessel-modal');
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                ui.toast('🚀 INSPECTING WB-027 TELEMETRY');
+            },
+
+            closeVesselModal: () => {
+                const modal = document.getElementById('vessel-modal');
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            },
+
+            startFlightClock: () => {
+                ui.startClockAndTelemetry();
+            },
+
+            // 輔助函式
+            formatTime: (sec) => {
+                const s = Math.floor(sec || 0);
+                const m = Math.floor(s / 60);
+                const rem = s % 60;
+                return `${String(m).padStart(2, '0')}:${String(rem).padStart(2, '0')}`;
+            },
+
+            toast: (msg) => {
+                const el = document.getElementById('strata-toast');
+                if (!el) return;
+                el.innerText = msg;
+                el.classList.remove('opacity-0');
+                clearTimeout(ui._toastTimer);
+                ui._toastTimer = setTimeout(() => el.classList.add('opacity-0'), 2500);
+            }
+        };
+
+        function osBasename(p) {
+            if (!p) return '';
+            return p.replace(/\\/g, '/').split('/').pop();
+        }
+
+        // 頁面生命週期初始化 (確保 pywebviewready 與 DOMContentLoaded 皆能順暢啟動)
+        let _hasStarted = false;
+        async function launchStrata() {
+            if (_hasStarted) return;
+            _hasStarted = true;
+            await ui.init();
+        }
+
+        window.addEventListener('pywebviewready', launchStrata);
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.pywebview && pywebview.api) {
+                launchStrata();
+            } else {
+                setTimeout(launchStrata, 150);
+            }
+        });
+        window.addEventListener('resize', () => {
+            ui.updateZenithBeam(ui.activeAlbumIdx);
+        });
+    </script>
+</body>
+</html>

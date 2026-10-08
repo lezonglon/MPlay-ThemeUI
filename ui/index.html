@@ -238,6 +238,14 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: rgba(168, 85, 247, 0.5); }
+
+        /* Frameless window drag styles */
+        .pywebview-drag-region {
+            -webkit-app-region: drag;
+        }
+        .no-drag, button, input, select, a {
+            -webkit-app-region: no-drag;
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white">
@@ -252,9 +260,11 @@
         
         <!-- Folder View Layer -->
         <div id="layer-folders">
-            <header class="flex flex-col md:flex-row justify-between items-center gap-4 mb-8 sticky top-0 z-10 px-8 py-5 bg-[#0a0a0f]/80 backdrop-blur-md border-b border-white/5">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-gradient-to-tr from-purple-600 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/20">
+            <header class="flex flex-col md:flex-row justify-between items-center gap-4 mb-8 sticky top-0 z-10 px-8 py-4 bg-[#0a0a0f]/85 backdrop-blur-md border-b border-white/5 pywebview-drag-region select-none cursor-default"
+                    onmousedown="if (event.button === 0 && !event.target.closest('button, input, select, a, .no-drag')) { ui.dragWindow(); }"
+                    ondblclick="if (!event.target.closest('button, input, select, a, .no-drag')) { ui.toggleMaximize(); }">
+                <div class="flex items-center gap-4 no-drag">
+                    <div class="w-11 h-11 bg-gradient-to-tr from-purple-600 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/20">
                         <span class="material-icons-round text-white text-2xl">graphic_eq</span>
                     </div>
                     <div>
@@ -266,7 +276,7 @@
                 </div>
 
                 <!-- Search & Actions -->
-                <div class="flex items-center gap-3 w-full md:w-auto">
+                <div class="flex items-center gap-3 w-full md:w-auto no-drag">
                     <div class="relative flex-1 md:w-64">
                         <span class="material-icons-round absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">search</span>
                         <input id="search-input" type="text" placeholder="搜尋專輯或曲目..." oninput="ui.filterFolders(this.value)"
@@ -279,33 +289,54 @@
                     <button onclick="ui.scanFolder()" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold rounded-full shadow-lg shadow-purple-600/30 transition flex items-center gap-1.5 active:scale-95" title="匯入資料夾">
                         <span class="material-icons-round text-base">add</span> 匯入
                     </button>
-                    <button onclick="ui.closeApp()" class="p-2 hover:bg-red-500/20 text-gray-400 hover:text-red-400 rounded-full transition active:scale-95" title="退出應用">
-                        <span class="material-icons-round">power_settings_new</span>
-                    </button>
+
+                    <!-- Fused Window Controls (最小化, 最大化/還原, 關閉) -->
+                    <div class="flex items-center gap-1 pl-3 border-l border-white/10 no-drag">
+                        <button onclick="ui.minimizeWindow()" class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition active:scale-95" title="最小化 (Minimize)">
+                            <span class="material-icons-round text-base">remove</span>
+                        </button>
+                        <button id="btn-maximize" onclick="ui.toggleMaximize()" class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition active:scale-95" title="最大化 / 還原 (Maximize)">
+                            <span class="material-icons-round text-base icon-max-symbol">crop_square</span>
+                        </button>
+                        <button onclick="ui.closeApp()" class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-red-500/80 hover:shadow-lg hover:shadow-red-500/30 transition active:scale-95" title="關閉 (Close)">
+                            <span class="material-icons-round text-base">close</span>
+                        </button>
+                    </div>
                 </div>
             </header>
 
-            <div id="folder-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-8"></div>
+            <div id="folder-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-8">
+                <!-- Folder cards dynamically loaded -->
+            </div>
+            
             <div class="h-32"></div>
         </div>
 
+        <!-- Track List Drawer Layer -->
         <div id="layer-tracks">
-            <div class="p-6 flex items-center gap-4 flex-shrink-0 border-b border-white/10">
-                <button onclick="ui.closeFolder()" class="p-2 hover:bg-white/10 rounded-full transition text-white" title="Back">
-                    <span class="material-icons-round text-xl">arrow_back_ios_new</span>
-                </button>
-                <div class="overflow-hidden">
-                    <h2 id="panel-title" class="text-lg font-bold truncate text-white drop-shadow">Folder Name</h2>
-                    <p class="text-xs text-gray-400 font-mono">TRACKLIST</p>
+            <div class="p-6 border-b border-white/10 flex items-center justify-between bg-black/20 flex-shrink-0">
+                <div class="flex items-center gap-3 overflow-hidden">
+                    <button onclick="ui.closeFolder()" class="p-2 hover:bg-white/10 rounded-full transition text-gray-400 hover:text-white active:scale-95" title="返回">
+                        <span class="material-icons-round text-xl">arrow_back_ios_new</span>
+                    </button>
+                    <div class="overflow-hidden">
+                        <h2 id="panel-title" class="text-base font-bold text-white truncate">Folder Name</h2>
+                        <p class="text-[10px] text-gray-400 font-mono tracking-wider">PLAYLIST TRACKS</p>
+                    </div>
                 </div>
+                <span id="track-count-badge" class="text-xs font-mono text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded-full border border-purple-500/20">0 tracks</span>
             </div>
-            <div id="track-list" class="flex-1 overflow-y-auto p-4 space-y-1 pb-32 scroll-smooth"></div>
+            
+            <div id="track-list" class="flex-1 overflow-y-auto p-4 space-y-1.5 scroll-smooth">
+                <!-- Tracks dynamically loaded -->
+            </div>
         </div>
+
     </div>
 
     <!-- 🎛️ Default Dark Parametric EQ Custom Modal -->
-    <div id="eq-modal" class="hidden fixed inset-0 z-[999999] bg-black/70 backdrop-blur-md flex items-center justify-center p-4" onclick="ui.closeEqModal()">
-        <div class="w-[620px] bg-[#12121a] border border-purple-500/30 rounded-2xl p-6 shadow-[0_0_50px_rgba(168,85,247,0.2)] flex flex-col gap-4 font-sans text-white" onclick="event.stopPropagation()">
+    <div id="eq-modal" class="hidden fixed inset-0 z-[999999] bg-black/70 backdrop-blur-md flex items-center justify-center p-4 select-none overflow-hidden" onclick="ui.closeEqModal()" onwheel="event.stopPropagation()">
+        <div class="w-[620px] bg-[#12121a] border border-purple-500/30 rounded-2xl p-6 shadow-[0_0_50px_rgba(168,85,247,0.2)] flex flex-col gap-4 font-sans text-white" onclick="event.stopPropagation()" onwheel="event.stopPropagation()">
             <div class="flex justify-between items-center border-b border-purple-500/20 pb-3">
                 <div class="flex items-center gap-2">
                     <span class="material-icons-round text-purple-400 text-xl">equalizer</span>
@@ -359,35 +390,6 @@
                 <span class="text-purple-400 font-bold">Real-time Audio Engine</span>
             </div>
         </div>
-    </div>
-
-            <div id="folder-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-8">
-                <!-- Folder cards dynamically loaded -->
-            </div>
-            
-            <div class="h-32"></div>
-        </div>
-
-        <!-- Track List Drawer Layer -->
-        <div id="layer-tracks">
-            <div class="p-6 border-b border-white/10 flex items-center justify-between bg-black/20 flex-shrink-0">
-                <div class="flex items-center gap-3 overflow-hidden">
-                    <button onclick="ui.closeFolder()" class="p-2 hover:bg-white/10 rounded-full transition text-gray-400 hover:text-white active:scale-95" title="返回">
-                        <span class="material-icons-round text-xl">arrow_back_ios_new</span>
-                    </button>
-                    <div class="overflow-hidden">
-                        <h2 id="panel-title" class="text-base font-bold text-white truncate">Folder Name</h2>
-                        <p class="text-[10px] text-gray-400 font-mono tracking-wider">PLAYLIST TRACKS</p>
-                    </div>
-                </div>
-                <span id="track-count-badge" class="text-xs font-mono text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded-full border border-purple-500/20">0 tracks</span>
-            </div>
-            
-            <div id="track-list" class="flex-1 overflow-y-auto p-4 space-y-1.5 scroll-smooth">
-                <!-- Tracks dynamically loaded -->
-            </div>
-        </div>
-
     </div>
 
     <!-- Floating Modern Player Bar -->
@@ -449,12 +451,14 @@
                     <span class="material-icons-round text-lg">palette</span>
                 </button>
                 <div id="theme-menu" class="hidden absolute bottom-12 right-0 w-44 bg-[#181824]/95 border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50 flex-col backdrop-blur-xl">
-                    <button onclick="pywebview.api.change_theme('needy_theme.html')" class="px-4 py-2 text-left text-xs text-gray-300 hover:bg-white/10 hover:text-white transition">✨ Internet Angel</button>
+                    <button onclick="pywebview.api.change_theme('STRATA.html')" class="px-4 py-2 text-left text-xs text-amber-300 font-bold hover:bg-white/10 hover:text-amber-200 transition">🧊 STRATA 3D</button>
+                    <button onclick="pywebview.api.change_theme('needy_theme.html')" class="px-4 py-2 text-left text-xs text-gray-300 hover:bg-white/10 hover:text-white transition border-t border-white/5">✨ Internet Angel</button>
                     <button onclick="pywebview.api.change_theme('cyberpunk.html')" class="px-4 py-2 text-left text-xs text-gray-300 hover:bg-white/10 hover:text-white transition border-t border-white/5">⚡ Cyberpunk</button>
                     <button onclick="pywebview.api.change_theme('mech_theme.html')" class="px-4 py-2 text-left text-xs text-gray-300 hover:bg-white/10 hover:text-white transition border-t border-white/5">🤖 Cyber Mech</button>
                     <button onclick="pywebview.api.change_theme('index.html')" class="px-4 py-2 text-left text-xs text-purple-300 font-semibold bg-purple-500/15 transition border-t border-white/5 flex items-center justify-between">🎵 Default Dark <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span></button>
                     <button onclick="pywebview.api.change_theme('light.html')" class="px-4 py-2 text-left text-xs text-gray-300 hover:bg-white/10 hover:text-white transition border-t border-white/5">🌸 Light Ambient</button>
                     <button onclick="pywebview.api.change_theme('image_theme.html')" class="px-4 py-2 text-left text-xs text-gray-300 hover:bg-white/10 hover:text-white transition border-t border-white/5">🖼️ Immersive Glass</button>
+                    <button onclick="pywebview.api.change_theme('DEV.html')" class="px-4 py-2 text-left text-xs text-yellow-300 hover:bg-white/10 hover:text-white transition border-t border-white/5 font-mono">🛠️ DEV Mode</button>
                 </div>
             </div>
 
@@ -474,6 +478,7 @@
         const ui = {
             isDragging: false,
             currentTrackPath: null,
+            lastHighlightedPath: null,
             isProcessing: false,
             allFolders: [],
 
@@ -525,15 +530,22 @@
 
             toggleEqModal: () => {
                 const modal = document.getElementById('eq-modal');
-                if (modal) modal.classList.toggle('hidden');
+                if (modal) {
+                    if (modal.classList.contains('hidden')) ui.openEqModal();
+                    else ui.closeEqModal();
+                }
             },
             closeEqModal: () => {
                 const modal = document.getElementById('eq-modal');
                 if (modal) modal.classList.add('hidden');
+                const layer = document.getElementById('layer-folders');
+                if (layer) layer.style.overflowY = 'auto';
             },
             openEqModal: () => {
                 const modal = document.getElementById('eq-modal');
                 if (modal) modal.classList.remove('hidden');
+                const layer = document.getElementById('layer-folders');
+                if (layer) layer.style.overflowY = 'hidden';
             },
 
             initEqUI: async () => {
@@ -668,6 +680,11 @@
                     if (st.is_normalize !== undefined) ui.updateNormalizeState(st.is_normalize);
                     if (st.is_boot_mode !== undefined) ui.updateBootState(st.is_boot_mode);
                     if (st.current_path) ui.highlightTrack(st.current_path);
+
+                    if (pywebview.api.is_window_maximized) {
+                        const isMax = await pywebview.api.is_window_maximized();
+                        ui.updateMaximizeIcon(isMax);
+                    }
                 } catch(e) {
                     console.error("syncState error:", e);
                 }
@@ -835,13 +852,17 @@
                         </div>
                     </div>`;
                 }).join('');
+
+                if (ui.currentTrackPath) {
+                    ui.highlightTrack(ui.currentTrackPath, true);
+                }
             },
 
             handleTrackClick: async (encodedPath) => {
                 if (ui.isProcessing) return;
                 const path = decodeURIComponent(encodedPath);
                 ui.isProcessing = true;
-                ui.highlightTrack(path);
+                ui.highlightTrack(path, true);
                 
                 try {
                     await pywebview.api.play_video(path);
@@ -852,24 +873,36 @@
                 }
             },
 
-            highlightTrack: (path) => {
+            highlightTrack: (path, forceScroll = false) => {
+                if (!path) return;
                 const cleanPath = path.replace(/\\/g, '/');
                 ui.currentTrackPath = cleanPath;
 
                 const trackLayer = document.getElementById('layer-tracks');
-                if (!trackLayer.classList.contains('active')) return;
+                if (!trackLayer || !trackLayer.classList.contains('active')) return;
+
+                // 只有曲目真正切換或強制要求捲動時才觸發捲動，防止使用者用滾輪瀏覽時被每500ms強制拉回
+                const trackChanged = (ui.lastHighlightedPath !== cleanPath);
+                if (!trackChanged && !forceScroll) {
+                    return;
+                }
+                ui.lastHighlightedPath = cleanPath;
 
                 document.querySelectorAll('.track-item.active').forEach(el => {
                     el.classList.remove('active');
-                    el.querySelector('.track-num').classList.remove('hidden');
+                    const num = el.querySelector('.track-num');
+                    if (num) num.classList.remove('hidden');
                 });
 
                 try {
                     const newActive = document.querySelector(`.track-item[data-path="${CSS.escape(cleanPath)}"]`);
                     if (newActive) {
                         newActive.classList.add('active');
-                        newActive.querySelector('.track-num').classList.add('hidden');
-                        newActive.scrollIntoView({behavior: "smooth", block: "nearest"});
+                        const num = newActive.querySelector('.track-num');
+                        if (num) num.classList.add('hidden');
+                        if (trackChanged || forceScroll) {
+                            newActive.scrollIntoView({behavior: "smooth", block: "nearest"});
+                        }
                     }
                 } catch(e) {}
             },
@@ -877,6 +910,32 @@
             closeFolder: () => {
                 document.getElementById('layer-folders').classList.remove('depth-mode');
                 document.getElementById('layer-tracks').classList.remove('active');
+                ui.lastHighlightedPath = null;
+            },
+
+            dragWindow: () => {
+                if (window.pywebview && pywebview.api && pywebview.api.drag_window) {
+                    pywebview.api.drag_window();
+                }
+            },
+
+            minimizeWindow: () => {
+                if (window.pywebview && pywebview.api && pywebview.api.minimize_window) {
+                    pywebview.api.minimize_window();
+                }
+            },
+
+            toggleMaximize: async () => {
+                if (window.pywebview && pywebview.api && pywebview.api.toggle_maximize_window) {
+                    const isMax = await pywebview.api.toggle_maximize_window();
+                    ui.updateMaximizeIcon(isMax);
+                }
+            },
+
+            updateMaximizeIcon: (isMax) => {
+                document.querySelectorAll('.icon-max-symbol').forEach(el => {
+                    el.innerText = isMax ? 'filter_none' : 'crop_square';
+                });
             },
 
             scanFolder: async () => { 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MPlay - NEEDY GIRL OVERDOSE // INTERNET ANGEL OS</title>
+    <title>MPlay - DEV EXPERIMENTAL OS // DEVELOPER WORKSTATION</title>
     <script src="https://cdn.tailwindcss.com" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&family=VT323&family=Plus+Jakarta+Sans:wght@500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
@@ -436,7 +436,6 @@
             left: 85px !important;
             right: 16px !important;
             bottom: 108px !important;
-            z-index: 150 !important;
             width: auto !important;
             height: auto !important;
             transform: none !important;
@@ -846,6 +845,28 @@
         @keyframes wave-bar-3 { 0% { height: 25%; background: #63f4ff; } 100% { height: 100%; background: #ff45c8; } }
         @keyframes wave-bar-4 { 0% { height: 75%; background: #ff45c8; } 100% { height: 35%; background: #8258ff; } }
 
+        /* 🎛️ Live Audio Router & Resampler Visualizer */
+        .bridge-viz {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 20px;
+            padding: 2px;
+        }
+        .bridge-bar {
+            width: 4px;
+            height: 20%;
+            background: #523080;
+            border-radius: 2px;
+            transition: height 0.2s ease, background 0.2s ease;
+        }
+        .bridge-active .bridge-bar:nth-child(1) { animation: wave-bar-1 0.35s ease-in-out infinite alternate; background: #00e676; }
+        .bridge-active .bridge-bar:nth-child(2) { animation: wave-bar-2 0.28s ease-in-out infinite alternate; background: #63f4ff; }
+        .bridge-active .bridge-bar:nth-child(3) { animation: wave-bar-3 0.42s ease-in-out infinite alternate; background: #ff4081; }
+        .bridge-active .bridge-bar:nth-child(4) { animation: wave-bar-4 0.31s ease-in-out infinite alternate; background: #ffea00; }
+        .bridge-active .bridge-bar:nth-child(5) { animation: wave-bar-2 0.39s ease-in-out infinite alternate; background: #00e676; }
+        .bridge-active .bridge-bar:nth-child(6) { animation: wave-bar-1 0.45s ease-in-out infinite alternate; background: #63f4ff; }
+
         #artwork-modal, #wallpaper-modal, #delete-modal, #eq-modal {
             position: fixed;
             inset: 0;
@@ -962,8 +983,8 @@
             onmousedown="if (event.button === 0 && !event.target.closest('button, input, select, a, .no-drag')) { ui.dragWindow(); }"
             ondblclick="if (!event.target.closest('button, input, select, a, .no-drag')) { ui.toggleMaximize(); }">
         <div class="flex items-center gap-2 cursor-move" style="font-size: 10px;">
-            <span class="text-sm">✨</span>
-            <span style="font-family: 'Press Start 2P', monospace; font-size: 8px; letter-spacing: 0.5px;">AME-OS // INTERNET ANGEL SYSTEM</span>
+            <span class="text-sm">🛠️</span>
+            <span style="font-family: 'Press Start 2P', monospace; font-size: 8px; letter-spacing: 0.5px; color: #ffeb3b;">AME-OS // DEV EXPERIMENTAL OS [DEBUG]</span>
         </div>
         <div class="xp-btn-box no-drag" style="align-items: center; gap: 4px;">
             <div class="xp-btn" onclick="ui.minimizeWindow()" title="Minimize Window (最小化)" style="width: 22px; height: 18px; font-size: 11px; line-height: 1; text-align: center;">_</div>
@@ -983,15 +1004,15 @@
 
         <div class="relative z-10 w-[380px] p-6 bg-[#f4ecfd]/90 border-2 border-[#6b33a8] rounded-lg shadow-[0_12px_40px_rgba(45,12,85,0.6)] flex flex-col items-center text-center">
             <div id="login-avatar-box" class="w-20 h-20 bg-white border-2 border-[#ff4081] rounded-full overflow-hidden mb-3 shadow-[0_0_15px_rgba(255,64,129,0.5)] flex items-center justify-center">
-                <span id="login-avatar-icon" class="material-icons-round text-4xl text-[#ff4081]">favorite</span>
+                <span id="login-avatar-icon" class="material-icons-round text-4xl text-[#ff4081]">developer_mode</span>
                 <img id="login-avatar-img" src="" alt="Avatar" class="w-full h-full object-contain hidden">
             </div>
 
-            <div class="text-sm font-bold text-[#ff4081] tracking-widest font-mono mb-1">INTERNET_ANGEL_OS</div>
-            <div class="text-xs font-bold text-[#3b1166] mb-3">Welcome, P-Chan! 💕</div>
+            <div class="text-sm font-bold text-[#ff4081] tracking-widest font-mono mb-1">AME_DEV_OS // WORKSTATION</div>
+            <div class="text-xs font-bold text-[#3b1166] mb-3">Welcome, Developer! 🛠️</div>
 
             <div id="login-status-text" class="text-[11px] font-bold text-[#7b1fa2] font-mono mb-2 animate-pulse">
-                ⚡ AUTO-LOGGING IN...
+                ⚡ INITIALIZING DEV KERNEL...
             </div>
 
             <div class="w-full bg-[#e2cbf7] h-3 border border-[#6b33a8] rounded-sm overflow-hidden p-0.5 shadow-inner">
@@ -999,7 +1020,7 @@
             </div>
 
             <div class="text-[9px] text-[#6b33a8] font-mono mt-3 opacity-80">
-                System Preloading // Sound Engine & Theme Initializing...
+                Dev Kernel Active // MPV Audio Engine & Debug Tools Loaded
             </div>
         </div>
     </div>
@@ -1070,6 +1091,13 @@
                 <span class="material-icons-round text-2xl">assessment</span>
             </div>
             <span class="desktop-icon-label">Telemetry</span>
+        </div>
+
+        <div class="desktop-icon" onclick="ui.toggleWindow('audio-bridge-window')" title="Open Live Audio Router & Resampler Studio (即時系統音訊串接控制台)">
+            <div class="desktop-icon-box" style="color: #00e676;">
+                <span class="material-icons-round text-2xl">router</span>
+            </div>
+            <span class="desktop-icon-label">Audio Router</span>
         </div>
 
         <div class="desktop-icon" onclick="ui.arrangeWindows()" title="Reset & Auto Arrange All Desktop Windows">
@@ -1327,6 +1355,316 @@
         <div class="xp-resizer"></div>
     </div>
 
+    <!-- 🎛️ Live Audio Router & Resampler Window -->
+    <div id="audio-bridge-window" class="xp-window is-minimized hidden" style="position: fixed; left: 140px; top: 45px; width: 620px; max-width: 95vw; display: none; z-index: 135;">
+        <div class="xp-titlebar" style="background: linear-gradient(90deg, #1b0a33 0%, #4a148c 50%, #00e676 100%);">
+            <div class="flex items-center gap-2">
+                <span>🎛️ DEV // LIVE AUDIO ROUTER & RESAMPLER</span>
+                <span id="bridge-header-badge" class="px-1.5 py-0.5 rounded text-[8px] font-mono font-bold bg-white/20 text-yellow-300">IDLE</span>
+            </div>
+            <div class="xp-btn-box">
+                <div class="xp-btn" onclick="ui.minimizeWindow('audio-bridge-window')" title="Minimize">_</div>
+                <div class="xp-btn" onclick="ui.maximizeWindow('audio-bridge-window')" title="Maximize">□</div>
+                <div class="xp-btn" onclick="ui.closeWindow('audio-bridge-window')" title="Close">X</div>
+            </div>
+        </div>
+
+        <div class="p-3.5 space-y-3 bg-[#f4ecfd] text-[#1b1233] max-h-[80vh] overflow-y-auto font-sans" onclick="event.stopPropagation()">
+            <!-- Mode Switcher Tabs -->
+            <div class="flex items-center p-1 bg-white/80 rounded-lg border border-purple-200 gap-1.5 shadow-xs">
+                <button id="bridge-tab-player" onclick="ui.setAudioBridgeMode('player')" class="flex-1 py-1.5 px-3 rounded-md font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer bg-[#8258ff] text-white shadow-xs">
+                    <span class="material-icons-round text-sm">music_note</span>
+                    <span>🎵 本機播放器模式 (Local MPV Only)</span>
+                </button>
+                <button id="bridge-tab-system" onclick="ui.setAudioBridgeMode('system')" class="flex-1 py-1.5 px-3 rounded-md font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer text-[#4a148c] hover:bg-purple-100/60">
+                    <span class="material-icons-round text-sm">language</span>
+                    <span>🌐 系統全域串接 (System Loopback)</span>
+                </button>
+            </div>
+
+            <!-- Hero Section: Master Switch Card -->
+            <div class="bg-gradient-to-r from-[#241540] to-[#120a24] p-3.5 rounded-lg border-2 border-[#8258ff] text-white shadow-md">
+                <div class="flex items-center justify-between gap-3 flex-wrap">
+                    <div class="flex items-center gap-3">
+                        <button id="bridge-master-toggle" onclick="ui.toggleAudioBridge()" class="px-4 py-2 rounded-lg font-bold font-mono text-xs shadow-lg transition flex items-center gap-2 bg-[#8258ff] hover:bg-[#9d7aff] text-white cursor-pointer active:scale-95 border border-white/20">
+                            <span class="material-icons-round text-base" id="bridge-master-icon">play_arrow</span>
+                            <span id="bridge-master-text">🎵 啟用本機濾鏡 (ENABLE)</span>
+                        </button>
+                        <div>
+                            <div class="text-[11px] font-bold text-gray-200 flex items-center gap-2">
+                                <span id="bridge-hero-title">本機音樂/影片專用發燒濾鏡</span>
+                                <span id="bridge-status-pill" class="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-gray-700 text-gray-300">⚪ 待機離線 (IDLE)</span>
+                            </div>
+                            <div id="bridge-hero-subtitle" class="text-[9px] text-gray-400 font-mono">免選設備、零迴路風險，直接對 MPlay 內部播放器套用 SOXR 發燒重採樣與 EQ DSP</div>
+                        </div>
+                    </div>
+
+                    <!-- Animated Signal Flow & Mini VU -->
+                    <div class="flex items-center gap-2 bg-black/40 px-3 py-1.5 rounded-md border border-white/10" id="bridge-viz-container">
+                        <div class="text-[9px] font-mono text-gray-400">SIGNAL</div>
+                        <div class="bridge-viz" id="bridge-vu-bars">
+                            <div class="bridge-bar"></div>
+                            <div class="bridge-bar"></div>
+                            <div class="bridge-bar"></div>
+                            <div class="bridge-bar"></div>
+                            <div class="bridge-bar"></div>
+                            <div class="bridge-bar"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Signal Pipeline Graphic (Player Mode) -->
+                <div id="bridge-pipeline-player" class="mt-3 pt-2.5 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-gray-300 gap-1 overflow-x-auto">
+                    <div class="flex items-center gap-1 bg-white/5 px-2 py-1 rounded">
+                        <span>🎵 MPlay 播放音訊</span>
+                    </div>
+                    <span class="text-[#00e676]">➔</span>
+                    <div class="flex items-center gap-1 bg-[#00e676]/20 px-2 py-1 rounded border border-[#00e676]/40 text-[#00e676]">
+                        <span>⚡ SOXR VHQ 192k 發燒重採樣</span>
+                    </div>
+                    <span class="text-[#63f4ff]">➔</span>
+                    <div class="flex items-center gap-1 bg-white/5 px-2 py-1 rounded border border-[#63f4ff]/40 text-cyan-200">
+                        <span>🔊 當前耳機 / DAC (免接管系統)</span>
+                    </div>
+                </div>
+
+                <!-- Signal Pipeline Graphic (System Mode) -->
+                <div id="bridge-pipeline-system" class="hidden mt-3 pt-2.5 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-gray-300 gap-1 overflow-x-auto">
+                    <div class="flex items-center gap-1 bg-white/5 px-2 py-1 rounded">
+                        <span>💻 Windows 程式/遊戲/音樂</span>
+                    </div>
+                    <span class="text-[#ff4081]">➔</span>
+                    <div class="flex items-center gap-1 bg-white/5 px-2 py-1 rounded border border-[#ff4081]/40">
+                        <span>🎛️ 系統預設/側錄/虛擬端點</span>
+                    </div>
+                    <span class="text-[#00e676]">➔</span>
+                    <div class="flex items-center gap-1 bg-[#00e676]/10 px-2 py-1 rounded border border-[#00e676]/40 text-[#00e676]">
+                        <span>⚡ MPV 發燒重採樣</span>
+                    </div>
+                    <span class="text-[#63f4ff]">➔</span>
+                    <div class="flex items-center gap-1 bg-white/5 px-2 py-1 rounded border border-[#63f4ff]/40">
+                        <span>🔊 實體 DAC / 喇叭 / 耳機</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loop Prevention Banner & Player Safe Alert -->
+            <div id="bridge-player-safe-alert" class="p-2.5 rounded-lg text-xs font-bold border transition flex items-center gap-2 bg-purple-50 text-purple-900 border-purple-300">
+                <span class="material-icons-round text-base text-[#8258ff]">verified</span>
+                <span>🛡️ 本機直通模式 (Direct DSP)：零延遲、免選輸入輸出設備、零迴路風險，音訊直接經發燒濾鏡優化輸出。</span>
+            </div>
+
+            <div id="bridge-loop-alert" class="hidden p-2.5 rounded-lg text-xs font-bold border transition flex items-center gap-2 bg-emerald-50 text-emerald-800 border-emerald-300">
+                <span class="material-icons-round text-base text-emerald-600" id="bridge-loop-icon">verified_user</span>
+                <span id="bridge-loop-text">🛡️ 迴路防護就緒 (Loop Safe)：輸出已鎖定實體硬體設備，杜絕巡迴爆音反饋。</span>
+            </div>
+
+            <!-- Configuration Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <!-- Left Option A: Player Direct Card (Shown in Player Mode) -->
+                <div id="bridge-player-card" class="bg-white p-3 rounded-lg border border-[#d1b3ff] space-y-2.5 shadow-xs flex flex-col justify-between">
+                    <div>
+                        <div class="text-xs font-bold text-[#4a148c] flex items-center justify-between border-b border-purple-100 pb-1 mb-2">
+                            <span class="flex items-center gap-1"><span class="material-icons-round text-sm">album</span> 本機直通輸出特性 (Local Direct)</span>
+                            <span class="text-[9px] px-1.5 py-0.5 rounded bg-purple-100 text-[#8258ff] font-bold font-mono">零系統干擾</span>
+                        </div>
+                        <div class="space-y-2 text-xs text-purple-950 font-sans">
+                            <div class="flex items-start gap-1.5">
+                                <span class="text-emerald-600 font-bold">✓</span>
+                                <span><b>免選輸入輸出設備</b>：專一優化本播放器內部音樂與影片，絕不修改 Windows 預設聲音端點。</span>
+                            </div>
+                            <div class="flex items-start gap-1.5">
+                                <span class="text-emerald-600 font-bold">✓</span>
+                                <span><b>原生極速解碼</b>：libmpv 原生解碼管線過載處理，無需 TCP/WASAPI 側錄中轉，延遲低於 1ms。</span>
+                            </div>
+                            <div class="flex items-start gap-1.5">
+                                <span class="text-emerald-600 font-bold">✓</span>
+                                <span><b>即時動態熱更</b>：播放中隨時點擊切換 58 款空間預置或 SOXR 採樣率，無縫即時生效。</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-2 border-t border-purple-100 flex items-center justify-between text-[10px] text-gray-500 font-mono">
+                        <span>目標設備: 系統預設/當前 DAC</span>
+                        <span id="player-dsp-active-tag" class="text-emerald-600 font-bold">● 原生直通就緒</span>
+                    </div>
+                </div>
+
+                <!-- Left Option B: Endpoint Routing (Shown in System Mode) -->
+                <div id="bridge-endpoint-card" class="hidden bg-white p-3 rounded-lg border border-[#d1b3ff] space-y-2.5 shadow-xs">
+                    <div class="text-xs font-bold text-[#4a148c] flex items-center justify-between border-b border-purple-100 pb-1">
+                        <span class="flex items-center gap-1"><span class="material-icons-round text-sm">settings_input_component</span> 音訊端點路由 (Endpoints)</span>
+                        <button onclick="ui.refreshAudioBridgeUI(true)" class="text-[10px] text-[#8258ff] hover:text-[#4a148c] flex items-center gap-0.5 cursor-pointer font-bold transition hover:scale-105" title="即時偵測 Windows 設備插拔增刪並刷新">
+                            <span class="material-icons-round text-xs">refresh</span> 重新整理設備
+                        </button>
+                    </div>
+
+                    <!-- Input Endpoint with Master Volume Control -->
+                    <div>
+                        <div class="flex items-center justify-between mb-0.5">
+                            <label class="block text-[10px] font-bold text-gray-600">音訊輸入端點 (Capture / Loopback Input):</label>
+                            <span id="bridge-input-vol-badge" class="text-[9px] font-mono font-bold text-purple-700 bg-purple-50 px-1 rounded border border-purple-200">100%</span>
+                        </div>
+                        <select id="bridge-input-select" onchange="ui.onBridgeInputChange()" class="w-full text-xs p-1.5 rounded border border-gray-300 bg-gray-50 font-mono text-[#3b1166]">
+                            <option value="">正在偵測輸入端點...</option>
+                        </select>
+                        <!-- Input Endpoint Hardware Volume Slider & Mute -->
+                        <div class="mt-1 flex items-center gap-1.5 bg-purple-50/70 p-1.5 rounded border border-purple-100">
+                            <button id="bridge-input-mute-btn" onclick="ui.toggleInputMute()" class="p-1 rounded bg-white hover:bg-purple-100 text-[#6b33a8] border border-purple-200 shadow-2xs transition cursor-pointer flex items-center justify-center shrink-0" title="靜音/取消靜音輸入端點">
+                                <span class="material-icons-round text-xs" id="bridge-input-mute-icon">mic</span>
+                            </button>
+                            <span class="text-[9px] font-bold text-gray-600 shrink-0">輸入硬體音量:</span>
+                            <input type="range" id="bridge-input-vol-slider" min="0" max="100" value="100" class="flex-1 accent-purple-600 h-1.5 cursor-pointer" oninput="ui.onInputVolumeSlider(this.value)">
+                            <span id="bridge-input-vol-val" class="text-[9px] font-mono font-bold text-purple-800 w-7 text-right shrink-0">100%</span>
+                        </div>
+                        <div class="text-[9px] text-gray-500 mt-0.5">※ 支援 Windows 系統預設輸出側錄、各輸出端點與麥克風</div>
+                    </div>
+
+                    <!-- Target Output Section (Single vs Multi-Output) -->
+                    <div class="pt-1 border-t border-purple-100">
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="block text-[10px] font-bold text-gray-600">重新發出輸出設備 (Target Output):</label>
+                            <!-- Single vs Multi Switcher -->
+                            <div class="flex items-center bg-gray-100 p-0.5 rounded border border-gray-200 text-[9px] font-mono">
+                                <button id="btn-out-mode-single" onclick="ui.setOutputMode('single')" class="px-2 py-0.5 rounded font-bold cursor-pointer transition bg-[#8258ff] text-white shadow-xs">
+                                    🔊 單一輸出
+                                </button>
+                                <button id="btn-out-mode-multi" onclick="ui.setOutputMode('multi')" class="px-2 py-0.5 rounded font-bold cursor-pointer transition text-gray-600 hover:text-purple-700">
+                                    🎛️ 多喇叭並接
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Single Output Mode View -->
+                        <div id="bridge-single-output-view">
+                            <select id="bridge-output-select" onchange="ui.onBridgeOutputChange()" class="w-full text-xs p-1.5 rounded border border-gray-300 bg-gray-50 font-mono text-[#3b1166]">
+                                <option value="">正在取得輸出設備清單...</option>
+                            </select>
+                            <!-- Single Output Hardware Volume Slider & Mute -->
+                            <div class="mt-1 flex items-center gap-1.5 bg-purple-50/70 p-1.5 rounded border border-purple-100">
+                                <button id="bridge-output-mute-btn" onclick="ui.toggleSingleOutputMute()" class="p-1 rounded bg-white hover:bg-purple-100 text-[#6b33a8] border border-purple-200 shadow-2xs transition cursor-pointer flex items-center justify-center shrink-0" title="靜音/取消靜音輸出喇叭">
+                                    <span class="material-icons-round text-xs" id="bridge-output-mute-icon">volume_up</span>
+                                </button>
+                                <span class="text-[9px] font-bold text-gray-600 shrink-0">喇叭硬體音量:</span>
+                                <input type="range" id="bridge-output-vol-slider" min="0" max="100" value="80" class="flex-1 accent-purple-600 h-1.5 cursor-pointer" oninput="ui.onSingleOutputVolumeSlider(this.value)">
+                                <span id="bridge-output-vol-val" class="text-[9px] font-mono font-bold text-purple-800 w-7 text-right shrink-0">80%</span>
+                            </div>
+                            <div class="text-[9px] text-gray-500 mt-0.5">※ 系統嚴格禁止輸出設為輸入同一聲卡或指向相同迴路</div>
+                        </div>
+
+                        <!-- Multi-Output Mode View -->
+                        <div id="bridge-multi-output-view" class="hidden space-y-1.5">
+                            <div class="text-[9px] text-purple-800 bg-purple-50 p-1.5 rounded border border-purple-200 flex items-center justify-between">
+                                <span>⚡ <b>多喇叭並接廣播</b>：同步輸出至多個硬體端點，各喇叭獨立調校音量</span>
+                                <span id="bridge-multi-count-badge" class="font-bold text-purple-900 bg-purple-200/80 px-1.5 py-0.5 rounded font-mono">已選 0 設備</span>
+                            </div>
+                            <!-- Parallel Devices Checkboxes & Individual Volume Sliders List -->
+                            <div id="bridge-multi-devices-list" class="max-h-48 overflow-y-auto space-y-1.5 pr-1 custom-scrollbar">
+                                <div class="text-[10px] text-gray-400 p-2 text-center">正在偵測可並接設備...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-1 border-t border-gray-100 space-y-1">
+                        <label class="flex items-center gap-1.5 text-[11px] text-gray-700 cursor-pointer">
+                            <input type="checkbox" id="bridge-auto-default" checked class="rounded text-purple-600" onchange="ui.onBridgeConfigChange()">
+                            <span>抽插連線時自動將 Windows 預設輸出導至虛擬喇叭</span>
+                        </label>
+                        <label class="flex items-center gap-1.5 text-[11px] text-gray-700 cursor-pointer">
+                            <input type="checkbox" id="bridge-auto-restore" checked class="rounded text-purple-600" disabled>
+                            <span class="text-gray-500">中斷或關閉程式時自動還原實體喇叭 (始終啟用)</span>
+                        </label>
+                    </div>
+                    <div class="pt-1.5 border-t border-purple-100 flex items-center justify-between text-[10px] text-gray-600 font-mono">
+                        <span class="flex items-center gap-1">
+                            <span class="material-icons-round text-xs text-purple-600">shield</span>
+                            <span id="bridge-channel-label">專屬通道: 127.88.99.1 (獨占防衝突)</span>
+                        </span>
+                        <span id="bridge-channel-badge" class="px-1.5 py-0.5 rounded bg-purple-100 text-purple-800 font-bold text-[9px]">ISOLATED</span>
+                    </div>
+                </div>
+
+                <!-- Right: Resampling & Filter Engine -->
+                <div class="bg-white p-3 rounded-lg border border-[#d1b3ff] space-y-2.5 shadow-xs">
+                    <div class="text-xs font-bold text-[#4a148c] flex items-center gap-1 border-b border-purple-100 pb-1">
+                        <span class="material-icons-round text-sm">equalizer</span> MPV 發燒重採樣濾鏡 (Resampler)
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-600 mb-0.5">重採樣演算法 / 濾鏡模式 (Engine):</label>
+                        <select id="bridge-engine-select" onchange="ui.onBridgeConfigChange()" class="w-full text-xs p-1.5 rounded border border-gray-300 bg-gray-50 font-mono text-[#3b1166]">
+                            <option value="soxr_vhq">SoX Resampler VHQ (28-bit 發燒極致抗失真，精確度最高)</option>
+                            <option value="soxr_hq">SoX Resampler HQ (20-bit 高音質低延遲)</option>
+                            <option value="swr_poly">FFmpeg SWR Polyphase (多相立體 FIR 濾鏡)</option>
+                            <option value="sinc_native">MPV Sinc Blackman-Nutall (原生精密 Sinc 濾鏡)</option>
+                            <option value="none">Direct Passthrough (原始直通不重採樣)</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-600 mb-0.5">目標採樣率 (Sample Rate):</label>
+                            <select id="bridge-rate-select" onchange="ui.onBridgeConfigChange()" class="w-full text-xs p-1.5 rounded border border-gray-300 bg-gray-50 font-mono text-[#3b1166]">
+                                <option value="192000" selected>192.0 kHz (Ultra Hi-Res)</option>
+                                <option value="96000">96.0 kHz (Hi-Res)</option>
+                                <option value="88200">88.2 kHz (2x CD)</option>
+                                <option value="48000">48.0 kHz (Studio)</option>
+                                <option value="44100">44.1 kHz (CD)</option>
+                                <option value="0">Original (原始不變)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-600 mb-0.5">位元精度 (Bit Depth):</label>
+                            <select id="bridge-format-select" onchange="ui.onBridgeConfigChange()" class="w-full text-xs p-1.5 rounded border border-gray-300 bg-gray-50 font-mono text-[#3b1166]">
+                                <option value="float" selected>32-Bit Float (最高動態)</option>
+                                <option value="s32">32-Bit Integer (整數)</option>
+                                <option value="s24">24-Bit Integer (發燒)</option>
+                                <option value="s16">16-Bit Integer (標準)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center text-[10px] font-bold text-gray-600 mb-0.5">
+                            <span>串接音量增益 (Bridge Volume):</span>
+                            <span id="bridge-volume-display" class="font-mono text-purple-700">80%</span>
+                        </div>
+                        <input type="range" id="bridge-volume-slider" min="0" max="100" value="80" class="w-full" oninput="ui.onBridgeVolumeChange(this.value)">
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Dual Audio Coexistence Monitor Section -->
+            <div class="bg-[#241540]/5 p-3 rounded-lg border border-[#8258ff]/30 space-y-2">
+                <div class="text-xs font-bold text-[#4a148c] flex items-center justify-between">
+                    <span class="flex items-center gap-1"><span class="material-icons-round text-sm">graphic_eq</span> 雙音訊獨立並行監控 (Dual-Engine Monitor)</span>
+                    <span class="text-[9px] font-mono text-gray-500">硬體混音器並行輸出 (Zero Interrupt)</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div class="bg-white p-2.5 rounded border border-purple-100 flex items-center justify-between">
+                        <div>
+                            <div class="font-bold text-[#3b1166] flex items-center gap-1">🎵 本機播放器</div>
+                            <div id="dual-player-title" class="text-[10px] text-gray-500 truncate max-w-[150px]">Ame-Chan BGM</div>
+                        </div>
+                        <span id="dual-player-badge" class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-purple-100 text-purple-700">READY</span>
+                    </div>
+
+                    <div class="bg-white p-2.5 rounded border border-purple-100 flex items-center justify-between">
+                        <div>
+                            <div class="font-bold text-[#3b1166] flex items-center gap-1">🎛️ 系統音訊濾鏡</div>
+                            <div id="dual-bridge-summary" class="text-[10px] text-gray-500 truncate max-w-[150px]">192k SOXR VHQ</div>
+                        </div>
+                        <span id="dual-bridge-badge" class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-gray-100 text-gray-600">OFFLINE</span>
+                    </div>
+                </div>
+                <div class="text-[9px] text-[#6b33a8] font-mono text-center">
+                    ✨ 本地播放器歌曲清單與 Windows 應用程式聲音同時存在，各自獨立調節音量與濾鏡！
+                </div>
+            </div>
+        </div>
+        <div class="xp-resizer"></div>
+    </div>
+
     <!-- Retro Context Menus -->
     <div id="context-menu-track" class="xp-context-menu">
         <div class="xp-menu-item" onclick="ui.onContextPlay()"><span class="material-icons-round text-sm text-[#ff4081]">play_arrow</span> ▶ Play Now</div>
@@ -1345,6 +1683,7 @@
     </div>
 
     <div id="context-menu-desktop" class="xp-context-menu">
+        <div class="xp-menu-item" onclick="ui.toggleWindow('audio-bridge-window'); ui.closeContextMenus()"><span class="material-icons-round text-sm text-[#00e676]">router</span> 🎛️ Audio Router & Resampler</div>
         <div class="xp-menu-item" onclick="ui.togglePipMode(); ui.closeContextMenus()"><span class="material-icons-round text-sm text-[#ff4081]">picture_in_picture_alt</span> 📌 PIP Desktop Mode</div>
         <div class="xp-menu-item" onclick="ui.arrangeWindows(); ui.closeContextMenus()"><span class="material-icons-round text-sm text-[#00e676]">auto_fix_high</span> ✨ Auto Layout</div>
         <div class="xp-menu-divider"></div>
@@ -1606,6 +1945,12 @@
             <button onclick="pywebview.api.toggle_audio_normalize()" id="btn-normalize" class="px-2 py-1 text-[10px] font-bold rounded border border-[#ff4081] bg-[#ffdbf3] text-[#d81b60] shadow-xs transition cursor-pointer" title="Toggle EBU R128 Loudness Normalization">
                 ⚖️ EBU R128 ON
             </button>
+            <button onclick="ui.toggleAudioBridge()" id="btn-audio-bridge" class="px-2 py-1 text-[10px] font-bold rounded border border-[#6b33a8] bg-[#f0e1ff] text-[#4a148c] shadow-xs transition cursor-pointer flex items-center gap-1 font-mono hover:scale-105" title="Toggle Live Audio DSP & Resampler (音訊發燒濾鏡/串接開關)">
+                <span class="material-icons-round text-xs" id="icon-bridge-btn">music_note</span> <span id="label-bridge-btn">🎵 本機 OFF</span>
+            </button>
+            <button onclick="ui.toggleWindow('audio-bridge-window')" class="text-[#7c4dff] hover:text-[#00e676] transition p-1 hover:scale-110" title="Open Audio Router & Resampler Studio (即時系統音訊串接控制台)">
+                <span class="material-icons-round text-lg">tune</span>
+            </button>
             <button onclick="ui.openWallpaperModal()" class="text-[#7c4dff] hover:text-[#ff4081] transition" title="Wallpaper">
                 <span class="material-icons-round text-lg">wallpaper</span>
             </button>
@@ -1617,14 +1962,14 @@
                     <span class="material-icons-round text-lg">palette</span>
                 </button>
                 <div id="theme-menu" class="hidden absolute bottom-10 right-0 w-44 bg-[#f4ecfd] border-2 border-[#6b33a8] shadow-2xl rounded overflow-hidden z-50 flex-col">
-                    <button onclick="pywebview.api.change_theme('STRATA.html')" class="px-3 py-2 text-left text-xs text-[#b87000] font-bold hover:bg-[#ffdbf3] border-b border-[#d1b3ff]">🧊 STRATA 3D</button>
-                    <button onclick="pywebview.api.change_theme('needy_theme.html')" class="px-3 py-2 text-left text-xs text-[#ff4081] font-bold bg-[#ffdbf3] border-b border-[#d1b3ff]">✨ Internet Angel</button>
+                    <button onclick="pywebview.api.change_theme('STRATA.html')" class="px-3 py-2 text-left text-xs text-[#ffaa00] font-bold bg-[#0f1713] border-b border-[#ffaa00]/30 font-mono hover:bg-[#1a2620]">🧊 STRATA 3D</button>
+                    <button onclick="pywebview.api.change_theme('DEV.html')" class="px-3 py-2 text-left text-xs text-[#ff4081] font-bold bg-[#ffdbf3] border-b border-[#d1b3ff] font-mono">🛠️ DEV Mode</button>
+                    <button onclick="pywebview.api.change_theme('needy_theme.html')" class="px-3 py-2 text-left text-xs text-[#3b1166] hover:bg-[#ffdbf3] border-b border-[#d1b3ff]">✨ Internet Angel</button>
                     <button onclick="pywebview.api.change_theme('cyberpunk.html')" class="px-3 py-2 text-left text-xs text-[#3b1166] hover:bg-[#ffdbf3] border-b border-[#d1b3ff]">⚡ Cyberpunk</button>
                     <button onclick="pywebview.api.change_theme('mech_theme.html')" class="px-3 py-2 text-left text-xs text-[#3b1166] hover:bg-[#ffdbf3] border-b border-[#d1b3ff]">🤖 Cyber Mech</button>
                     <button onclick="pywebview.api.change_theme('index.html')" class="px-3 py-2 text-left text-xs text-[#3b1166] hover:bg-[#ffdbf3] border-b border-[#d1b3ff]">🎵 Default Dark</button>
                     <button onclick="pywebview.api.change_theme('light.html')" class="px-3 py-2 text-left text-xs text-[#3b1166] hover:bg-[#ffdbf3] border-b border-[#d1b3ff]">🌸 Light Ambient</button>
-                    <button onclick="pywebview.api.change_theme('image_theme.html')" class="px-3 py-2 text-left text-xs text-[#3b1166] hover:bg-[#ffdbf3] border-b border-[#d1b3ff]">🖼️ Immersive Glass</button>
-                    <button onclick="pywebview.api.change_theme('DEV.html')" class="px-3 py-2 text-left text-xs text-[#3b1166] hover:bg-[#ffdbf3] font-mono">🛠️ DEV Mode</button>
+                    <button onclick="pywebview.api.change_theme('image_theme.html')" class="px-3 py-2 text-left text-xs text-[#3b1166] hover:bg-[#ffdbf3]">🖼️ Immersive Glass</button>
                 </div>
             </div>
             <div class="flex items-center gap-1 bg-white border border-[#8258ff] px-2 py-1 rounded">
@@ -1997,6 +2342,10 @@
                     await ui.initEqUI();
                 } catch(e) {}
 
+                try {
+                    await ui.refreshAudioBridgeUI();
+                } catch(e) {}
+
                 // Execute startup Auto Layout
                 ui.arrangeWindows();
 
@@ -2027,7 +2376,7 @@
             },
 
             initWindowSystem: () => {
-                const windowIds = ['layer-folders', 'playlist-window', 'taskmanager-window', 'favorites-window', 'top10-window', 'video-window'];
+                const windowIds = ['layer-folders', 'playlist-window', 'taskmanager-window', 'favorites-window', 'top10-window', 'video-window', 'audio-bridge-window'];
                 windowIds.forEach(id => {
                     ui.makeWindowDraggable(id);
                     ui.makeWindowResizable(id);
@@ -2040,10 +2389,20 @@
 
             bringToFront: (id) => {
                 const el = document.getElementById(id);
-                if (el) {
-                    ui.topZIndex = Math.min(190, ui.topZIndex + 1);
-                    el.style.zIndex = ui.topZIndex;
+                if (!el) return;
+                ui.topZIndex = (ui.topZIndex || 120) + 1;
+                if (ui.topZIndex >= 195) {
+                    const allWinIds = ['layer-folders', 'playlist-window', 'taskmanager-window', 'favorites-window', 'top10-window', 'video-window', 'audio-bridge-window'];
+                    const sorted = allWinIds
+                        .map(wId => document.getElementById(wId))
+                        .filter(w => w && w.style.display !== 'none' && !w.classList.contains('hidden'))
+                        .sort((a, b) => (parseInt(a.style.zIndex) || 120) - (parseInt(b.style.zIndex) || 120));
+                    sorted.forEach((w, idx) => {
+                        w.style.zIndex = 120 + idx;
+                    });
+                    ui.topZIndex = 120 + sorted.length;
                 }
+                el.style.zIndex = ui.topZIndex;
             },
 
             makeWindowDraggable: (id) => {
@@ -2066,10 +2425,10 @@
                 titlebar.addEventListener('mousedown', (e) => {
                     if (e.button !== 0) return;
                     if (e.target.closest('.xp-btn') || e.target.closest('.xp-btn-box')) return;
+                    ui.bringToFront(id);
                     if (win.classList.contains('is-maximized')) return;
 
                     isDragging = true;
-                    ui.bringToFront(id);
 
                     // 精確讀取物理邊界，將所有定位標準化為直觀的 left / top 像素，徹底根除 calc / transform / right 衝突
                     const rect = win.getBoundingClientRect();
@@ -2223,7 +2582,7 @@
             },
 
             arrangeWindows: () => {
-                const allWins = ['favorites-window', 'top10-window', 'layer-folders', 'playlist-window', 'taskmanager-window', 'video-window'];
+                const allWins = ['favorites-window', 'top10-window', 'layer-folders', 'playlist-window', 'taskmanager-window', 'video-window', 'audio-bridge-window'];
                 
                 const openWins = allWins.filter(id => {
                     const el = document.getElementById(id);
@@ -2354,6 +2713,7 @@
                     ui.bringToFront(id);
                     if (id === 'favorites-window') ui.loadFavorites();
                     if (id === 'top10-window') ui.loadTop10();
+                    if (id === 'audio-bridge-window') ui.refreshAudioBridgeUI();
                     ui.arrangeWindows();
                 } else {
                     ui.closeWindow(id);
@@ -2407,6 +2767,7 @@
                     el._preMaxWidth = el.style.width;
                     el._preMaxHeight = el.style.height;
                     el.classList.add('is-maximized');
+                    ui.bringToFront(id);
                 } else {
                     el.classList.remove('is-maximized');
                     // 還原至自訂拖拽/拉伸後的位置與尺寸
@@ -2416,6 +2777,7 @@
                     if (el._preMaxBottom) el.style.bottom = el._preMaxBottom;
                     if (el._preMaxWidth) el.style.width = el._preMaxWidth;
                     if (el._preMaxHeight) el.style.height = el._preMaxHeight;
+                    ui.bringToFront(id);
                 }
                 setTimeout(() => ui.onWindowResizeAdaptive(), 50);
             },
@@ -3068,6 +3430,811 @@
                 pathEl.setAttribute('d', d);
             },
 
+            // ========================================================
+            // 🎛️ Live Audio Router & Resampler Controller (DEV Edition)
+            // ========================================================
+            bridgeStatus: null,
+            bridgeDevices: null,
+
+            setAudioBridgeMode: async (mode) => {
+                if (!window.pywebview || !pywebview.api || !pywebview.api.set_audio_bridge_mode) return;
+                try {
+                    const res = await pywebview.api.set_audio_bridge_mode(mode);
+                    if (res && res.error) {
+                        ui.toast("❌ " + res.error);
+                        return;
+                    }
+                    await ui.refreshAudioBridgeUI();
+                    if (mode === 'player') {
+                        ui.toast("🎵 已切換至「本機播放器模式」：直接優化本機音效，免選端點！");
+                    } else {
+                        ui.toast("🌐 已切換至「系統全域串接模式」：可接管 Windows 系統聲音輸出");
+                    }
+                } catch (e) {
+                    console.error("setAudioBridgeMode error:", e);
+                }
+            },
+
+            refreshAudioBridgeUI: async (isManual = false) => {
+                if (!window.pywebview || !pywebview.api || !pywebview.api.get_audio_bridge_devices) return;
+                try {
+                    const devData = await pywebview.api.get_audio_bridge_devices();
+                    const status = await pywebview.api.get_audio_bridge_status();
+                    ui.bridgeDevices = devData;
+                    ui.bridgeStatus = status;
+
+                    const mode = (status && status.mode) || 'player';
+                    const tabPlayer = document.getElementById('bridge-tab-player');
+                    const tabSystem = document.getElementById('bridge-tab-system');
+                    const playerCard = document.getElementById('bridge-player-card');
+                    const endpointCard = document.getElementById('bridge-endpoint-card');
+                    const playerSafeAlert = document.getElementById('bridge-player-safe-alert');
+                    const loopAlert = document.getElementById('bridge-loop-alert');
+                    const pipelinePlayer = document.getElementById('bridge-pipeline-player');
+                    const pipelineSystem = document.getElementById('bridge-pipeline-system');
+
+                    if (mode === 'player') {
+                        if (tabPlayer) tabPlayer.className = "flex-1 py-1.5 px-3 rounded-md font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer bg-[#8258ff] text-white shadow-xs";
+                        if (tabSystem) tabSystem.className = "flex-1 py-1.5 px-3 rounded-md font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer text-[#4a148c] hover:bg-purple-100/60";
+                        if (playerCard) playerCard.classList.remove('hidden');
+                        if (endpointCard) endpointCard.classList.add('hidden');
+                        if (playerSafeAlert) playerSafeAlert.classList.remove('hidden');
+                        if (loopAlert) loopAlert.classList.add('hidden');
+                        if (pipelinePlayer) pipelinePlayer.classList.remove('hidden');
+                        if (pipelineSystem) pipelineSystem.classList.add('hidden');
+                    } else {
+                        if (tabPlayer) tabPlayer.className = "flex-1 py-1.5 px-3 rounded-md font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer text-[#4a148c] hover:bg-purple-100/60";
+                        if (tabSystem) tabSystem.className = "flex-1 py-1.5 px-3 rounded-md font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer bg-[#8258ff] text-white shadow-xs";
+                        if (playerCard) playerCard.classList.add('hidden');
+                        if (endpointCard) endpointCard.classList.remove('hidden');
+                        if (playerSafeAlert) playerSafeAlert.classList.add('hidden');
+                        if (loopAlert) loopAlert.classList.remove('hidden');
+                        if (pipelinePlayer) pipelinePlayer.classList.add('hidden');
+                        if (pipelineSystem) pipelineSystem.classList.remove('hidden');
+                    }
+
+                    // 1. 輸出模式同步 (Single vs Multi)
+                    ui.outputMode = (status && status.multi_output_enabled) ? 'multi' : (ui.outputMode || 'single');
+                    if (status && status.output_devices && Array.isArray(status.output_devices)) {
+                        ui.multiOutputSelectedDevices = [...status.output_devices];
+                    } else if (!ui.multiOutputSelectedDevices) {
+                        ui.multiOutputSelectedDevices = [];
+                    }
+
+                    // 動態防護：清理已在 Windows 實體拔除的無效端點
+                    if (devData.outputs && devData.outputs.length > 0) {
+                        const validDevIds = new Set(devData.outputs.map(d => d.id));
+                        const prevCount = ui.multiOutputSelectedDevices.length;
+                        ui.multiOutputSelectedDevices = ui.multiOutputSelectedDevices.filter(id => validDevIds.has(id));
+                        if (ui.multiOutputSelectedDevices.length !== prevCount && ui.bridgeStatus && ui.bridgeStatus.active) {
+                            if (window.pywebview && pywebview.api && pywebview.api.set_audio_bridge_multi_output) {
+                                await pywebview.api.set_audio_bridge_multi_output(true, ui.multiOutputSelectedDevices);
+                            }
+                        }
+                    }
+
+                    ui.updateOutputModeUI();
+
+                    // 2. 填充輸入端點 (支援 Windows 預設輸出側錄、所有 Windows 輸出端點側錄與麥克風)
+                    const inSelect = document.getElementById('bridge-input-select');
+                    if (inSelect && devData.inputs) {
+                        const prevVal = inSelect.value || (status && status.input_device);
+                        inSelect.innerHTML = devData.inputs.map(d => {
+                            const recTag = d.is_recommended ? ' ⭐ 推薦' : '';
+                            return `<option value="${d.id}">${d.name}${recTag}</option>`;
+                        }).join('');
+
+                        // 判斷原先選取的設備是否仍在當前清單中 (動態偵測拔除自動切換)
+                        if (prevVal && Array.from(inSelect.options).some(o => o.value === prevVal)) {
+                            inSelect.value = prevVal;
+                        } else if (devData.inputs.length > 0) {
+                            const rec = devData.inputs.find(d => d.is_recommended) || devData.inputs[0];
+                            inSelect.value = rec.id;
+                        }
+
+                        // 同步輸入硬體音量狀態
+                        if (status && status.input_volume) {
+                            ui.updateInputVolumeUI(status.input_volume);
+                        } else {
+                            ui.fetchInputVolume(inSelect.value);
+                        }
+                    }
+
+                    // 3. 填充輸出端點 (Playback) - 防巡迴驗證標記
+                    const outSelect = document.getElementById('bridge-output-select');
+                    if (outSelect && devData.outputs) {
+                        const prevVal = outSelect.value || (status && status.output_device);
+                        const defName = devData.default_render ? devData.default_render.name : 'Windows 預設';
+                        const defIsVirtual = devData.default_render && devData.default_render.name.toLowerCase().includes('cable');
+
+                        let optionsHtml = '';
+                        // Windows 預設選項
+                        if (defIsVirtual) {
+                            optionsHtml += `<option value="auto" disabled class="text-red-500 font-bold">Windows 預設 (${defName}) ⚠️ 虛擬端點禁止輸出</option>`;
+                        } else {
+                            optionsHtml += `<option value="auto">Windows 預設 (${defName})</option>`;
+                        }
+
+                        // 各設備選項
+                        devData.outputs.forEach(d => {
+                            if (d.id === 'auto') return;
+                            if (d.is_virtual) {
+                                optionsHtml += `<option value="${d.id}" disabled class="text-red-500 font-bold">${d.name} [⚠️ 虛擬端點-巡迴衝突禁止]</option>`;
+                            } else {
+                                optionsHtml += `<option value="${d.id}">${d.name}</option>`;
+                            }
+                        });
+                        outSelect.innerHTML = optionsHtml;
+
+                        // 判斷原先選取的設備是否仍在當前清單中 (動態偵測拔除自動切換)
+                        if (prevVal && Array.from(outSelect.options).some(o => o.value === prevVal && !o.disabled)) {
+                            outSelect.value = prevVal;
+                        } else if (devData.safe_physical_output && Array.from(outSelect.options).some(o => o.value === devData.safe_physical_output && !o.disabled)) {
+                            outSelect.value = devData.safe_physical_output;
+                        } else {
+                            const firstSafe = Array.from(outSelect.options).find(o => !o.disabled);
+                            if (firstSafe) outSelect.value = firstSafe.value;
+                        }
+
+                        // 同步單一輸出硬體音量狀態
+                        if (status && status.output_volume) {
+                            ui.updateSingleOutputVolumeUI(status.output_volume);
+                        } else {
+                            ui.fetchSingleOutputVolume(outSelect.value);
+                        }
+                    }
+
+                    // 4. 渲染多喇叭並接設備卡片清單
+                    ui.renderMultiOutputList();
+
+                    if (isManual) {
+                        ui.toast("🔄 音訊設備清單已動態刷新完成！");
+                    }
+
+                    // 5. 填入重採樣與音量設定
+                    if (status) {
+                        const engSelect = document.getElementById('bridge-engine-select');
+                        if (engSelect && status.resampler_engine) engSelect.value = status.resampler_engine;
+
+                        const rateSelect = document.getElementById('bridge-rate-select');
+                        if (rateSelect && status.sample_rate !== undefined) rateSelect.value = String(status.sample_rate);
+
+                        const fmtSelect = document.getElementById('bridge-format-select');
+                        if (fmtSelect && status.sample_format) fmtSelect.value = status.sample_format;
+
+                        const volSlider = document.getElementById('bridge-volume-slider');
+                        const volDisp = document.getElementById('bridge-volume-display');
+                        if (volSlider && status.volume !== undefined) {
+                            volSlider.value = status.volume;
+                            if (volDisp) volDisp.innerText = status.volume + '%';
+                        }
+
+                        const autoDefChk = document.getElementById('bridge-auto-default');
+                        if (autoDefChk && status.auto_route_default !== undefined) {
+                            autoDefChk.checked = status.auto_route_default;
+                        }
+                    }
+
+                    // 7. 更新 UI 狀態與防巡迴檢查
+                    ui.updateBridgeUIState(status);
+                    await ui.checkBridgeLoop();
+
+                } catch (e) {
+                    console.error("refreshAudioBridgeUI error:", e);
+                }
+            },
+
+            outputMode: 'single',
+            multiOutputSelectedDevices: [],
+
+            setOutputMode: async (mode) => {
+                ui.outputMode = mode;
+                ui.updateOutputModeUI();
+                if (window.pywebview && pywebview.api && pywebview.api.set_audio_bridge_multi_output) {
+                    try {
+                        const res = await pywebview.api.set_audio_bridge_multi_output(mode === 'multi', ui.multiOutputSelectedDevices);
+                        if (res && res.status) ui.updateBridgeUIState(res.status);
+                    } catch (e) {}
+                }
+                await ui.renderMultiOutputList();
+                await ui.checkBridgeLoop();
+            },
+
+            updateOutputModeUI: () => {
+                const isMulti = ui.outputMode === 'multi';
+                const btnSingle = document.getElementById('btn-out-mode-single');
+                const btnMulti = document.getElementById('btn-out-mode-multi');
+                const singleView = document.getElementById('bridge-single-output-view');
+                const multiView = document.getElementById('bridge-multi-output-view');
+
+                if (btnSingle) {
+                    btnSingle.className = isMulti 
+                        ? "px-2 py-0.5 rounded font-bold cursor-pointer transition text-gray-600 hover:text-purple-700" 
+                        : "px-2 py-0.5 rounded font-bold cursor-pointer transition bg-[#8258ff] text-white shadow-xs";
+                }
+                if (btnMulti) {
+                    btnMulti.className = isMulti 
+                        ? "px-2 py-0.5 rounded font-bold cursor-pointer transition bg-[#8258ff] text-white shadow-xs" 
+                        : "px-2 py-0.5 rounded font-bold cursor-pointer transition text-gray-600 hover:text-purple-700";
+                }
+                if (singleView) singleView.classList.toggle('hidden', isMulti);
+                if (multiView) multiView.classList.toggle('hidden', !isMulti);
+            },
+
+            updateInputVolumeUI: (volData) => {
+                if (!volData) return;
+                const slider = document.getElementById('bridge-input-vol-slider');
+                const valText = document.getElementById('bridge-input-vol-val');
+                const badge = document.getElementById('bridge-input-vol-badge');
+                const muteBtn = document.getElementById('bridge-input-mute-btn');
+                const muteIcon = document.getElementById('bridge-input-mute-icon');
+
+                const vol = (volData.volume !== undefined) ? volData.volume : 100;
+                const isMuted = Boolean(volData.mute);
+
+                if (slider) slider.value = vol;
+                if (valText) valText.innerText = (isMuted ? "🔇 " : "") + vol + '%';
+                if (badge) badge.innerText = (isMuted ? "靜音 " : "") + vol + '%';
+                if (muteIcon) muteIcon.innerText = isMuted ? "mic_off" : "mic";
+                if (muteBtn) {
+                    muteBtn.className = isMuted 
+                        ? "p-1 rounded bg-red-100 text-red-600 border border-red-300 shadow-2xs transition cursor-pointer flex items-center justify-center shrink-0 font-bold"
+                        : "p-1 rounded bg-white hover:bg-purple-100 text-[#6b33a8] border border-purple-200 shadow-2xs transition cursor-pointer flex items-center justify-center shrink-0";
+                }
+            },
+
+            fetchInputVolume: async (devId) => {
+                if (!devId || !window.pywebview || !pywebview.api || !pywebview.api.get_device_volume) return;
+                try {
+                    const res = await pywebview.api.get_device_volume(devId);
+                    if (res && res.success) ui.updateInputVolumeUI(res);
+                } catch (e) {}
+            },
+
+            onInputVolumeSlider: (val) => {
+                const valText = document.getElementById('bridge-input-vol-val');
+                const badge = document.getElementById('bridge-input-vol-badge');
+                if (valText) valText.innerText = val + '%';
+                if (badge) badge.innerText = val + '%';
+                const inSelect = document.getElementById('bridge-input-select');
+                const devId = inSelect ? inSelect.value : '';
+                if (devId && window.pywebview && pywebview.api && pywebview.api.set_device_volume) {
+                    pywebview.api.set_device_volume(devId, parseInt(val));
+                }
+            },
+
+            toggleInputMute: async () => {
+                const inSelect = document.getElementById('bridge-input-select');
+                const devId = inSelect ? inSelect.value : '';
+                if (!devId || !window.pywebview || !pywebview.api) return;
+                try {
+                    const cur = await pywebview.api.get_device_volume(devId);
+                    const newMute = cur ? !cur.mute : false;
+                    await pywebview.api.set_device_mute(devId, newMute);
+                    ui.fetchInputVolume(devId);
+                } catch (e) {}
+            },
+
+            updateSingleOutputVolumeUI: (volData) => {
+                if (!volData) return;
+                const slider = document.getElementById('bridge-output-vol-slider');
+                const valText = document.getElementById('bridge-output-vol-val');
+                const muteBtn = document.getElementById('bridge-output-mute-btn');
+                const muteIcon = document.getElementById('bridge-output-mute-icon');
+
+                const vol = (volData.volume !== undefined) ? volData.volume : 80;
+                const isMuted = Boolean(volData.mute);
+
+                if (slider) slider.value = vol;
+                if (valText) valText.innerText = (isMuted ? "🔇 " : "") + vol + '%';
+                if (muteIcon) muteIcon.innerText = isMuted ? "volume_off" : "volume_up";
+                if (muteBtn) {
+                    muteBtn.className = isMuted 
+                        ? "p-1 rounded bg-red-100 text-red-600 border border-red-300 shadow-2xs transition cursor-pointer flex items-center justify-center shrink-0 font-bold"
+                        : "p-1 rounded bg-white hover:bg-purple-100 text-[#6b33a8] border border-purple-200 shadow-2xs transition cursor-pointer flex items-center justify-center shrink-0";
+                }
+            },
+
+            fetchSingleOutputVolume: async (devId) => {
+                if (!devId || !window.pywebview || !pywebview.api || !pywebview.api.get_device_volume) return;
+                try {
+                    const res = await pywebview.api.get_device_volume(devId);
+                    if (res && res.success) ui.updateSingleOutputVolumeUI(res);
+                } catch (e) {}
+            },
+
+            onSingleOutputVolumeSlider: (val) => {
+                const valText = document.getElementById('bridge-output-vol-val');
+                if (valText) valText.innerText = val + '%';
+                const outSelect = document.getElementById('bridge-output-select');
+                const devId = outSelect ? outSelect.value : '';
+                if (devId && window.pywebview && pywebview.api && pywebview.api.set_device_volume) {
+                    pywebview.api.set_device_volume(devId, parseInt(val));
+                }
+            },
+
+            toggleSingleOutputMute: async () => {
+                const outSelect = document.getElementById('bridge-output-select');
+                const devId = outSelect ? outSelect.value : '';
+                if (!devId || !window.pywebview || !pywebview.api) return;
+                try {
+                    const cur = await pywebview.api.get_device_volume(devId);
+                    const newMute = cur ? !cur.mute : false;
+                    await pywebview.api.set_device_mute(devId, newMute);
+                    ui.fetchSingleOutputVolume(devId);
+                } catch (e) {}
+            },
+
+            onBridgeInputChange: async () => {
+                const inSelect = document.getElementById('bridge-input-select');
+                if (inSelect) {
+                    await ui.fetchInputVolume(inSelect.value);
+                    ui.renderMultiOutputList();
+                    await ui.onBridgeConfigChange();
+                }
+            },
+
+            onBridgeOutputChange: async () => {
+                const outSelect = document.getElementById('bridge-output-select');
+                if (outSelect) {
+                    await ui.fetchSingleOutputVolume(outSelect.value);
+                    await ui.onBridgeConfigChange();
+                }
+            },
+
+            renderMultiOutputList: async () => {
+                const listEl = document.getElementById('bridge-multi-devices-list');
+                const countBadge = document.getElementById('bridge-multi-count-badge');
+                if (!listEl || !ui.bridgeDevices || !ui.bridgeDevices.outputs) return;
+
+                const inSelect = document.getElementById('bridge-input-select');
+                const inVal = inSelect ? inSelect.value : '';
+                const outputs = ui.bridgeDevices.outputs.filter(d => d.id !== 'auto');
+                const selected = ui.multiOutputSelectedDevices || [];
+
+                let html = '';
+                for (const d of outputs) {
+                    const isChecked = selected.includes(d.id);
+                    let isConflict = Boolean(d.is_virtual);
+                    let conflictReason = d.is_virtual ? "虛擬端點禁止並接輸出" : "";
+
+                    if (!isConflict && window.pywebview && pywebview.api && pywebview.api.check_audio_bridge_loop) {
+                        try {
+                            const chk = await pywebview.api.check_audio_bridge_loop(inVal, d.id, true, false);
+                            if (chk.is_loop) {
+                                isConflict = true;
+                                conflictReason = chk.reason;
+                            }
+                        } catch (e) {}
+                    }
+
+                    const isLive = Boolean(ui.bridgeStatus && ui.bridgeStatus.active && ui.bridgeStatus.active_output_devices && ui.bridgeStatus.active_output_devices.includes(d.id));
+
+                    const vInfo = (ui.bridgeStatus && ui.bridgeStatus.multi_volumes && ui.bridgeStatus.multi_volumes[d.id]) || { volume: 80, mute: false };
+                    const volVal = vInfo.volume !== undefined ? vInfo.volume : 80;
+                    const isMuted = Boolean(vInfo.mute);
+
+                    let cardBg = "bg-white border-gray-200";
+                    if (isConflict) {
+                        cardBg = "bg-red-50/70 border-red-200 opacity-75";
+                    } else if (isLive) {
+                        cardBg = "bg-emerald-50/70 border-emerald-400 ring-1 ring-emerald-300";
+                    } else if (isChecked) {
+                        cardBg = "bg-purple-50/80 border-[#8258ff]";
+                    }
+
+                    html += `
+                        <div class="p-2 rounded-lg border ${cardBg} transition space-y-1.5 shadow-2xs">
+                            <div class="flex items-center justify-between gap-1.5">
+                                <label class="flex items-center gap-2 cursor-pointer flex-1 min-w-0">
+                                    <input type="checkbox" ${isChecked && !isConflict ? 'checked' : ''} ${isConflict ? 'disabled' : ''} 
+                                        onchange="ui.toggleMultiOutputDevice('${d.id}', this.checked)"
+                                        class="rounded text-purple-600 focus:ring-purple-400">
+                                    <span class="text-xs font-bold text-gray-800 truncate" title="${d.name}">${d.name}</span>
+                                </label>
+                                ${isLive ? `<span class="text-[8px] bg-emerald-100 text-emerald-800 border border-emerald-300 px-1 py-0.5 rounded font-bold shrink-0 flex items-center gap-0.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse"></span>發聲中</span>` : ''}
+                                ${isConflict ? `<span class="text-[8px] bg-red-100 text-red-700 px-1 py-0.5 rounded font-bold shrink-0" title="${conflictReason}">⚠️ 迴路衝突</span>` : ''}
+                            </div>
+                            <div class="flex items-center gap-1.5 pt-1 border-t border-gray-100">
+                                <button onclick="ui.toggleDeviceMute('${d.id}')" ${isConflict ? 'disabled' : ''} class="p-0.5 px-1 rounded ${isMuted ? 'bg-red-100 text-red-600 font-bold' : 'bg-gray-100 hover:bg-purple-100 text-[#4a148c]'} text-[10px] transition cursor-pointer flex items-center justify-center shrink-0" title="靜音此喇叭">
+                                    <span class="material-icons-round text-xs">${isMuted ? 'volume_off' : 'volume_up'}</span>
+                                </button>
+                                <span class="text-[9px] font-bold text-gray-600 shrink-0">音量:</span>
+                                <input type="range" min="0" max="100" value="${volVal}" ${isConflict ? 'disabled' : ''}
+                                    oninput="ui.onDeviceVolumeSlider('${d.id}', this.value)"
+                                    class="flex-1 accent-purple-600 h-1 cursor-pointer">
+                                <span id="multi-vol-val-${d.id.replace(/[^a-zA-Z0-9]/g, '_')}" class="text-[9px] font-mono font-bold text-purple-800 w-7 text-right shrink-0">${volVal}%</span>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                listEl.innerHTML = html || '<div class="text-[10px] text-gray-400 p-2 text-center">無可用輸出端點</div>';
+                if (countBadge) {
+                    const activeCount = selected.filter(id => !outputs.find(o => o.id === id && o.is_virtual)).length;
+                    countBadge.innerText = `已選 ${activeCount} 設備`;
+                }
+            },
+
+            toggleMultiOutputDevice: async (devId, checked) => {
+                if (!ui.multiOutputSelectedDevices) ui.multiOutputSelectedDevices = [];
+                if (checked) {
+                    if (!ui.multiOutputSelectedDevices.includes(devId)) {
+                        ui.multiOutputSelectedDevices.push(devId);
+                    }
+                } else {
+                    ui.multiOutputSelectedDevices = ui.multiOutputSelectedDevices.filter(id => id !== devId);
+                }
+                const countBadge = document.getElementById('bridge-multi-count-badge');
+                if (countBadge) countBadge.innerText = `已選 ${ui.multiOutputSelectedDevices.length} 設備`;
+
+                if (window.pywebview && pywebview.api && pywebview.api.set_audio_bridge_multi_output) {
+                    try {
+                        const res = await pywebview.api.set_audio_bridge_multi_output(true, ui.multiOutputSelectedDevices);
+                        if (res && res.error) {
+                            ui.toast("⚠️ " + res.error);
+                            if (checked) {
+                                ui.multiOutputSelectedDevices = ui.multiOutputSelectedDevices.filter(id => id !== devId);
+                            } else {
+                                ui.multiOutputSelectedDevices.push(devId);
+                            }
+                            await ui.renderMultiOutputList();
+                        } else {
+                            if (res && res.status) ui.updateBridgeUIState(res.status);
+                            await ui.renderMultiOutputList();
+                            const isLiveNow = Boolean(res && res.status && res.status.active);
+                            const actMsg = checked 
+                                ? (isLiveNow ? "⚡ 已動態熱接入喇叭即時發聲！" : "✅ 已勾選並接喇叭") 
+                                : (isLiveNow ? "🔌 已安全熱移除喇叭 (零中斷)" : "☑️ 已取消勾選喇叭");
+                            ui.toast(actMsg);
+                        }
+                    } catch (e) {
+                        console.error("toggleMultiOutputDevice error:", e);
+                    }
+                }
+                await ui.checkBridgeLoop();
+            },
+
+            onDeviceVolumeSlider: (devId, val) => {
+                const elId = `multi-vol-val-${devId.replace(/[^a-zA-Z0-9]/g, '_')}`;
+                const valSpan = document.getElementById(elId);
+                if (valSpan) valSpan.innerText = val + '%';
+                if (window.pywebview && pywebview.api && pywebview.api.set_device_volume) {
+                    pywebview.api.set_device_volume(devId, parseInt(val));
+                }
+            },
+
+            toggleDeviceMute: async (devId) => {
+                if (!window.pywebview || !pywebview.api) return;
+                try {
+                    const cur = await pywebview.api.get_device_volume(devId);
+                    const newMute = cur ? !cur.mute : false;
+                    await pywebview.api.set_device_mute(devId, newMute);
+                    ui.renderMultiOutputList();
+                } catch (e) {}
+            },
+
+            checkBridgeLoop: async () => {
+                const mode = ui.bridgeStatus ? ui.bridgeStatus.mode : 'player';
+                const masterBtn = document.getElementById('bridge-master-toggle');
+
+                if (mode === 'player') {
+                    if (masterBtn) {
+                        masterBtn.disabled = false;
+                        masterBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    }
+                    return { isLoop: false, reason: "本機直通模式安全" };
+                }
+
+                const inSelect = document.getElementById('bridge-input-select');
+                const outSelect = document.getElementById('bridge-output-select');
+                if (!inSelect) return { isLoop: false, reason: "迴路安全" };
+
+                const inVal = inSelect.value;
+                const outVal = outSelect ? outSelect.value : 'auto';
+                const autoDefChk = document.getElementById('bridge-auto-default');
+                const willAuto = autoDefChk ? autoDefChk.checked : true;
+                const isMulti = ui.outputMode === 'multi';
+
+                // 呼叫後端檢測巡迴 (支援單一輸出或多喇叭並接)
+                let isLoop = false;
+                let reason = "迴路安全";
+                if (window.pywebview && pywebview.api && pywebview.api.check_audio_bridge_loop) {
+                    try {
+                        if (isMulti) {
+                            if (!ui.multiOutputSelectedDevices || ui.multiOutputSelectedDevices.length === 0) {
+                                isLoop = true;
+                                reason = "【並接提示】多喇叭並接模式下請至少勾選一個輸出喇叭設備！";
+                            } else {
+                                const check = await pywebview.api.check_audio_bridge_loop(inVal, '', willAuto, true, ui.multiOutputSelectedDevices);
+                                isLoop = check.is_loop;
+                                reason = check.reason;
+                            }
+                        } else {
+                            const check = await pywebview.api.check_audio_bridge_loop(inVal, outVal, willAuto, false);
+                            isLoop = check.is_loop;
+                            reason = check.reason;
+                        }
+                    } catch (e) {}
+                }
+
+                const alertEl = document.getElementById('bridge-loop-alert');
+                const alertText = document.getElementById('bridge-loop-text');
+                const alertIcon = document.getElementById('bridge-loop-icon');
+
+                if (isLoop) {
+                    if (alertEl) {
+                        alertEl.className = "p-2.5 rounded-lg text-xs font-bold border transition flex items-center gap-2 bg-red-100 text-red-800 border-red-300";
+                    }
+                    if (alertIcon) alertIcon.innerText = "warning";
+                    if (alertText) alertText.innerText = reason;
+                    if (masterBtn) {
+                        masterBtn.disabled = true;
+                        masterBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    }
+                } else {
+                    if (alertEl) {
+                        alertEl.className = "p-2.5 rounded-lg text-xs font-bold border transition flex items-center gap-2 bg-emerald-50 text-emerald-800 border-emerald-300";
+                    }
+                    if (alertIcon) alertIcon.innerText = "verified_user";
+                    if (alertText) alertText.innerText = isMulti 
+                        ? `🛡️ 迴路防護就緒 (Loop Safe)：已安全連結 ${ui.multiOutputSelectedDevices.length} 個並接喇叭輸出。`
+                        : "🛡️ 迴路防護就緒 (Loop Safe)：輸出已鎖定實體硬體設備，杜絕巡迴爆音反饋。";
+                    if (masterBtn) {
+                        masterBtn.disabled = false;
+                        masterBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    }
+                }
+
+                return { isLoop, reason };
+            },
+
+            onBridgeConfigChange: async () => {
+                const mode = ui.bridgeStatus ? ui.bridgeStatus.mode : 'player';
+                if (mode === 'system') {
+                    const { isLoop } = await ui.checkBridgeLoop();
+                    if (isLoop) return;
+                }
+
+                // 僅在使用者主動變更設定且串接/本機濾鏡正在運行時，進行熱套用
+                if (ui.bridgeStatus && ui.bridgeStatus.active) {
+                    const cfg = ui.getBridgeConfigFromUI();
+                    if (window.pywebview && pywebview.api && pywebview.api.start_audio_bridge) {
+                        try {
+                            const res = await pywebview.api.start_audio_bridge(cfg);
+                            if (res && res.status) ui.updateBridgeUIState(res.status);
+                        } catch (e) {}
+                    }
+                }
+            },
+
+            getBridgeConfigFromUI: () => {
+                const inSelect = document.getElementById('bridge-input-select');
+                const outSelect = document.getElementById('bridge-output-select');
+                const engSelect = document.getElementById('bridge-engine-select');
+                const rateSelect = document.getElementById('bridge-rate-select');
+                const fmtSelect = document.getElementById('bridge-format-select');
+                const volSlider = document.getElementById('bridge-volume-slider');
+                const autoDefChk = document.getElementById('bridge-auto-default');
+
+                return {
+                    input_device: inSelect ? inSelect.value : '',
+                    output_device: outSelect ? outSelect.value : 'auto',
+                    multi_output_enabled: ui.outputMode === 'multi',
+                    output_devices: ui.multiOutputSelectedDevices || [],
+                    resampler_engine: engSelect ? engSelect.value : 'soxr_vhq',
+                    sample_rate: rateSelect ? parseInt(rateSelect.value) : 192000,
+                    sample_format: fmtSelect ? fmtSelect.value : 'float',
+                    volume: volSlider ? parseInt(volSlider.value) : 80,
+                    auto_route_default: autoDefChk ? autoDefChk.checked : true
+                };
+            },
+
+            toggleAudioBridge: async () => {
+                if (!window.pywebview || !pywebview.api || !pywebview.api.toggle_audio_bridge) return;
+                const mode = ui.bridgeStatus ? ui.bridgeStatus.mode : 'player';
+                if (mode === 'system') {
+                    const masterBtn = document.getElementById('bridge-master-toggle');
+                    if (masterBtn && masterBtn.disabled) {
+                        ui.toast("⚠️ 巡迴衝突保護中，請先選擇安全的實體輸出設備！");
+                        return;
+                    }
+                }
+
+                const cfg = ui.getBridgeConfigFromUI();
+                try {
+                    const res = await pywebview.api.toggle_audio_bridge(cfg);
+                    if (res && res.error) {
+                        ui.toast("❌ " + res.error);
+                        return;
+                    }
+                    const status = await pywebview.api.get_audio_bridge_status();
+                    ui.updateBridgeUIState(status);
+                    if (status && status.mode === 'player') {
+                        if (status.active) {
+                            ui.toast("🎵 已啟用本機發燒濾鏡！(SOXR 192k)");
+                        } else {
+                            ui.toast("⏹️ 已停用本機發燒濾鏡，還原原始直通輸出");
+                        }
+                    } else {
+                        if (status && status.active) {
+                            ui.toast("⚡ 已插上音訊串接！Windows 音效將經由 MPV 重採樣輸出");
+                        } else {
+                            ui.toast("🔌 已拔除音訊串接，已自動還原 Windows 原始喇叭");
+                        }
+                    }
+                } catch (e) {
+                    console.error("toggleAudioBridge error:", e);
+                }
+            },
+
+            toggleAudioBridgeQuick: () => {
+                ui.toggleAudioBridge();
+            },
+
+            onBridgeVolumeChange: (val) => {
+                const disp = document.getElementById('bridge-volume-display');
+                if (disp) disp.innerText = val + '%';
+                if (window.pywebview && pywebview.api && pywebview.api.set_audio_bridge_volume) {
+                    pywebview.api.set_audio_bridge_volume(val);
+                }
+            },
+
+            updateBridgeUIState: (status) => {
+                ui.bridgeStatus = status;
+                const isActive = Boolean(status && status.active);
+                const mode = (status && status.mode) || 'player';
+
+                // 1. Master Toggle 按鈕與標題資訊
+                const masterBtn = document.getElementById('bridge-master-toggle');
+                const masterIcon = document.getElementById('bridge-master-icon');
+                const masterText = document.getElementById('bridge-master-text');
+                const heroTitle = document.getElementById('bridge-hero-title');
+                const heroSub = document.getElementById('bridge-hero-subtitle');
+                const statusPill = document.getElementById('bridge-status-pill');
+                const headerBadge = document.getElementById('bridge-header-badge');
+                const vizContainer = document.getElementById('bridge-viz-container');
+                const playerTag = document.getElementById('player-dsp-active-tag');
+
+                if (mode === 'player') {
+                    if (heroTitle) heroTitle.innerText = "本機音樂/影片專用發燒濾鏡";
+                    if (heroSub) heroSub.innerText = "免選設備、零迴路風險，直接對 MPlay 內部播放器套用 SOXR 發燒重採樣與 EQ DSP";
+
+                    if (isActive) {
+                        if (masterBtn) {
+                            masterBtn.className = "px-4 py-2 rounded-lg font-bold font-mono text-xs shadow-lg transition flex items-center gap-2 bg-[#00e676] hover:bg-[#00c853] text-[#0f071b] cursor-pointer active:scale-95 border border-white/40 ring-2 ring-[#00e676]/50 animate-pulse";
+                        }
+                        if (masterIcon) masterIcon.innerText = "stop";
+                        if (masterText) masterText.innerText = "⏹️ 停用本機濾鏡 (DISABLE)";
+                        if (statusPill) {
+                            statusPill.className = "px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-[#00e676] text-[#0f071b]";
+                            statusPill.innerText = "🟢 本機發燒濾鏡運行中 (ACTIVE)";
+                        }
+                        if (headerBadge) {
+                            headerBadge.className = "px-1.5 py-0.5 rounded text-[8px] font-mono font-bold bg-[#00e676] text-black";
+                            headerBadge.innerText = "PLAYER 192k";
+                        }
+                        if (vizContainer) vizContainer.classList.add('bridge-active');
+                        if (playerTag) {
+                            playerTag.innerText = "● 濾鏡運作中";
+                            playerTag.className = "text-[#00e676] font-bold";
+                        }
+                    } else {
+                        if (masterBtn) {
+                            masterBtn.className = "px-4 py-2 rounded-lg font-bold font-mono text-xs shadow-lg transition flex items-center gap-2 bg-[#8258ff] hover:bg-[#9d7aff] text-white cursor-pointer active:scale-95 border border-white/20";
+                        }
+                        if (masterIcon) masterIcon.innerText = "play_arrow";
+                        if (masterText) masterText.innerText = "🎵 啟用本機濾鏡 (ENABLE)";
+                        if (statusPill) {
+                            statusPill.className = "px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-gray-700 text-gray-300";
+                            statusPill.innerText = "⚪ 待機離線 (IDLE)";
+                        }
+                        if (headerBadge) {
+                            headerBadge.className = "px-1.5 py-0.5 rounded text-[8px] font-mono font-bold bg-white/20 text-yellow-300";
+                            headerBadge.innerText = "IDLE";
+                        }
+                        if (vizContainer) vizContainer.classList.remove('bridge-active');
+                        if (playerTag) {
+                            playerTag.innerText = "● 原生直通就緒";
+                            playerTag.className = "text-purple-600 font-bold";
+                        }
+                    }
+                } else {
+                    // System Loopback Mode
+                    if (heroTitle) heroTitle.innerText = "系統音訊即時橋接核心";
+                    if (heroSub) heroSub.innerText = "抽插式設計：關閉自動中斷並還原 Windows 實體喇叭";
+
+                    if (isActive) {
+                        if (masterBtn) {
+                            masterBtn.className = "px-4 py-2 rounded-lg font-bold font-mono text-xs shadow-lg transition flex items-center gap-2 bg-[#00e676] hover:bg-[#00c853] text-[#0f071b] cursor-pointer active:scale-95 border border-white/40 ring-2 ring-[#00e676]/50 animate-pulse";
+                        }
+                        if (masterIcon) masterIcon.innerText = "power";
+                        if (masterText) masterText.innerText = "⚡ 拔除中斷 (DISCONNECT)";
+                        if (statusPill) {
+                            statusPill.className = "px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-[#00e676] text-[#0f071b]";
+                            statusPill.innerText = "🟢 即時串流中 (LIVE)";
+                        }
+                        if (headerBadge) {
+                            headerBadge.className = "px-1.5 py-0.5 rounded text-[8px] font-mono font-bold bg-[#00e676] text-black";
+                            headerBadge.innerText = "LIVE 192k";
+                        }
+                        if (vizContainer) vizContainer.classList.add('bridge-active');
+                    } else {
+                        if (masterBtn) {
+                            masterBtn.className = "px-4 py-2 rounded-lg font-bold font-mono text-xs shadow-lg transition flex items-center gap-2 bg-[#8258ff] hover:bg-[#9d7aff] text-white cursor-pointer active:scale-95 border border-white/20";
+                        }
+                        if (masterIcon) masterIcon.innerText = "power_settings_new";
+                        if (masterText) masterText.innerText = "🔌 插上串接 (CONNECT)";
+                        if (statusPill) {
+                            statusPill.className = "px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-gray-700 text-gray-300";
+                            statusPill.innerText = "⚪ 待機離線 (IDLE)";
+                        }
+                        if (headerBadge) {
+                            headerBadge.className = "px-1.5 py-0.5 rounded text-[8px] font-mono font-bold bg-white/20 text-yellow-300";
+                            headerBadge.innerText = "IDLE";
+                        }
+                        if (vizContainer) vizContainer.classList.remove('bridge-active');
+                    }
+                }
+
+                // 2. 底部工作列快速按鈕
+                const quickBtn = document.getElementById('btn-audio-bridge');
+                const quickIcon = document.getElementById('icon-bridge-btn');
+                const quickLabel = document.getElementById('label-bridge-btn');
+                if (quickBtn) {
+                    if (mode === 'player') {
+                        if (isActive) {
+                            quickBtn.className = "px-2 py-1 text-[10px] font-bold rounded border border-[#00e676] bg-[#00e676]/20 text-[#00c853] shadow-xs transition cursor-pointer flex items-center gap-1 font-mono hover:scale-105 animate-pulse";
+                            if (quickIcon) quickIcon.innerText = "music_note";
+                            if (quickLabel) quickLabel.innerText = "🟢 本機 192k";
+                        } else {
+                            quickBtn.className = "px-2 py-1 text-[10px] font-bold rounded border border-[#6b33a8] bg-[#f0e1ff] text-[#4a148c] shadow-xs transition cursor-pointer flex items-center gap-1 font-mono hover:scale-105";
+                            if (quickIcon) quickIcon.innerText = "music_note";
+                            if (quickLabel) quickLabel.innerText = "🎵 本機 OFF";
+                        }
+                    } else {
+                        if (isActive) {
+                            quickBtn.className = "px-2 py-1 text-[10px] font-bold rounded border border-[#00e676] bg-[#00e676]/20 text-[#00c853] shadow-xs transition cursor-pointer flex items-center gap-1 font-mono hover:scale-105 animate-pulse";
+                            if (quickIcon) quickIcon.innerText = "power";
+                            if (quickLabel) quickLabel.innerText = "🟢 串接 ON";
+                        } else {
+                            quickBtn.className = "px-2 py-1 text-[10px] font-bold rounded border border-[#6b33a8] bg-[#f0e1ff] text-[#4a148c] shadow-xs transition cursor-pointer flex items-center gap-1 font-mono hover:scale-105";
+                            if (quickIcon) quickIcon.innerText = "router";
+                            if (quickLabel) quickLabel.innerText = "🔌 串接 OFF";
+                        }
+                    }
+                }
+
+                // 3. 雙音訊共存狀態顯示
+                const dualBridgeBadge = document.getElementById('dual-bridge-badge');
+                const dualBridgeSummary = document.getElementById('dual-bridge-summary');
+                if (dualBridgeBadge) {
+                    dualBridgeBadge.innerText = isActive ? (mode === 'player' ? 'PLAYER ACTIVE' : 'STREAMING') : 'OFFLINE';
+                    dualBridgeBadge.className = isActive ? "px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-emerald-100 text-emerald-800" : "px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-gray-100 text-gray-600";
+                }
+                if (dualBridgeSummary && status) {
+                    const rateLabel = (status.sample_rate / 1000) + 'k';
+                    const engLabel = (status.resampler_engine || '').toUpperCase();
+                    dualBridgeSummary.innerText = `${rateLabel} ${engLabel} (${status.sample_format})`;
+                }
+
+                // 4. 專屬通道狀態更新 (IP + Port 隔離通道)
+                const channelLabel = document.getElementById('bridge-channel-label');
+                const channelBadge = document.getElementById('bridge-channel-badge');
+                if (channelLabel && status) {
+                    if (status.active && status.stream_port) {
+                        channelLabel.innerText = `專屬通道: ${status.stream_host}:${status.stream_port} (獨占防衝)`;
+                    } else {
+                        channelLabel.innerText = `專屬通道: ${status.stream_host || '127.88.99.1'} (動態安全埠)`;
+                    }
+                }
+                if (channelBadge && status) {
+                    channelBadge.innerText = (status.active && status.stream_port) ? "LIVE SECURE" : "ISOLATED";
+                    channelBadge.className = (status.active && status.stream_port) 
+                        ? "px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[9px]"
+                        : "px-1.5 py-0.5 rounded bg-purple-100 text-purple-800 font-bold text-[9px]";
+                }
+            },
             openWallpaperModal: () => {
                 ui.toggleDecorationsModal();
             },
@@ -3347,6 +4514,19 @@
                     if (st.is_boot_mode !== undefined) ui.updateBootState(st.is_boot_mode);
                     if (st.current_path) ui.highlightTrack(st.current_path);
                     if (st.play_count !== undefined) ui.updateTrackStats(st.play_count, st.like_score);
+
+                    // 同步雙音訊監控面板中本地播放器狀態
+                    const dualTitle = document.getElementById('dual-player-title');
+                    const dualBadge = document.getElementById('dual-player-badge');
+                    if (dualTitle) {
+                        dualTitle.innerText = (st.title && st.title !== "AWAITING_MEDIA") ? st.title : "IDLE (待機中)";
+                    }
+                    if (dualBadge) {
+                        dualBadge.innerText = st.is_playing ? "PLAYING" : "PAUSED";
+                        dualBadge.className = st.is_playing 
+                            ? "px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-green-100 text-green-700" 
+                            : "px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-purple-100 text-purple-700";
+                    }
 
                     if (pywebview.api.is_window_maximized) {
                         const isMax = await pywebview.api.is_window_maximized();
@@ -3951,7 +5131,21 @@
             closeApp: () => pywebview.api.close_app()
         };
 
-        window.addEventListener('pywebviewready', ui.init);
+        let _devHasStarted = false;
+        async function launchDevTheme() {
+            if (_devHasStarted) return;
+            _devHasStarted = true;
+            await ui.init();
+        }
+
+        window.addEventListener('pywebviewready', launchDevTheme);
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.pywebview && pywebview.api) {
+                launchDevTheme();
+            } else {
+                setTimeout(launchDevTheme, 150);
+            }
+        });
     </script>
 </body>
 </html>

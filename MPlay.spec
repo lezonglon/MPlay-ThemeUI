@@ -1,4 +1,5 @@
 import sys
+import os
 
 CONDA_ENV = sys.prefix
 SITE_PACKAGES = os.path.join(CONDA_ENV, 'Lib', 'site-packages')
@@ -36,6 +37,7 @@ a = Analysis(
         ('ui', 'ui'),
         ('bin', 'bin'),
         ('database.py', '.'),
+        ('audio_bridge.py', '.'),
         ('config.json', '.'),
     ],
     hiddenimports=[
@@ -57,6 +59,10 @@ a = Analysis(
         'http.server',
         'wsgiref',
         'wsgiref.simple_server',
+        'socket',
+        'struct',
+        'audio_bridge',
+        'database',
     ],
     hookspath=[],
     hooksconfig={},
@@ -98,6 +104,7 @@ exe = EXE(
         'libmpv-2.dll',
         'Microsoft.Web.WebView2.Core.dll',
         'WebView2Loader.dll',
+        'python311.dll',
         'python313.dll',
         'python3.dll',
         'ffi.dll',

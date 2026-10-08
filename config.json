@@ -4,10 +4,10 @@
     "startup_args": "--geometry=50%x50%",
     "theme": "dark",
     "boot_music": true,
-    "theme_file": "needy_theme.html",
+    "theme_file": "STRATA.html",
     "custom_wallpaper": null,
-    "audio_upsample": true,
-    "audio_normalize": true,
+    "audio_upsample": false,
+    "audio_normalize": false,
     "custom_boot_track": "",
     "noir_mode": false,
     "theme_settings": {
@@ -26,7 +26,12 @@
         ],
         "eq_preset": "Flat",
         "needy_preset_wallpaper": "default",
-        "mech_bg_image": ""
+        "mech_bg_image": "",
+        "strata_palette": "white",
+        "strata_telemetry_mode": "battery"
     },
-    "play_mode": "album_continue"
+    "play_mode": "album_continue",
+    "audio_bridge_mode": "player",
+    "audio_bridge_multi_output": false,
+    "audio_bridge_output_devices": []
 }
