@@ -6,11 +6,9 @@ Language: **繁體中文** | [English](./README_EN.md)
 > 本專案開發此介面主要用於**個人娛樂測試使用，非商業用途**。  
 > 初始想法是希望有一個可以快速簡易收聽音樂的程式，支援一鍵匯入與自動分類，並且具有極高客製化彈性的介面，讓音樂不僅止於聽，更能享受視覺娛樂！  
 > 本專案基於 **Python + MPV 核心播放引擎 + HTML/CSS/JS 介面** 開發，並由 **AI 輔助完成**。未來如需體驗不同風格，可以直接撰寫或替換全新的 HTML 介面！
-
+> **後續研究不開源聲明**：**由於後續已開發到部分敏感內容與功能，後續研究將不會開源更新。**
 ---
-<img width="1172" height="752" alt="image" src="https://github.com/user-attachments/assets/edb53488-7334-4a09-974d-f847c998ca6b" />
-<img width="1172" height="752" alt="image" src="https://github.com/user-attachments/assets/857865c7-ce0d-4b9a-958b-bbe9236bc0db" />
-<img width="1155" height="738" alt="image" src="https://github.com/user-attachments/assets/f242c00e-2a68-483c-880c-5f97122b3bc1" />
+<img width="1162" height="745" alt="player" src="https://github.com/user-attachments/assets/cf0b1c42-d353-4a1a-a13b-9cb27658fa10" />
 
 ## 🌟 核心特色 (Features)
 
@@ -25,7 +23,7 @@ Language: **繁體中文** | [English](./README_EN.md)
   * 🔀 **Shuffle**（隨機播放）
   * 🔂 **Repeat One**（單曲循環）
   * 📀 **Album Continue**（專輯連播 — 播完當前專輯後自動銜接下一個專輯）
-* 🎨 **多款主題風格**：內建測試開發主題（Needy Girl Overdose、Cyberpunk、Cyber Mech HUD、Glass、Modern Dark、Clean Light），並支援自由編寫 HTML/CSS/JS 進行擴充。
+* 🎨 **多款主題風格**：內建測試開發主題（Cyber Mech HUD、Glass、Modern Dark、Clean Light...），並支援自由編寫 HTML/CSS/JS 進行擴充。
 
 ---
 
