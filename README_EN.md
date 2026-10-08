@@ -6,6 +6,13 @@ Language: **English** | [繁體中文](./README.md)
 > This project is developed primarily for **personal entertainment, testing, and non-commercial purposes**.  
 > The initial vision was to create a fast and simple music player featuring one-click library scanning, automatic categorization, and highly customizable UI themes—making music not just an audio experience, but a visual delight!  
 > Built with **Python + MPV playback engine + HTML/CSS/JS frontend** and assisted by AI. Users can easily create or substitute different HTML interfaces to customize their visual experience.
+> This software is provided "AS IS" for personal study, testing, and educational purposes only. Use of this software is strictly at your own risk.
+> Under no circumstances shall the author(s) or developer(s) be held liable for any direct, indirect, incidental, consequential, or punitive damages arising from the installation, execution, or use of this software, including but not limited to:
+> 1. **Data & File Corruption**: Loss, deletion, or corruption of system files, user data, or saved game states.
+> 2. **Hardware Damage**: Malfunction, physical damage, degradation, or failure of any hardware components or peripherals.
+> 3. **Game Account Penalties**: Account bans, suspensions, blacklisting, warnings, rollbacks, or loss of in-game items/currency.
+> 4. **Property & Financial Losses**: Any other monetary, property, or virtual asset losses resulting from the above events.
+> By downloading, installing, or executing this software, you acknowledge and agree that you assume all risks associated with its use and release the author(s) from any and all liability.
 
 ---
 
