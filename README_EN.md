@@ -39,25 +39,6 @@ Language: **English** | [繁體中文](./README.md)
 
 ---
 
-## 📦 Portable Download (For End Users)
-
-If you prefer using the precompiled binary without installing Python:
-
-1. Navigate to the **[Releases](../../releases)** page on GitHub and download the latest:
-   * **`MPlayThemeUI.exe`** (Main Executable)
-   * **`bin.zip`** (Core Binary Dependencies)
-2. Extract `bin.zip` to obtain a `bin` folder.
-3. Place `MPlayThemeUI.exe` and the `bin` folder in the **same directory**:
-   ```text
-   📁 MPlay-Folder/
-   ├── 📄 MPlayThemeUI.exe
-   └── 📁 bin/
-       └── 📄 libmpv-2.dll (and other binaries)
-   ```
-4. Double-click `MPlayThemeUI.exe` to start enjoying your music!
-
----
-
 ## 🛠️ Developer Setup & Build Instructions
 
 If you wish to modify the source code or compile the project manually:
