@@ -35,16 +35,6 @@ Language: **繁體中文** | [English](./README_EN.md)
 
 ---
 
-## 📦 免安裝便攜版下載 (For End Users)
-
-如果您不想安裝 Python 開發環境，只想直接使用播放器：
-
-1. 前往本專案右側的 **[Releases](../../releases)** 頁面下載最新版本的：
-   * **`MPlayThemeUI.exe`**（主程式）
-2. 雙擊執行 `MPlayThemeUI.exe` 即可開始收聽！
-
----
-
 ## 🛠️ 開發環境建置 (For Developers)
 
 如果您想自行修改源碼或編譯專案，請參考以下步驟：
